@@ -686,5 +686,238 @@ window.WTW_INITIAL_DATA = {
         brandColor: "Slate mate con grabado plateado"
       }
     ]
+  },
+
+  // 6. REVISIÓN DE CONTENIDOS WEB, FASSTT, VIDEOS Y PENDIENTES STARTTS
+  websiteReviews: {
+    getHelp: {
+      title: "Get Help & Self-Help Toolkits (Autoayuda)",
+      statusHeadline: "Contenidos clínicos ya compartidos con onmove. Mañana presentación de wireframes.",
+      wireframesReviewDate: "2026-10-16", // Mañana viernes
+      currentStage: "wireframe_review", // content_drafted | shared_with_agency | wireframe_review | clinical_signoff | cms_build | launched
+      lockedTopics: [
+        "Preocupación por familiares en el extranjero (Worried about family overseas)",
+        "Impacto del trauma y la violencia en la vida diaria (Trauma & daily impact)",
+        "Navegando noticias y medios de comunicación (Navigating news and media triggers)",
+        "Apoyo a niños y jóvenes afectados por la guerra (Supporting children and youth)"
+      ],
+      lockedTechniques: [
+        "Gentle Belly Breathing (Respiración abdominal suave)",
+        "5-4-3-2-1 Grounding (Anclaje sensorial)",
+        "Orient to the Present (Orientación al momento presente)",
+        "Five Senses Treasure Hunt (Exploración de los cinco sentidos)"
+      ],
+      pendingFeelingsSignoff: [
+        "Anxiety (Ansiedad)", "Disconnection (Desconexión)", "Depression (Depresión)", 
+        "Fear (Miedo)", "Loneliness (Soledad)", "Overwhelm (Agobio)", 
+        "Restlessness (Inquietud)", "Worry (Preocupación)"
+      ],
+      nextSteps: [
+        { step: "1. Sesión de Revisión de Wireframes con onmove", date: "2026-10-16", owner: "Luis Rastelli / Jasmina", status: "upcoming", note: "Evaluar wireframes de Figma presentados por la agencia y validar rutas de usuario." },
+        { step: "2. Cierre y Firma Clínica Definitiva de Joshua", date: "2026-10-20", owner: "Joshua (STARTTS)", status: "pending", note: "Aprobación de la terminología de las 8 condiciones/sentimientos." },
+        { step: "3. Envío de Textos Finales a Traducción (6 Idiomas)", date: "2026-10-23", owner: "Yassmen Yahya", status: "pending", note: "Traducción y revisión con hablantes nativos en árabe, farsi, dari, ucraniano y hebreo." },
+        { step: "4. Maquetación y Desarrollo Front-end en Bricks Builder", date: "2026-11-10", owner: "onmove (Agencia)", status: "pending_eta", note: "Construcción interactiva del Hub de autoayuda con filtros por sentimiento." },
+        { step: "5. Integración de los 4 Videos de Técnicas", date: "2026-11-25", owner: "Luis Rastelli / onmove", status: "pending", note: "Embebido de los videos con subtitulado multilingüe." }
+      ]
+    },
+    aboutUs: {
+      title: "Sección About Us (Quiénes Somos & Marco Institucional)",
+      statusHeadline: "Sección redactada en Figma; revisión de elementos faltantes para entrega final.",
+      status: "in_review",
+      checklist: [
+        { item: "Declaración de Misión y Enfoque Informado en Trauma", status: "completed", note: "Texto base alineado a los principios clínicos de STARTTS." },
+        { item: "Co-branding Institucional: STARTTS / NSW Health", status: "completed", note: "Logos oficiales e isotipo de 3 bucles continuo integrados." },
+        { item: "Respaldo y Lockup de la Red Nacional FASSTT", status: "pending_review", note: "¿Falta incorporar el lockup formal y mención de servicio a nivel Australia?" },
+        { item: "Protocolos de Confidencialidad y Privacidad Médica", status: "completed", note: "Aclaración explícita de anonimato en llamadas y navegación." },
+        { item: "Biografías del Equipo Clínico / Testimonios", status: "pending_review", note: "Definir si se incluyen fotos del equipo de Yassmen o solo perfiles institucionales por seguridad." },
+        { item: "Botón de Salida Segura Inmediata ('Safety Exit')", status: "in_progress", note: "Componente técnico para redirigir inmediatamente a Google en caso de riesgo." },
+        { item: "Traducción Oficial en los 6 Idiomas", status: "pending", note: "Pendiente entrega a traductores acreditados." }
+      ]
+    },
+    fassttNetwork: {
+      title: "Red Nacional de Socios FASSTT (Oficinas en Toda Australia)",
+      headline: "Directorio nacional para que los usuarios fuera de NSW conozcan las sedes presenciales de atención al trauma.",
+      offices: [
+        {
+          state: "NSW",
+          agency: "STARTTS",
+          name: "NSW Service for the Treatment and Rehabilitation of Torture and Trauma Survivors",
+          locations: "Carramar (Sede Central), Fairfield, Auburn, Blacktown, Newcastle, Wollongong, Coffs Harbour, Armidale, Wagga Wagga",
+          phone: "(02) 9646 6700",
+          website: "https://www.startts.org.au",
+          isLead: true
+        },
+        {
+          state: "VIC",
+          agency: "Foundation House",
+          name: "The Victorian Foundation for Survivors of Torture",
+          locations: "Brunswick, Dallas, Dandenong, Ringwood",
+          phone: "(03) 9388 0022",
+          website: "https://www.foundationhouse.org.au",
+          isLead: false
+        },
+        {
+          state: "QLD",
+          agency: "QPASTT",
+          name: "Queensland Program of Assistance to Survivors of Torture and Trauma",
+          locations: "Brisbane (Woolloongabba), Logan, Toowoomba, Cairns, Townsville",
+          phone: "(07) 3391 6677",
+          website: "https://www.qpastt.org.au",
+          isLead: false
+        },
+        {
+          state: "SA",
+          agency: "STTARS",
+          name: "Survivors of Torture and Trauma Assistance and Rehabilitation Service",
+          locations: "Bowden (Adelaide)",
+          phone: "(08) 8206 8900",
+          website: "https://www.sttars.org.au",
+          isLead: false
+        },
+        {
+          state: "WA",
+          agency: "ASeTTS",
+          name: "Association for Services to Torture and Trauma Survivors",
+          locations: "Perth",
+          phone: "(08) 9227 2700",
+          website: "https://www.asetts.org.au",
+          isLead: false
+        },
+        {
+          state: "TAS",
+          agency: "Phoenix Centre",
+          name: "Migrant Resource Centre Tasmania (Phoenix Centre)",
+          locations: "Hobart, Launceston",
+          phone: "(03) 6221 0999",
+          website: "https://www.mrctas.org.au",
+          isLead: false
+        },
+        {
+          state: "NT",
+          agency: "Melaleuca Australia",
+          name: "Melaleuca Australia Refugee Centre",
+          locations: "Darwin",
+          phone: "(08) 8985 3311",
+          website: "https://www.melaleuca.org.au",
+          isLead: false
+        },
+        {
+          state: "ACT",
+          agency: "Companion House",
+          name: "Companion House Assisting Survivors of Torture and Trauma",
+          locations: "Canberra",
+          phone: "(02) 6251 4550",
+          website: "https://www.companionhouse.org.au",
+          isLead: false
+        }
+      ]
+    },
+    videoContent: {
+      title: "Producción de Videos (4 Get Help + 1 Institucional)",
+      headline: "Estrategia audiovisual de apoyo clínico y difusión para la plataforma y redes.",
+      videos: [
+        {
+          id: "vid-1",
+          title: "Gentle Belly Breathing (Respiración Abdominal)",
+          type: "Get Help Toolkit",
+          specs: "Video guiado de 60-90s, ritmo lento, animación suave y voz en off tranquila.",
+          status: "scripting",
+          owner: "Joshua / Luis",
+          subtitles: "Pendiente (6 idiomas)",
+          eta: "2026-11-15"
+        },
+        {
+          id: "vid-2",
+          title: "5-4-3-2-1 Grounding Technique (Anclaje Sensorial)",
+          type: "Get Help Toolkit",
+          specs: "Ejercicio sensorial guiado para ataques de pánico y recuerdos traumáticos.",
+          status: "scripting",
+          owner: "Joshua / Luis",
+          subtitles: "Pendiente (6 idiomas)",
+          eta: "2026-11-15"
+        },
+        {
+          id: "vid-3",
+          title: "Orient to the Present (Orientación al Presente)",
+          type: "Get Help Toolkit",
+          specs: "Técnica breve de conexión con el entorno seguro actual.",
+          status: "scripting",
+          owner: "Joshua / Luis",
+          subtitles: "Pendiente (6 idiomas)",
+          eta: "2026-11-20"
+        },
+        {
+          id: "vid-4",
+          title: "Five Senses Treasure Hunt (Exploración Sensorial)",
+          type: "Get Help Toolkit",
+          specs: "Apto para adultos y familias/niños, ejercicio visual y auditivo.",
+          status: "scripting",
+          owner: "Joshua / Luis",
+          subtitles: "Pendiente (6 idiomas)",
+          eta: "2026-11-20"
+        },
+        {
+          id: "vid-5",
+          title: "Witness to War — Video Institucional & Misión",
+          type: "Institucional / Marca",
+          specs: "Video insignia de 2 minutos para Homepage y campañas. Presenta la línea gratuita.",
+          status: "concept",
+          owner: "Luis Rastelli / Lachlan",
+          subtitles: "Pendiente (6 idiomas)",
+          eta: "2026-12-05"
+        }
+      ]
+    },
+    starttsPending: {
+      title: "Entregables Pendientes por Parte de STARTTS (Hacia la Agencia)",
+      headline: "Lista estricta de compromisos internos de STARTTS para evitar demoras atribuibles a la agencia.",
+      items: [
+        {
+          id: "sp-01",
+          title: "Validación de Wireframes de 'Get Help' en reunión de mañana",
+          owner: "Luis Rastelli / Jasmina",
+          dueDate: "2026-10-16",
+          status: "in_progress",
+          urgency: "critical",
+          note: "Revisar los frames 1492-6 y 1853-7561 presentados por onmove."
+        },
+        {
+          id: "sp-02",
+          title: "Aprobación clínica final del listado de 8 emociones",
+          owner: "Joshua (Líder Clínico)",
+          dueDate: "2026-10-20",
+          status: "pending",
+          urgency: "critical",
+          note: "Joshua debe firmar la lista de sentimientos para desbloquear la arquitectura."
+        },
+        {
+          id: "sp-03",
+          title: "Entrega de textos traducidos en 5 idiomas a onmove",
+          owner: "Yassmen / Jasmina",
+          dueDate: "2026-11-10",
+          status: "pending",
+          urgency: "high",
+          note: "Árabe, Dari, Farsi, Ucraniano y Hebreo para la carga en Bricks Builder."
+        },
+        {
+          id: "sp-04",
+          title: "Aprobación de la dirección visual de Homepage",
+          owner: "Lachlan (Líder de Área)",
+          dueDate: "2026-10-30",
+          status: "pending",
+          urgency: "high",
+          note: "Visto bueno a los mockups Figma de la portada antes del código."
+        },
+        {
+          id: "sp-05",
+          title: "Confirmación de licencias Bricks Builder y hosting",
+          owner: "Luis Rastelli",
+          dueDate: "2026-10-28",
+          status: "in_progress",
+          urgency: "medium",
+          note: "Asegurar que la titularidad quede en STARTTS y no en onmove."
+        }
+      ]
+    }
   }
 };

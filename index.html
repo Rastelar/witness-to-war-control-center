@@ -103,183 +103,198 @@
     </div>
   </div>
 
-  <!-- HEADER PRINCIPAL DEL APLICATIVO -->
-  <header class="bg-[#323B3F] text-white sticky top-0 z-40 shadow-md border-b border-slate-700/60 no-print">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-20">
-        
-        <!-- Identidad Visual de Marca (Logo Oficial) -->
-        <div class="flex items-center gap-4">
-          <div class="bg-white p-2 rounded-xl shadow-sm flex items-center justify-center">
-            <img src="assets/logos/W2W_logo-01.svg" alt="Witness to War Logo" class="h-8 md:h-10 w-auto" />
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-bold text-[#96EE89] uppercase tracking-wider">Mission Control</span>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
-                STARTTS / NSW Health
-              </span>
+  <!-- BARRA SUPERIOR FIJA (STICKY WRAPPER UNIFICADO - EVITA SOLAPAMIENTOS) -->
+  <div class="sticky top-0 z-40 shadow-md no-print">
+    
+    <!-- HEADER PRINCIPAL DEL APLICATIVO -->
+    <header class="bg-[#323B3F] text-white border-b border-slate-700/80">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          
+          <!-- Identidad Visual de Marca (Logo Oficial Nítido) -->
+          <div class="flex items-center gap-3">
+            <div class="h-11 w-11 flex-shrink-0 flex items-center justify-center p-1.5 bg-slate-800 rounded-xl border border-slate-700 shadow-inner">
+              <img src="assets/logos/W2W_logo-05.svg" alt="Witness to War Symbol" class="h-8 w-8 filter drop-shadow" />
             </div>
-            <h1 class="text-lg md:text-xl font-bold tracking-tight text-white flex items-center gap-2">
-              Witness to War & Violence
-            </h1>
-          </div>
-        </div>
-
-        <!-- Métricas Rápidas & Selector de Roles -->
-        <div class="flex items-center gap-3">
-          
-          <!-- Contenedor de Métricas del Header -->
-          <div id="headerMetrics" class="hidden lg:flex items-center">
-            <!-- Inyectado dinámicamente por app.js -->
-          </div>
-
-          <!-- Selector de Rol (Vistas Personalizadas) -->
-          <div class="flex items-center gap-1.5 bg-slate-800/80 p-1 rounded-xl border border-slate-700">
-            <span class="text-[11px] font-bold text-slate-400 pl-2 hidden sm:inline">Rol:</span>
-            <select id="roleSelector" class="bg-slate-900 text-white text-xs font-semibold rounded-lg px-2.5 py-1.5 border-0 focus:ring-2 focus:ring-[#96EE89] cursor-pointer">
-              <option value="executive">👑 Vista Ejecutiva (Lachlan)</option>
-              <option value="agency">🏢 Vista Agencia (onmove)</option>
-              <option value="operations">👥 Vista Operativa (Equipo W2W)</option>
-              <option value="media">📈 Vista Growth & Redes (Luis)</option>
-              <option value="merch">📦 Vista Merchandising & Eventos</option>
-            </select>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-extrabold text-[#96EE89] uppercase tracking-wider" id="hdrMissionText">Mission Control</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700" id="hdrSubAgency">
+                  STARTTS / NSW Health
+                </span>
+              </div>
+              <h1 class="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2 mt-0.5" id="hdrTitle">
+                Witness to War &amp; Violence
+              </h1>
+            </div>
           </div>
 
-          <!-- Indicador de Sincronización en Vivo -->
-          <div id="syncBadge" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-800 text-emerald-300 border border-slate-700">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span id="syncStatusText">En Vivo</span>
-          </div>
+          <!-- Controles Superiores: Idioma, Rol, Sincronización y Acciones -->
+          <div class="flex flex-wrap items-center gap-2.5">
+            
+            <!-- Selector de Idioma (Australian English Main + Español) -->
+            <div class="flex items-center gap-1.5 bg-slate-800/90 px-2.5 py-1 rounded-xl border border-slate-700 shadow-sm">
+              <span class="text-xs">🌐</span>
+              <select id="languageSelector" onchange="setLanguage(this.value)" class="bg-slate-900 text-white text-xs font-bold rounded-lg px-2 py-1 border border-slate-700 focus:ring-2 focus:ring-[#96EE89] cursor-pointer">
+                <option value="en" selected>🇦🇺 English (AU)</option>
+                <option value="es">🇪🇸 Español</option>
+              </select>
+            </div>
 
-          <!-- Botón de Compartir Enlace con Roles & Túnel Seguro -->
-          <button onclick="openShareModal()" title="Compartir Enlaces por Rol & Túnel Seguro" 
-                  class="flex items-center gap-1.5 px-3 py-1.5 bg-[#96EE89] hover:bg-[#82d675] text-[#323B3F] text-xs font-bold rounded-lg shadow-sm transition-all">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
-            </svg>
-            <span class="hidden md:inline">Compartir</span>
-          </button>
+            <!-- Selector de Rol (Vistas Personalizadas) -->
+            <div class="flex items-center gap-1.5 bg-slate-800/90 px-2.5 py-1 rounded-xl border border-slate-700 shadow-sm">
+              <span class="text-[11px] font-bold text-slate-400 pl-1 hidden sm:inline" id="roleLabelText">Role:</span>
+              <select id="roleSelector" class="bg-slate-900 text-white text-xs font-semibold rounded-lg px-2 py-1 border border-slate-700 focus:ring-2 focus:ring-[#96EE89] cursor-pointer">
+                <option value="executive">👑 Executive View (Lachlan)</option>
+                <option value="agency">🏢 Agency Portal (onmove)</option>
+                <option value="operations">👥 Operations (WTWV Team)</option>
+                <option value="media">📈 Growth &amp; Media (Luis)</option>
+                <option value="merch">📦 Merchandising &amp; Events</option>
+              </select>
+            </div>
 
-          <!-- Botones de Acción Globales (Exportar, Imprimir, Menú) -->
-          <div class="flex items-center gap-1">
-            <!-- Imprimir / PDF -->
-            <button onclick="printExecutiveReport()" title="Exportar Reporte Ejecutivo a PDF" 
-                    class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+            <!-- Indicador de Sincronización en Vivo -->
+            <div id="syncBadge" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-800 text-emerald-300 border border-slate-700">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="syncStatusText">Live Sync</span>
+            </div>
+
+            <!-- Botón de Compartir Enlace con Roles & Túnel Seguro -->
+            <button onclick="openShareModal()" title="Share Access Links" 
+                    class="flex items-center gap-1.5 px-3 py-1.5 bg-[#96EE89] hover:bg-[#82d675] text-[#323B3F] text-xs font-extrabold rounded-xl shadow-sm transition-all">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
               </svg>
+              <span class="hidden sm:inline" id="shareBtnText">Share</span>
             </button>
 
-            <!-- Exportar JSON -->
-            <button onclick="exportDataAsJSON()" title="Descargar Copia de Respaldo JSON" 
-                    class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-              </svg>
-            </button>
+            <!-- Botones de Acción Globales (Exportar, Imprimir, Menú) -->
+            <div class="flex items-center gap-1">
+              <button onclick="printExecutiveReport()" title="Export Executive Report to PDF" 
+                      class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                </svg>
+              </button>
+              <button onclick="exportDataAsJSON()" title="Download JSON Backup" 
+                      class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+              </button>
+              <button onclick="importDataFromJSON()" title="Upload JSON Backup" 
+                      class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                </svg>
+              </button>
+              <button onclick="resetToDefaultData()" title="Reset to Factory Data" 
+                      class="p-2 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+              </button>
+            </div>
 
-            <!-- Importar JSON -->
-            <button onclick="importDataFromJSON()" title="Cargar Copia de Respaldo JSON" 
-                    class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
-              </svg>
-            </button>
-
-            <!-- Restaurar Datos Originales -->
-            <button onclick="resetToDefaultData()" title="Restablecer Datos de Fábrica" 
-                    class="p-2 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-colors">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-              </svg>
-            </button>
           </div>
-
-        </div>
-
-      </div>
-    </div>
-  </header>
-
-  <!-- BARRA DE NAVEGACIÓN SECUNDARIA (PESTAÑAS) -->
-  <nav class="bg-white border-b border-slate-200 sticky top-20 z-30 shadow-sm no-print">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-14 overflow-x-auto no-scrollbar gap-2">
-        <div class="flex items-center gap-1.5 flex-nowrap">
-          
-          <!-- Pestaña 1: Radar Estratégico -->
-          <button data-nav-tab="radar" class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold bg-[#323B3F] text-[#96EE89] shadow-sm transition-all whitespace-nowrap">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-            </svg>
-            <span>🧭 Radar Estratégico</span>
-          </button>
-
-          <!-- Pestaña 2: Sitio Web & Agencia onmove -->
-          <button data-nav-tab="agency" class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
-            </svg>
-            <span>🌐 Sitio Web & onmove (Timeframes)</span>
-          </button>
-
-          <!-- Pestaña 3: Flujo Interno & Anti-Cuellos de Botella -->
-          <button data-nav-tab="workflow" class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
-            <span>⚡ Flujo Interno & Anti-Cuellos</span>
-          </button>
-
-          <!-- Pestaña 4: Redes & Google Ads -->
-          <button data-nav-tab="media" class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-            </svg>
-            <span>📊 Campañas & Telefonía (Meta/Google)</span>
-          </button>
-
-          <!-- Pestaña 5: Merchandising & Presupuestos -->
-          <button data-nav-tab="merch" class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-            </svg>
-            <span>🎁 Merchandising & Impresión</span>
-          </button>
-
-          <!-- Pestaña 6: Matriz RACI & Contactos -->
-          <button data-nav-tab="raci" class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-            </svg>
-            <span>👥 Matriz RACI</span>
-          </button>
-
-          <!-- Pestaña 7: Cronograma & Roadmap -->
-          <button data-nav-tab="timeline" class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-            </svg>
-            <span>📅 Cronograma & Roadmap</span>
-          </button>
 
         </div>
 
-        <!-- Búsqueda Global Rápida -->
-        <div class="hidden sm:flex items-center gap-2">
-          <div class="relative">
-            <input type="text" id="globalSearchInput" placeholder="Buscar tarea, proveedor..." 
-                   class="bg-slate-100 border border-slate-200 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#96EE89] w-48" />
-            <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-          </div>
+        <!-- Métrica Rápida del Header (Header Metrics Strip) -->
+        <div id="headerMetrics" class="mt-2.5 pt-2.5 border-t border-slate-700/60 hidden sm:flex flex-wrap items-center justify-between gap-3 text-xs text-slate-300">
+          <!-- Renderizado dinámicamente desde app.js -->
         </div>
 
       </div>
-    </div>
-  </nav>
+    </header>
+
+    <!-- BARRA DE NAVEGACIÓN SECUNDARIA (PESTAÑAS) -->
+    <nav class="bg-white border-b border-slate-200 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-13 overflow-x-auto no-scrollbar gap-2 py-1.5">
+          <div class="flex items-center gap-1.5 flex-nowrap">
+            
+            <!-- Pestaña 1: Radar Estratégico -->
+            <button data-nav-tab="radar" class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold bg-[#323B3F] text-[#96EE89] shadow-sm transition-all whitespace-nowrap">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+              <span id="tabLabelRadar">Strategic Radar</span>
+            </button>
+
+            <!-- Pestaña 2: Sitio Web & onmove Sprints (Timeframes & Builder) -->
+            <button data-nav-tab="agency" class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+              </svg>
+              <span id="tabLabelAgency">Website &amp; onmove (Sprints)</span>
+            </button>
+
+            <!-- Pestaña 3: Get Help, FASSTT & Scope Reviews -->
+            <button data-nav-tab="scope-reviews" class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
+              <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+              </svg>
+              <span id="tabLabelScopeReviews">Get Help, FASSTT &amp; Videos</span>
+            </button>
+
+            <!-- Pestaña 4: Flujo Interno & Anti-Cuellos de Botella -->
+            <button data-nav-tab="workflow" class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+              <span id="tabLabelWorkflow">Team Workflow &amp; Unblock</span>
+            </button>
+
+            <!-- Pestaña 5: Redes & Google Ads -->
+            <button data-nav-tab="media" class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+              </svg>
+              <span id="tabLabelMedia">Media &amp; Telephony (Meta/Google)</span>
+            </button>
+
+            <!-- Pestaña 6: Merchandising & Presupuestos -->
+            <button data-nav-tab="merch" class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+              </svg>
+              <span id="tabLabelMerch">Merchandise &amp; Print</span>
+            </button>
+
+            <!-- Pestaña 7: Matriz RACI & Contactos -->
+            <button data-nav-tab="raci" class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              <span id="tabLabelRaci">RACI Matrix</span>
+            </button>
+
+            <!-- Pestaña 8: Cronograma & Roadmap -->
+            <button data-nav-tab="timeline" class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              <span id="tabLabelTimeline">Roadmap &amp; Gantt</span>
+            </button>
+
+          </div>
+
+          <!-- Búsqueda Global Rápida -->
+          <div class="hidden sm:flex items-center gap-2">
+            <div class="relative">
+              <input type="text" id="globalSearchInput" placeholder="Buscar tarea, entregable..." 
+                     class="bg-slate-100 border border-slate-200 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#96EE89] w-48" />
+              <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </nav>
+  </div>
 
   <!-- CONTENEDOR PRINCIPAL REACTIVO -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">

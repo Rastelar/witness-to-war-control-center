@@ -10,43 +10,312 @@
 // Key para persistencia local
 const STORAGE_KEY = "wtwv_control_center_state_v1";
 
+// DICCIONARIO DE INTERNACIONALIZACIÓN (DEFAULT: AUSTRALIAN ENGLISH)
+const I18N = {
+  en: {
+    // Header & Brand
+    missionControl: "Mission Control",
+    subAgency: "STARTTS / NSW Health",
+    appTitle: "Witness to War & Violence",
+    appSubtitle: "Digital Operations & Delivery Control Centre",
+    roleLabel: "Role:",
+    roleExecutive: "👑 Executive View (Lachlan)",
+    roleAgency: "🏢 Agency Portal (onmove)",
+    roleOperations: "👥 Operations (WTWV Team)",
+    roleMedia: "📈 Growth & Media (Luis)",
+    roleMerch: "📦 Merchandising & Events",
+    liveSync: "Live Sync",
+    offlineMode: "Local Mode",
+    shareBtn: "Share",
+    printBtn: "Print / PDF Report",
+    backupBtn: "Export JSON",
+    importBtn: "Import JSON",
+    resetBtn: "Reset Data",
+    searchPlaceholder: "Search task, deliverable, partner...",
+
+    // Navigation Tabs
+    tabRadar: "Strategic Radar",
+    tabAgency: "Website & onmove (Sprints)",
+    tabScopeReviews: "Get Help, FASSTT & Videos",
+    tabWorkflow: "Team Workflow & Unblock",
+    tabMedia: "Media & Telephony (Meta/Google)",
+    tabMerch: "Merchandise & Print",
+    tabRaci: "RACI Matrix",
+    tabTimeline: "Roadmap & Gantt",
+
+    // Agency & Sprints (Timeframe Builder)
+    agencyTag: "Web Development & CMS",
+    agencyContracted: "Agency Contracted:",
+    agencyHeadline: "Deliverables, Sprints & Official Timeframe Tracking",
+    agencyProposal: "Approved proposal: 165 hours @ $130/hr + GST ($21,450 AUD) on WordPress with Bricks Builder across 6 languages.",
+    demandTimeframeBtn: "Request Timeframe from onmove",
+    openFigmaBtn: "Open onmove Figma",
+    addDeliverableBtn: "➕ Add Deliverable",
+    exportSprintBtn: "📄 Export Sprint to Lachlan",
+    hoursContracted: "Contracted Hours",
+    fixedRate: "Fixed rate of $130/hr + GST",
+    webBudget: "Website Budget",
+    budgetExcl: "Excludes hosting & plugin licences",
+    techStack: "Tech Stack",
+    wcagStandard: "WordPress CMS + WCAG 2.1 AA",
+    managementAlert: "Management Alert",
+    managementAlertText: "Awaiting onmove development commitment dates to present to Lachlan and Board.",
+    allDeliverables: "All Deliverables",
+    laneDone: "Completed ('What has been done')",
+    laneInProgress: "In Progress ('In development')",
+    laneToDo: "To Do ('What is left to do')",
+    laneBlocked: "Blocked ('Waiting on STARTTS')",
+    filterBySprint: "Filter by Sprint:",
+    allPhases: "All Sprints",
+    phase1Label: "Sprint 1: Strategy & IA",
+    phase2Label: "Sprint 2: UX/UI Design",
+    phase3Label: "Sprint 3: Bricks Builder Build",
+    phase4Label: "Sprint 4: QA, Accessibility & Launch",
+    etaCommitted: "Committed ETA:",
+    estimatedProgress: "Phase progress:",
+    keyDeliverables: "Key Deliverables for this Sprint:",
+    clientDependency: "STARTTS Internal Dependency:",
+    responsible: "Responsible:",
+    status: "Status:",
+    actions: "Actions",
+    editBtn: "Edit",
+    deleteBtn: "Delete",
+
+    // Scope Reviews
+    scopeTitle: "Get Help, FASSTT National Network & Video Production",
+    scopeSubtitle: "Operational sign-off and scope tracking across critical digital deliverables.",
+    tomorrowAlertTitle: "Tomorrow's Presentation with onmove (Friday 16 Oct)",
+    tomorrowAlertDesc: "Evaluating Figma wireframes (frames 1492-6 and 1853-7561) for the Get Help section and validating mobile-first user flows.",
+    lockedTopics: "Locked Topics (Approved)",
+    lockedTechniques: "Locked Self-Help Techniques (Approved)",
+    pendingFeelings: "8 Emotional States (Awaiting Joshua's Clinical Sign-off)",
+    signoffAsJoshua: "✍️ Sign-off Emotions as Joshua",
+    alreadySignedOff: "✅ Signed-off by Joshua (Clinical Lead)",
+    getHelpRoadmap: "Get Help Step-by-Step Delivery Roadmap & ETAs",
+    aboutUsTitle: "About Us Section Review (Institutional Framework)",
+    aboutUsSubtitle: "Checklist of completed items vs outstanding institutional requirements.",
+    fassttTitle: "FASSTT National Network Partners (Australia-wide Offices)",
+    fassttSubtitle: "National directory so clients outside NSW can find local specialised trauma rehabilitation centres.",
+    allStates: "All States (8)",
+    videosTitle: "Video Content Creation (4 Get Help Techniques + 1 Institutional)",
+    videosSubtitle: "Audio-visual psychoeducation strategy for platform embeds and social media.",
+    starttsPendingTitle: "Deliverables Pending by STARTTS (Owed to onmove)",
+    starttsPendingSubtitle: "Transparent internal commitments to ensure zero deflections or delays attributed to STARTTS."
+  },
+  es: {
+    // Header & Brand
+    missionControl: "Centro de Misión",
+    subAgency: "STARTTS / NSW Health",
+    appTitle: "Witness to War & Violence",
+    appSubtitle: "Centro de Control Digital & Operaciones",
+    roleLabel: "Rol:",
+    roleExecutive: "👑 Vista Ejecutiva (Lachlan)",
+    roleAgency: "🏢 Portal Agencia (onmove)",
+    roleOperations: "👥 Operaciones (Equipo W2W)",
+    roleMedia: "📈 Crecimiento & Redes (Luis)",
+    roleMerch: "📦 Merchandising & Eventos",
+    liveSync: "En Vivo (Sync)",
+    offlineMode: "Modo Local",
+    shareBtn: "Compartir",
+    printBtn: "Imprimir / Reporte PDF",
+    backupBtn: "Exportar JSON",
+    importBtn: "Importar JSON",
+    resetBtn: "Restablecer Datos",
+    searchPlaceholder: "Buscar tarea, entregable, socio...",
+
+    // Navigation Tabs
+    tabRadar: "Radar Estratégico",
+    tabAgency: "Sitio Web & onmove (Sprints)",
+    tabScopeReviews: "Get Help, FASSTT & Videos",
+    tabWorkflow: "Flujo Interno & Cuellos de Botella",
+    tabMedia: "Redes & Telefonía (Meta/Google)",
+    tabMerch: "Merchandising & Gráfica",
+    tabRaci: "Matriz RACI",
+    tabTimeline: "Cronograma & Gantt",
+
+    // Agency & Sprints (Timeframe Builder)
+    agencyTag: "Desarrollo Web & CMS",
+    agencyContracted: "Agencia Contratada:",
+    agencyHeadline: "Seguimiento de Entregables, Sprints y Cronograma Oficial",
+    agencyProposal: "Propuesta aprobada: 165 horas @ $130/h + GST ($21,450 AUD) en WordPress con Bricks Builder para 6 idiomas.",
+    demandTimeframeBtn: "Exigir Timeframe a onmove",
+    openFigmaBtn: "Abrir Figma de onmove",
+    addDeliverableBtn: "➕ Agregar Entregable",
+    exportSprintBtn: "📄 Exportar Sprint a Lachlan",
+    hoursContracted: "Horas Contratadas",
+    fixedRate: "Tarifa fija de $130/hr + GST",
+    webBudget: "Presupuesto Web",
+    budgetExcl: "Excluye hosting y licencias",
+    techStack: "Stack Tecnológico",
+    wcagStandard: "WordPress CMS + WCAG 2.1 AA",
+    managementAlert: "Alerta de Gestión",
+    managementAlertText: "Falta confirmación de fechas de desarrollo para presentar a Lachlan y al Directorio.",
+    allDeliverables: "Todos los Entregables",
+    laneDone: "Completado ('Lo que se hizo')",
+    laneInProgress: "En Desarrollo ('En construcción')",
+    laneToDo: "Por Hacer ('Lo que falta hacer')",
+    laneBlocked: "Bloqueado ('Esperando a STARTTS')",
+    filterBySprint: "Filtrar por Sprint:",
+    allPhases: "Todos los Sprints",
+    phase1Label: "Sprint 1: Estrategia & IA",
+    phase2Label: "Sprint 2: Diseño UX/UI",
+    phase3Label: "Sprint 3: Desarrollo Bricks Builder",
+    phase4Label: "Sprint 4: QA, Accesibilidad & Lanzamiento",
+    etaCommitted: "Fecha Comprometida (ETA):",
+    estimatedProgress: "Progreso estimado:",
+    keyDeliverables: "Entregables Clave de este Sprint:",
+    clientDependency: "Dependencia Interna de STARTTS:",
+    responsible: "Responsable:",
+    status: "Estado:",
+    actions: "Acciones",
+    editBtn: "Editar",
+    deleteBtn: "Eliminar",
+
+    // Scope Reviews
+    scopeTitle: "Get Help, Red Nacional FASSTT y Producción de Videos",
+    scopeSubtitle: "Validación operativa y seguimiento de alcance en entregables digitales críticos.",
+    tomorrowAlertTitle: "Sesión de Wireframes de Mañana con onmove (Viernes 16 Oct)",
+    tomorrowAlertDesc: "Revisar frames 1492-6 y 1853-7561 de Figma para la sección Get Help y validar rutas mobile-first.",
+    lockedTopics: "Temas Aprobados y Cerrados",
+    lockedTechniques: "Técnicas de Autoayuda Aprobadas",
+    pendingFeelings: "8 Emociones / Sentimientos (Pendiente Firma de Joshua)",
+    signoffAsJoshua: "✍️ Firmar Emociones como Joshua",
+    alreadySignedOff: "✅ Firmado clínicamente por Joshua (Líder Clínico)",
+    getHelpRoadmap: "Hoja de Ruta y Fechas de Entrega de Get Help",
+    aboutUsTitle: "Revisión de Sección About Us (Marco Institucional)",
+    aboutUsSubtitle: "Checklist de elementos completados vs requerimientos institucionales pendientes.",
+    fassttTitle: "Socios de la Red Nacional FASSTT (Oficinas en Toda Australia)",
+    fassttSubtitle: "Directorio nacional para que usuarios fuera de NSW ubiquen centros especializados de rehabilitación de trauma.",
+    allStates: "Todos los Estados (8)",
+    videosTitle: "Producción de Videos (4 Get Help + 1 Institucional)",
+    videosSubtitle: "Estrategia psicoeducativa audiovisual para la web y redes sociales.",
+    starttsPendingTitle: "Entregables Pendientes de STARTTS (Hacia la Agencia)",
+    starttsPendingSubtitle: "Compromisos internos transparentes para asegurar cero demoras atribuibles a STARTTS."
+  }
+};
+
 // Estado global de la aplicación
 let AppState = {
   data: null,
   currentRole: "executive", // "executive" | "agency" | "operations" | "media" | "merch"
-  activeTab: "radar",       // "radar" | "agency" | "workflow" | "media" | "merch" | "raci" | "timeline"
+  activeTab: "radar",       // "radar" | "agency" | "scope-reviews" | "workflow" | "media" | "merch" | "raci" | "timeline"
+  lang: localStorage.getItem("wtwv_lang") || "en", // Default: Australian English ("en")
+  agencySprintFilter: "all", // "all" | "completed" | "in_progress" | "todo" | "blocked"
+  agencyPhaseFilter: "all",  // "all" | "p1" | "p2" | "p3" | "p4"
+  fassttFilter: "all",       // "all" | "NSW" | "VIC" | "QLD" | "SA" | "WA" | "TAS" | "NT" | "ACT"
   filters: {
     search: "",
     assignee: "all",
     priority: "all",
     onlyBlocked: false
   },
-  modalOpen: null, // null | "taskModal" | "merchModal" | "emailModal" | "exportModal" | "shareModal"
+  modalOpen: null, // null | "taskModal" | "merchModal" | "emailModal" | "exportModal" | "shareModal" | "deliverableModal"
   isServerSyncActive: false
 };
+
+// Helper de traducción con fallback
+function t(key, fallback = "") {
+  const currentLang = AppState.lang || "en";
+  if (I18N[currentLang] && I18N[currentLang][key]) {
+    return I18N[currentLang][key];
+  }
+  if (I18N.en && I18N.en[key]) {
+    return I18N.en[key];
+  }
+  return fallback || key;
+}
+
+// Cambia el idioma de la aplicación (Australian English principal + Español)
+function setLanguage(lang) {
+  if (lang !== "en" && lang !== "es") lang = "en";
+  AppState.lang = lang;
+  localStorage.setItem("wtwv_lang", lang);
+
+  const langSelector = document.getElementById("languageSelector");
+  if (langSelector) langSelector.value = lang;
+
+  updateI18nStaticUI();
+  renderApp();
+
+  const msg = lang === "en" 
+    ? "Language set to Australian English (AU)" 
+    : "Idioma cambiado a Español";
+  showToast(msg, "info");
+}
+
+// Actualiza textos estáticos en header, pestañas y controles
+function updateI18nStaticUI() {
+  const safeText = (id, text) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  };
+
+  safeText("hdrMissionText", t("missionControl"));
+  safeText("hdrSubAgency", t("subAgency"));
+  safeText("hdrTitle", t("appTitle"));
+  safeText("roleLabelText", t("roleLabel"));
+  safeText("shareBtnText", t("shareBtn"));
+  safeText("syncStatusText", AppState.isServerSyncActive ? t("liveSync") : t("offlineMode"));
+
+  // Pestañas
+  safeText("tabLabelRadar", t("tabRadar"));
+  safeText("tabLabelAgency", t("tabAgency"));
+  safeText("tabLabelScopeReviews", t("tabScopeReviews"));
+  safeText("tabLabelWorkflow", t("tabWorkflow"));
+  safeText("tabLabelMedia", t("tabMedia"));
+  safeText("tabLabelMerch", t("tabMerch"));
+  safeText("tabLabelRaci", t("tabRaci"));
+  safeText("tabLabelTimeline", t("tabTimeline"));
+
+  // Input de búsqueda
+  const searchInput = document.getElementById("globalSearchInput");
+  if (searchInput) {
+    searchInput.placeholder = t("searchPlaceholder");
+  }
+
+  // Opciones de selector de rol
+  const roleSelect = document.getElementById("roleSelector");
+  if (roleSelect) {
+    const options = roleSelect.options;
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].value === "executive") options[i].text = t("roleExecutive");
+      else if (options[i].value === "agency") options[i].text = t("roleAgency");
+      else if (options[i].value === "operations") options[i].text = t("roleOperations");
+      else if (options[i].value === "media") options[i].text = t("roleMedia");
+      else if (options[i].value === "merch") options[i].text = t("roleMerch");
+    }
+  }
+}
 
 // Inicialización de la app
 document.addEventListener("DOMContentLoaded", async () => {
   parseUrlParameters();
   setupEventListeners();
+  updateI18nStaticUI();
   await initAppState();
-  console.log("Witness to War Control Center initialized successfully.");
+  console.log("Witness to War Control Center initialized in " + AppState.lang + " mode.");
 });
 
 /**
- * Lee parámetros de la URL (?role=agency, ?tab=agency) para compartir vistas directas
+ * Lee parámetros de la URL (?role=agency, ?tab=scope-reviews, ?lang=en) para compartir vistas directas
  */
 function parseUrlParameters() {
   try {
     const urlParams = new URLSearchParams(window.location.search);
     const roleParam = urlParams.get('role');
     const tabParam = urlParams.get('tab');
+    const langParam = urlParams.get('lang');
+
+    if (langParam && ["en", "es"].includes(langParam)) {
+      AppState.lang = langParam;
+      localStorage.setItem("wtwv_lang", langParam);
+    }
 
     if (roleParam && ["executive", "agency", "operations", "media", "merch"].includes(roleParam)) {
       AppState.currentRole = roleParam;
     }
     
-    if (tabParam && ["radar", "agency", "workflow", "media", "merch", "raci", "timeline"].includes(tabParam)) {
+    if (tabParam && ["radar", "agency", "scope-reviews", "workflow", "media", "merch", "raci", "timeline"].includes(tabParam)) {
       AppState.activeTab = tabParam;
     } else if (roleParam) {
       if (roleParam === "agency") AppState.activeTab = "agency";
@@ -56,7 +325,7 @@ function parseUrlParameters() {
       else if (roleParam === "executive") AppState.activeTab = "radar";
     }
   } catch (err) {
-    console.warn("Error parseando parámetros URL:", err);
+    console.warn("Error parsing URL parameters:", err);
   }
 }
 
@@ -319,37 +588,62 @@ function renderApp() {
 /**
  * Renderiza métricas rápidas del header
  */
+/**
+ * Renderiza métricas rápidas del header en tema oscuro de alto contraste
+ */
 function renderHeaderMetrics() {
   const container = document.getElementById("headerMetrics");
-  if (!container) return;
+  if (!container || !AppState.data) return;
 
   const data = AppState.data;
-  const totalTasks = data.teamOperations.tasks.length;
-  const blockedTasks = data.teamOperations.tasks.filter(t => t.isBlocked).length;
-  const metaSpent = data.paidMedia.phase1Meta.spentToDate;
-  const metaBudget = data.paidMedia.phase1Meta.totalBudget;
-  const websiteProgress = Math.round(
-    data.agencyRoadmap.phases.reduce((acc, p) => acc + p.progress, 0) / data.agencyRoadmap.phases.length
-  );
+  const totalTasks = data.teamOperations ? data.teamOperations.tasks.length : 0;
+  const blockedTasks = data.teamOperations ? data.teamOperations.tasks.filter(t => t.isBlocked).length : 0;
+  const metaSpent = data.paidMedia ? data.paidMedia.phase1Meta.spentToDate : 0;
+  const metaBudget = data.paidMedia ? data.paidMedia.phase1Meta.totalBudget : 3000;
+  const websiteProgress = data.agencyRoadmap ? Math.round(
+    data.agencyRoadmap.phases.reduce((acc, p) => acc + (p.progress || 0), 0) / data.agencyRoadmap.phases.length
+  ) : 0;
+
+  const isEn = AppState.lang === "en";
 
   container.innerHTML = `
-    <div class="flex items-center gap-3">
-      <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold ${
-        blockedTasks > 0 ? "bg-amber-100 text-amber-800 border border-amber-200" : "bg-emerald-100 text-emerald-800"
+    <div class="flex flex-wrap items-center gap-2.5">
+      <!-- Bottleneck Status -->
+      <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold ${
+        blockedTasks > 0 ? "bg-amber-950/80 text-amber-300 border border-amber-800" : "bg-emerald-950/80 text-emerald-300 border border-emerald-800"
       }">
-        <span class="w-2 h-2 rounded-full ${blockedTasks > 0 ? "bg-amber-500 animate-pulse" : "bg-emerald-500"}"></span>
-        ${blockedTasks > 0 ? `${blockedTasks} Cuellos de Botella` : "Flujo Despejado"}
+        <span class="w-2 h-2 rounded-full ${blockedTasks > 0 ? "bg-amber-400 animate-pulse" : "bg-emerald-400"}"></span>
+        <span>${blockedTasks > 0 ? `${blockedTasks} ${isEn ? "Bottlenecks" : "Cuellos de Botella"}` : (isEn ? "Workflow Clear" : "Flujo Despejado")}</span>
       </div>
 
-      <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
-        <span class="text-slate-400">Sitio Web:</span>
-        <span class="font-bold text-slate-900">${websiteProgress}%</span>
+      <!-- Website Progress -->
+      <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800/90 text-slate-300 border border-slate-700">
+        <span class="text-slate-400">${isEn ? "Website Sprints:" : "Sitio Web:"}</span>
+        <span class="font-bold text-[#96EE89]">${websiteProgress}%</span>
       </div>
 
-      <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
+      <!-- Meta Ads Spent -->
+      <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800/90 text-slate-300 border border-slate-700">
         <span class="text-slate-400">Meta Ads:</span>
-        <span class="font-bold text-slate-900">$${metaSpent.toFixed(0)} / $${metaBudget}</span>
+        <span class="font-bold text-white">$${metaSpent.toFixed(0)} / $${metaBudget} AUD</span>
       </div>
+
+      <!-- Languages -->
+      <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800/90 text-slate-300 border border-slate-700">
+        <span class="text-slate-400">${isEn ? "Languages:" : "Idiomas:"}</span>
+        <span class="font-bold text-slate-200">6 (EN, AR, FA, DA, UK, HE)</span>
+      </div>
+    </div>
+
+    <!-- Próximo Hito Crítico: Mañana Viernes 16 Octubre -->
+    <div class="flex items-center gap-2">
+      <button onclick="setActiveTab('scope-reviews')" class="flex items-center gap-1.5 px-2.5 py-1 bg-purple-950/90 hover:bg-purple-900 text-purple-200 border border-purple-800 rounded-lg text-xs font-bold transition-all">
+        <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
+        <span>${isEn ? "📅 Fri 16 Oct: onmove Wireframes Session" : "📅 Viernes 16 Oct: Wireframes onmove"}</span>
+        <svg class="w-3.5 h-3.5 text-purple-300 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
     </div>
   `;
 }
@@ -367,6 +661,9 @@ function renderCurrentTab() {
       break;
     case "agency":
       mainContent.innerHTML = renderAgencyView();
+      break;
+    case "scope-reviews":
+      mainContent.innerHTML = renderScopeReviewsView();
       break;
     case "workflow":
       mainContent.innerHTML = renderWorkflowView();
@@ -389,6 +686,13 @@ function renderCurrentTab() {
 
   // Refrescar listeners de la vista recién inyectada
   attachTabSpecificListeners();
+}
+
+/**
+ * Listeners específicos para vistas inyectadas
+ */
+function attachTabSpecificListeners() {
+  // Manejador opcional para inicializar interactividad específica
 }
 
 // =========================================================================
@@ -632,81 +936,306 @@ function renderRadarView() {
 }
 
 // =========================================================================
-// MÓDULO 2: AGENCIA WEB (onmove) - ROADMAP, TIMEFRAMES Y SEGUIMIENTO
+// MÓDULO 2: AGENCIA WEB (onmove) - ROADMAP, TIMEFRAMES Y SPRINT BUILDER
 // =========================================================================
 function renderAgencyView() {
   const agency = AppState.data.agencyRoadmap;
+  const isEn = AppState.lang === "en";
+
+  // Recopilar todos los entregables con su índice de fase
+  let allDeliverables = [];
+  agency.phases.forEach((phase, pIdx) => {
+    (phase.deliverables || []).forEach((del, dIdx) => {
+      allDeliverables.push({
+        ...del,
+        phaseIdx: pIdx,
+        delIdx: dIdx,
+        phaseName: phase.name,
+        phaseId: phase.id,
+        owner: del.owner || (pIdx === 0 ? "onmove / Luis" : pIdx === 1 ? "onmove UX/Design" : pIdx === 2 ? "onmove Dev Lead" : "onmove / STARTTS")
+      });
+    });
+  });
+
+  // Conteo de estados
+  const completedCount = allDeliverables.filter(d => d.status === "completed").length;
+  const inProgressCount = allDeliverables.filter(d => d.status === "in_progress" || d.status === "in_review").length;
+  const todoCount = allDeliverables.filter(d => d.status === "pending" || d.status === "todo").length;
+  const blockedCount = allDeliverables.filter(d => d.status === "blocked" || d.status === "attention").length;
+
+  // Filtrar según selección activa
+  let filteredDeliverables = allDeliverables;
+  if (AppState.agencySprintFilter === "completed") {
+    filteredDeliverables = filteredDeliverables.filter(d => d.status === "completed");
+  } else if (AppState.agencySprintFilter === "in_progress") {
+    filteredDeliverables = filteredDeliverables.filter(d => d.status === "in_progress" || d.status === "in_review");
+  } else if (AppState.agencySprintFilter === "todo") {
+    filteredDeliverables = filteredDeliverables.filter(d => d.status === "pending" || d.status === "todo");
+  } else if (AppState.agencySprintFilter === "blocked") {
+    filteredDeliverables = filteredDeliverables.filter(d => d.status === "blocked" || d.status === "attention");
+  }
+
+  // Filtrar por Sprint / Fase si no es "all"
+  if (AppState.agencyPhaseFilter && AppState.agencyPhaseFilter !== "all") {
+    filteredDeliverables = filteredDeliverables.filter(d => d.phaseId === AppState.agencyPhaseFilter);
+  }
 
   return `
     <div class="space-y-6 animate-fadeIn">
-      <!-- Header de la Agencia y Solución al Problema del Timeframe -->
+      <!-- Header de la Agencia y Resumen de Contrato -->
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
           <div>
             <div class="flex items-center gap-3">
               <span class="px-3 py-1 bg-slate-900 text-[#96EE89] rounded-lg text-xs font-bold uppercase tracking-wider">
-                Desarrollo Web & CMS
+                ${t("agencyTag")}
               </span>
-              <span class="text-xs text-slate-500">Agencia Contratada: <strong>${agency.agencyName}</strong> (${agency.website})</span>
+              <span class="text-xs text-slate-500">${t("agencyContracted")} <strong>${agency.agencyName}</strong> (${agency.website})</span>
             </div>
-            <h2 class="text-2xl font-bold text-[#323B3F] mt-2">Seguimiento de Entregables, Horas & Cronograma Oficial</h2>
+            <h2 class="text-2xl font-bold text-[#323B3F] mt-2">${t("agencyHeadline")}</h2>
             <p class="text-sm text-slate-600 mt-1">
-              Propuesta aprobada: <strong>165 horas @ $130/h + GST ($21,450 AUD)</strong> en WordPress con Bricks Builder para 6 idiomas.
+              ${t("agencyProposal")}
             </p>
           </div>
 
           <div class="flex flex-wrap items-center gap-2">
-            <button onclick="openEmailModal('act-1')" class="px-4 py-2.5 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] text-xs font-bold rounded-xl shadow flex items-center gap-2 transition-all">
+            <button onclick="openAddDeliverableModal(0)" class="px-3.5 py-2.5 bg-[#96EE89] hover:bg-[#82d675] text-[#323B3F] text-xs font-extrabold rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+              </svg>
+              <span>${t("addDeliverableBtn")}</span>
+            </button>
+
+            <button onclick="exportAgencySprintToLachlan()" class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-all" title="Copy formatted sprint schedule for Lachlan">
+              <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+              </svg>
+              <span>${t("exportSprintBtn")}</span>
+            </button>
+
+            <button onclick="openEmailModal('act-1')" class="px-3.5 py-2.5 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] text-xs font-bold rounded-xl shadow flex items-center gap-1.5 transition-all">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
-              Exigir Timeframe a onmove
+              <span>${t("demandTimeframeBtn")}</span>
             </button>
 
             <a href="https://www.figma.com/design/LH0VieeERNHhgVh4La9TtB/Witness-to-war" target="_blank" 
-               class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl flex items-center gap-2 transition-all">
+               class="px-3.5 py-2.5 bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-all">
               <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
               </svg>
-              Abrir Figma de onmove
+              <span>${t("openFigmaBtn")}</span>
             </a>
           </div>
         </div>
 
         <!-- Tarjetas de Información Clave sobre la Agencia -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6">
           <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <span class="text-xs font-bold text-slate-500 uppercase">Horas Contratadas</span>
+            <span class="text-xs font-bold text-slate-500 uppercase">${t("hoursContracted")}</span>
             <div class="text-2xl font-black text-[#323B3F] mt-1">${agency.totalHours} hrs</div>
-            <span class="text-[11px] text-slate-500">Tarifa fija de $130/hr + GST</span>
+            <span class="text-[11px] text-slate-500">${t("fixedRate")}</span>
           </div>
 
           <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <span class="text-xs font-bold text-slate-500 uppercase">Presupuesto Web</span>
+            <span class="text-xs font-bold text-slate-500 uppercase">${t("webBudget")}</span>
             <div class="text-2xl font-black text-[#323B3F] mt-1">$${agency.totalBudgetExGst.toLocaleString()} AUD</div>
-            <span class="text-[11px] text-slate-500">Excluye licencias y hosting</span>
+            <span class="text-[11px] text-slate-500">${t("budgetExcl")}</span>
           </div>
 
           <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <span class="text-xs font-bold text-slate-500 uppercase">Stack Tecnológico</span>
-            <div class="text-base font-bold text-slate-800 mt-1">Bricks Builder</div>
-            <span class="text-[11px] text-slate-500">WordPress CMS + WCAG 2.1 AA</span>
+            <span class="text-xs font-bold text-slate-500 uppercase">${t("techStack")}</span>
+            <div class="text-base font-bold text-slate-800 mt-1">${agency.platform}</div>
+            <span class="text-[11px] text-slate-500">${t("wcagStandard")}</span>
           </div>
 
           <div class="p-4 bg-amber-50 rounded-xl border border-amber-200">
             <span class="text-xs font-bold text-amber-800 uppercase flex items-center gap-1">
               <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-              Alerta de Gestión
+              ${t("managementAlert")}
             </span>
             <div class="text-xs font-semibold text-amber-900 mt-1 leading-snug">
-              Falta confirmación de fechas de desarrollo para presentar a Lachlan.
+              ${t("managementAlertText")}
             </div>
           </div>
         </div>
       </div>
 
-      <!-- FASES DEL PROYECTO WEB CON EDICIÓN DIRECTA DE FECHAS (ETAs) -->
+      <!-- MOTOR INTERACTIVO DE TIMEFRAMES: FILTROS DE ESTADO & SPRINT BUILDER -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 border-b border-slate-100">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <h3 class="text-lg font-bold text-[#323B3F]">
+                ${isEn ? "Interactive Sprint & Timeframe Board" : "Tablero Interactivo de Sprints & Timeframe"}
+              </h3>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">
+              ${isEn ? "onmove and STARTTS team can edit status, commitment dates, and owners directly." : "onmove y el equipo de STARTTS pueden editar estados, fechas y responsables directamente."}
+            </p>
+          </div>
+
+          <!-- Selector de Sprint / Fase -->
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs font-semibold text-slate-500">${t("filterBySprint")}</span>
+            <select onchange="setAgencyPhaseFilter(this.value)" class="text-xs font-bold text-slate-800 bg-slate-100 border border-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-[#96EE89]">
+              <option value="all" ${AppState.agencyPhaseFilter === "all" ? "selected" : ""}>${t("allPhases")}</option>
+              <option value="p1" ${AppState.agencyPhaseFilter === "p1" ? "selected" : ""}>${t("phase1Label")}</option>
+              <option value="p2" ${AppState.agencyPhaseFilter === "p2" ? "selected" : ""}>${t("phase2Label")}</option>
+              <option value="p3" ${AppState.agencyPhaseFilter === "p3" ? "selected" : ""}>${t("phase3Label")}</option>
+              <option value="p4" ${AppState.agencyPhaseFilter === "p4" ? "selected" : ""}>${t("phase4Label")}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Botones de Filtrado Rápido por Estado (Lo que se hizo, En desarrollo, Lo que falta, Bloqueado) -->
+        <div class="flex flex-wrap items-center gap-2 pt-4 pb-4">
+          <button onclick="setAgencySprintFilter('all')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+            AppState.agencySprintFilter === 'all' ? 'bg-[#323B3F] text-[#96EE89] shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+          }">
+            ${t("allDeliverables")} (${allDeliverables.length})
+          </button>
+          
+          <button onclick="setAgencySprintFilter('completed')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+            AppState.agencySprintFilter === 'completed' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
+          }">
+            <span>✓</span>
+            <span>${t("laneDone")} (${completedCount})</span>
+          </button>
+
+          <button onclick="setAgencySprintFilter('in_progress')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+            AppState.agencySprintFilter === 'in_progress' ? 'bg-blue-600 text-white shadow-sm' : 'bg-blue-50 text-blue-800 hover:bg-blue-100'
+          }">
+            <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+            <span>${t("laneInProgress")} (${inProgressCount})</span>
+          </button>
+
+          <button onclick="setAgencySprintFilter('todo')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+            AppState.agencySprintFilter === 'todo' ? 'bg-slate-700 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+          }">
+            <span>⏱</span>
+            <span>${t("laneToDo")} (${todoCount})</span>
+          </button>
+
+          <button onclick="setAgencySprintFilter('blocked')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+            AppState.agencySprintFilter === 'blocked' ? 'bg-amber-600 text-white shadow-sm' : 'bg-amber-50 text-amber-800 hover:bg-amber-100'
+          }">
+            <span>⚠️</span>
+            <span>${t("laneBlocked")} (${blockedCount})</span>
+          </button>
+        </div>
+
+        <!-- LISTA / TABLA INTERACTIVA DE ENTREGABLES EDITABLES -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-700">
+            <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[11px] border-y border-slate-200">
+              <tr>
+                <th class="py-3 px-3 w-10">#</th>
+                <th class="py-3 px-3">${isEn ? "Deliverable & Scope" : "Entregable & Alcance"}</th>
+                <th class="py-3 px-3">${isEn ? "Sprint / Phase" : "Sprint / Fase"}</th>
+                <th class="py-3 px-3">${t("responsible")}</th>
+                <th class="py-3 px-3">${t("status")}</th>
+                <th class="py-3 px-3">${t("etaCommitted")}</th>
+                <th class="py-3 px-3 text-right">${t("actions")}</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              ${filteredDeliverables.length === 0 ? `
+                <tr>
+                  <td colspan="7" class="py-8 text-center text-slate-400 font-medium">
+                    ${isEn ? "No deliverables match this filter." : "No hay entregables que coincidan con este filtro."}
+                  </td>
+                </tr>
+              ` : filteredDeliverables.map((item, idx) => `
+                <tr class="hover:bg-slate-50/80 transition-colors">
+                  <td class="py-3 px-3 text-slate-400 font-bold">${idx + 1}</td>
+                  
+                  <!-- Nombre y notas del entregable -->
+                  <td class="py-3 px-3">
+                    <div class="font-bold text-slate-900 ${item.status === 'completed' ? 'line-through text-slate-400' : ''}">
+                      ${item.name}
+                    </div>
+                    ${item.note ? `<div class="text-[11px] text-slate-500 mt-0.5">${item.note}</div>` : ''}
+                  </td>
+
+                  <!-- Sprint / Fase -->
+                  <td class="py-3 px-3">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700 whitespace-nowrap">
+                      ${item.phaseName.split(':')[0]}
+                    </span>
+                  </td>
+
+                  <!-- Responsable Asignado (Editable inline) -->
+                  <td class="py-3 px-3">
+                    <select onchange="updateDeliverableOwner(${item.phaseIdx}, ${item.delIdx}, this.value)" 
+                            class="text-xs font-semibold bg-white border border-slate-200 rounded-lg px-2 py-1 text-slate-800 focus:ring-1 focus:ring-[#96EE89]">
+                      <option value="onmove Dev Lead" ${item.owner.includes("Dev") ? "selected" : ""}>🏢 onmove Dev Lead</option>
+                      <option value="onmove UX/Design" ${item.owner.includes("UX") || item.owner.includes("Design") ? "selected" : ""}>🎨 onmove UX/Design</option>
+                      <option value="Luis Rastelli (WTWV)" ${item.owner.includes("Luis") ? "selected" : ""}>👤 Luis Rastelli (WTWV Lead)</option>
+                      <option value="Joshua (Clinical Lead)" ${item.owner.includes("Joshua") ? "selected" : ""}>🩺 Joshua (Clinical Lead)</option>
+                      <option value="Lachlan (Area Lead)" ${item.owner.includes("Lachlan") ? "selected" : ""}>👑 Lachlan (Area Lead)</option>
+                      <option value="Yassmen (Translations)" ${item.owner.includes("Yassmen") ? "selected" : ""}>🌐 Yassmen (Translations)</option>
+                    </select>
+                  </td>
+
+                  <!-- Estado del Entregable (Dropdown Editable) -->
+                  <td class="py-3 px-3">
+                    <select onchange="updateDeliverableStatus(${item.phaseIdx}, ${item.delIdx}, this.value)"
+                            class="text-xs font-bold rounded-lg px-2.5 py-1 border focus:ring-2 focus:ring-[#96EE89] cursor-pointer ${
+                              item.status === 'completed' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' :
+                              item.status === 'in_progress' || item.status === 'in_review' ? 'bg-blue-50 text-blue-800 border-blue-200' :
+                              item.status === 'blocked' || item.status === 'attention' ? 'bg-amber-50 text-amber-800 border-amber-200' :
+                              'bg-slate-100 text-slate-700 border-slate-200'
+                            }">
+                      <option value="completed" ${item.status === 'completed' ? 'selected' : ''}>✓ ${isEn ? "Done" : "Completado"}</option>
+                      <option value="in_progress" ${item.status === 'in_progress' || item.status === 'in_review' ? 'selected' : ''}>🔄 ${isEn ? "In Progress" : "En Desarrollo"}</option>
+                      <option value="pending" ${item.status === 'pending' || item.status === 'todo' ? 'selected' : ''}>⏱ ${isEn ? "To Do" : "Por Hacer"}</option>
+                      <option value="blocked" ${item.status === 'blocked' || item.status === 'attention' ? 'selected' : ''}>⚠️ ${isEn ? "Blocked" : "Bloqueado"}</option>
+                    </select>
+                  </td>
+
+                  <!-- Fecha Comprometida / ETA (Editable) -->
+                  <td class="py-3 px-3">
+                    <input type="text" 
+                           value="${item.date || 'TBD'}" 
+                           onchange="updateDeliverableDate(${item.phaseIdx}, ${item.delIdx}, this.value)"
+                           placeholder="YYYY-MM-DD"
+                           class="w-28 text-xs font-bold bg-white border border-slate-300 rounded px-2 py-1 text-slate-800 focus:ring-2 focus:ring-[#96EE89]" />
+                  </td>
+
+                  <!-- Acciones (Editar / Eliminar) -->
+                  <td class="py-3 px-3 text-right whitespace-nowrap">
+                    <button onclick="openEditDeliverableModal(${item.phaseIdx}, ${item.delIdx})" 
+                            class="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors" title="${t('editBtn')}">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                      </svg>
+                    </button>
+                    <button onclick="deleteDeliverable(${item.phaseIdx}, ${item.delIdx})" 
+                            class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="${t('deleteBtn')}">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DESGLOSE POR FASE CON BARRAS DE PROGRESO Y DEPENDENCIAS STARTTS -->
       <div class="space-y-6">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-bold text-[#323B3F]">
+            ${isEn ? "Detailed Sprint Phases & Agency Delivery Timeline" : "Fases Detalladas de Sprint y Cronograma Oficial"}
+          </h3>
+          <span class="text-xs text-slate-500">${agency.phases.length} ${isEn ? "Phases Contracted" : "Fases Contratadas"}</span>
+        </div>
+
         ${agency.phases.map((phase, pIdx) => `
           <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 hover:border-slate-300 transition-all">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 border-b border-slate-100">
@@ -717,22 +1246,22 @@ function renderAgencyView() {
                     phase.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
                     phase.status === 'attention' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'
                   }">
-                    ${phase.status === 'completed' ? 'Completada' :
-                      phase.status === 'in_progress' ? 'En Curso' :
-                      phase.status === 'attention' ? 'Requiere Atención' : 'Pendiente de Fechas'}
+                    ${phase.status === 'completed' ? (isEn ? 'Completed' : 'Completada') :
+                      phase.status === 'in_progress' ? (isEn ? 'In Progress' : 'En Curso') :
+                      phase.status === 'attention' ? (isEn ? 'Needs Attention' : 'Requiere Atención') : (isEn ? 'Pending ETA' : 'Pendiente de Fechas')}
                   </span>
-                  <span class="text-xs text-slate-400 font-medium">${phase.hours} Horas | $${phase.budget.toLocaleString()} AUD</span>
+                  <span class="text-xs text-slate-400 font-medium">${phase.hours} ${isEn ? 'Hours' : 'Horas'} | $${phase.budget.toLocaleString()} AUD</span>
                 </div>
                 <h3 class="text-lg font-bold text-[#323B3F] mt-1">${phase.name}</h3>
               </div>
 
-              <!-- Input editable para la fecha comprometida (ETA) -->
+              <!-- Input editable para la fecha comprometida (ETA) de la fase -->
               <div class="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
-                <span class="text-xs font-bold text-slate-600">Fecha Comprometida (ETA):</span>
+                <span class="text-xs font-bold text-slate-600">${t("etaCommitted")}</span>
                 <input type="text" 
                        value="${phase.eta}" 
                        onchange="updatePhaseEta(${pIdx}, this.value)" 
-                       class="text-xs font-bold text-slate-900 bg-white border border-slate-300 rounded px-2 py-1 w-32 focus:outline-none focus:ring-2 focus:ring-[#96EE89]"
+                       class="text-xs font-bold text-slate-900 bg-white border border-slate-300 rounded px-2 py-1 w-36 focus:outline-none focus:ring-2 focus:ring-[#96EE89]"
                        placeholder="YYYY-MM-DD o TBD" />
               </div>
             </div>
@@ -740,7 +1269,7 @@ function renderAgencyView() {
             <!-- Barra de Progreso de la Fase -->
             <div class="my-4">
               <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
-                <span>Progreso estimado de esta fase:</span>
+                <span>${t("estimatedProgress")}</span>
                 <span class="font-bold text-slate-800">${phase.progress}%</span>
               </div>
               <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
@@ -754,10 +1283,16 @@ function renderAgencyView() {
 
             <!-- Lista de Entregables de la Fase -->
             <div class="mt-4">
-              <h5 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Entregables Clave de esta fase:</h5>
+              <div class="flex items-center justify-between mb-2">
+                <h5 class="text-xs font-bold text-slate-500 uppercase tracking-wider">${t("keyDeliverables")}</h5>
+                <button onclick="openAddDeliverableModal(${pIdx})" class="text-xs font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1">
+                  <span>+</span> ${isEn ? "Add item to this phase" : "Agregar entregable a esta fase"}
+                </button>
+              </div>
+
               <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                ${phase.deliverables.map((del, dIdx) => `
-                  <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-start justify-between gap-2">
+                ${(phase.deliverables || []).map((del, dIdx) => `
+                  <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-start justify-between gap-2 hover:border-slate-200 transition-all">
                     <div class="flex items-start gap-2">
                       <input type="checkbox" 
                              ${del.status === 'completed' ? 'checked' : ''} 
@@ -770,7 +1305,12 @@ function renderAgencyView() {
                         ${del.note ? `<p class="text-[11px] text-slate-500 mt-0.5">${del.note}</p>` : ''}
                       </div>
                     </div>
-                    <span class="text-[10px] font-bold text-slate-400 whitespace-nowrap">${del.date || 'TBD'}</span>
+                    <div class="text-right">
+                      <span class="text-[10px] font-bold text-slate-500 whitespace-nowrap">${del.date || 'TBD'}</span>
+                      <div class="flex items-center justify-end gap-1 mt-1">
+                        <button onclick="openEditDeliverableModal(${pIdx}, ${dIdx})" class="text-[10px] text-slate-400 hover:text-slate-700 font-semibold underline">Edit</button>
+                      </div>
+                    </div>
                   </div>
                 `).join('')}
               </div>
@@ -778,12 +1318,12 @@ function renderAgencyView() {
 
             <!-- Dependencia de STARTTS (Qué nos pide la agencia a nosotros) -->
             ${phase.clientDependencies ? `
-              <div class="mt-4 p-3 bg-blue-50/60 rounded-xl border border-blue-100 flex items-start gap-2 text-xs text-blue-900">
+              <div class="mt-4 p-3 bg-blue-50/70 rounded-xl border border-blue-100 flex items-start gap-2 text-xs text-blue-900">
                 <svg class="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 <div>
-                  <strong>Dependencia interna de STARTTS:</strong> ${phase.clientDependencies}
+                  <strong>${t("clientDependency")}</strong> ${phase.clientDependencies}
                 </div>
               </div>
             ` : ''}
@@ -795,9 +1335,67 @@ function renderAgencyView() {
   `;
 }
 
-/**
- * Actualiza la fecha comprometida (ETA) de una fase
- */
+// Handlers para filtros y acciones de Sprint
+function setAgencySprintFilter(filter) {
+  AppState.agencySprintFilter = filter;
+  renderAgencyView();
+}
+
+function setAgencyPhaseFilter(phaseId) {
+  AppState.agencyPhaseFilter = phaseId;
+  renderAgencyView();
+}
+
+function updateDeliverableStatus(phaseIdx, delIdx, newStatus) {
+  const phase = AppState.data.agencyRoadmap.phases[phaseIdx];
+  if (phase && phase.deliverables[delIdx]) {
+    phase.deliverables[delIdx].status = newStatus;
+    
+    // Recalcular progreso de la fase
+    const completedCount = phase.deliverables.filter(d => d.status === "completed").length;
+    phase.progress = Math.round((completedCount / phase.deliverables.length) * 100);
+
+    saveAppState();
+    renderAgencyView();
+    showToast(AppState.lang === "en" ? "Deliverable status updated" : "Estado del entregable actualizado", "success");
+  }
+}
+
+function updateDeliverableDate(phaseIdx, delIdx, newDate) {
+  const phase = AppState.data.agencyRoadmap.phases[phaseIdx];
+  if (phase && phase.deliverables[delIdx]) {
+    phase.deliverables[delIdx].date = newDate;
+    saveAppState();
+    showToast(AppState.lang === "en" ? "ETA date updated" : "Fecha comprometida actualizada", "success");
+  }
+}
+
+function updateDeliverableOwner(phaseIdx, delIdx, newOwner) {
+  const phase = AppState.data.agencyRoadmap.phases[phaseIdx];
+  if (phase && phase.deliverables[delIdx]) {
+    phase.deliverables[delIdx].owner = newOwner;
+    saveAppState();
+    showToast(AppState.lang === "en" ? "Responsible owner updated" : "Responsable actualizado", "success");
+  }
+}
+
+function deleteDeliverable(phaseIdx, delIdx) {
+  const phase = AppState.data.agencyRoadmap.phases[phaseIdx];
+  if (phase && phase.deliverables[delIdx]) {
+    const confirmMsg = AppState.lang === "en" 
+      ? `Delete deliverable "${phase.deliverables[delIdx].name}"?` 
+      : `¿Eliminar entregable "${phase.deliverables[delIdx].name}"?`;
+    if (confirm(confirmMsg)) {
+      phase.deliverables.splice(delIdx, 1);
+      const completedCount = phase.deliverables.filter(d => d.status === "completed").length;
+      phase.progress = phase.deliverables.length > 0 ? Math.round((completedCount / phase.deliverables.length) * 100) : 0;
+      saveAppState();
+      renderAgencyView();
+      showToast(AppState.lang === "en" ? "Deliverable deleted" : "Entregable eliminado", "info");
+    }
+  }
+}
+
 function updatePhaseEta(phaseIndex, newEta) {
   if (AppState.data.agencyRoadmap.phases[phaseIndex]) {
     AppState.data.agencyRoadmap.phases[phaseIndex].eta = newEta;
@@ -806,22 +1404,732 @@ function updatePhaseEta(phaseIndex, newEta) {
   }
 }
 
-/**
- * Marca o desmarca un entregable de la agencia
- */
 function toggleDeliverableStatus(phaseIndex, deliverableIndex) {
   const phase = AppState.data.agencyRoadmap.phases[phaseIndex];
   if (phase && phase.deliverables[deliverableIndex]) {
     const current = phase.deliverables[deliverableIndex].status;
     phase.deliverables[deliverableIndex].status = current === "completed" ? "pending" : "completed";
     
-    // Recalcular progreso
     const completedCount = phase.deliverables.filter(d => d.status === "completed").length;
     phase.progress = Math.round((completedCount / phase.deliverables.length) * 100);
 
     saveAppState();
     renderAgencyView();
-    showToast("Estado del entregable actualizado", "success");
+    showToast(AppState.lang === "en" ? "Deliverable status updated" : "Estado del entregable actualizado", "success");
+  }
+}
+
+// Modal para agregar nuevo entregable
+function openAddDeliverableModal(preselectedPhaseIdx = 0) {
+  const isEn = AppState.lang === "en";
+  const modalContainer = document.getElementById("modalContainer");
+  if (!modalContainer) return;
+
+  AppState.modalOpen = "deliverableModal";
+
+  modalContainer.innerHTML = `
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-scaleUp">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#96EE89]"></span>
+            <h3 class="text-lg font-bold text-[#323B3F]">
+              ${isEn ? "Add New Deliverable / Sprint Item" : "Agregar Nuevo Entregable / Tarea de Sprint"}
+            </h3>
+          </div>
+          <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700 font-bold text-lg">&times;</button>
+        </div>
+
+        <form id="addDeliverableForm" onsubmit="handleAddDeliverableSubmit(event)" class="space-y-4 pt-4 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">${isEn ? "Deliverable Title" : "Título del Entregable"}:</label>
+            <input type="text" id="newDelName" required placeholder="${isEn ? 'e.g. Implement RTL styling for Arabic & Hebrew' : 'Ej: Implementar estilos RTL para Árabe y Hebreo'}"
+                   class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-medium text-slate-900 focus:ring-2 focus:ring-[#96EE89]" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">${isEn ? "Phase / Sprint" : "Fase / Sprint"}:</label>
+              <select id="newDelPhase" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-medium text-slate-800">
+                ${AppState.data.agencyRoadmap.phases.map((p, idx) => `
+                  <option value="${idx}" ${idx === preselectedPhaseIdx ? 'selected' : ''}>${p.name.split(':')[0]}</option>
+                `).join('')}
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">${t("responsible")}:</label>
+              <select id="newDelOwner" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-medium text-slate-800">
+                <option value="onmove Dev Lead">🏢 onmove Dev Lead</option>
+                <option value="onmove UX/Design">🎨 onmove UX/Design</option>
+                <option value="Luis Rastelli (WTWV)">👤 Luis Rastelli (WTWV Lead)</option>
+                <option value="Joshua (Clinical Lead)">🩺 Joshua (Clinical Lead)</option>
+                <option value="Lachlan (Area Lead)">👑 Lachlan (Area Lead)</option>
+                <option value="Yassmen (Translations)">🌐 Yassmen (Translations)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">${t("etaCommitted")}:</label>
+              <input type="date" id="newDelDate" value="2026-11-15"
+                     class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-medium text-slate-800" />
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">${t("status")}:</label>
+              <select id="newDelStatus" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-medium text-slate-800">
+                <option value="pending">${isEn ? "To Do" : "Por Hacer"}</option>
+                <option value="in_progress">${isEn ? "In Progress" : "En Desarrollo"}</option>
+                <option value="completed">${isEn ? "Completed" : "Completado"}</option>
+                <option value="blocked">${isEn ? "Blocked" : "Bloqueado"}</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">${isEn ? "Notes or Dependencies" : "Notas o Dependencias"}:</label>
+            <input type="text" id="newDelNote" placeholder="${isEn ? 'e.g. Depends on translated copy from Yassmen' : 'Ej: Requiere textos traducidos de Yassmen'}"
+                   class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-medium text-slate-800" />
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold">
+              ${isEn ? "Cancel" : "Cancelar"}
+            </button>
+            <button type="submit" class="px-4 py-2 bg-[#96EE89] hover:bg-[#82d675] text-[#323B3F] rounded-xl font-extrabold shadow">
+              ${isEn ? "Save Deliverable" : "Guardar Entregable"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+}
+
+function handleAddDeliverableSubmit(e) {
+  e.preventDefault();
+  const phaseIdx = parseInt(document.getElementById("newDelPhase").value, 10);
+  const name = document.getElementById("newDelName").value;
+  const owner = document.getElementById("newDelOwner").value;
+  const date = document.getElementById("newDelDate").value;
+  const status = document.getElementById("newDelStatus").value;
+  const note = document.getElementById("newDelNote").value;
+
+  const phase = AppState.data.agencyRoadmap.phases[phaseIdx];
+  if (phase) {
+    if (!phase.deliverables) phase.deliverables = [];
+    phase.deliverables.push({ name, owner, date, status, note });
+
+    const completedCount = phase.deliverables.filter(d => d.status === "completed").length;
+    phase.progress = Math.round((completedCount / phase.deliverables.length) * 100);
+
+    saveAppState();
+    closeModal();
+    renderAgencyView();
+    showToast(AppState.lang === "en" ? "Deliverable added to sprint" : "Entregable agregado al sprint", "success");
+  }
+}
+
+// Modal para editar entregable existente
+function openEditDeliverableModal(phaseIdx, delIdx) {
+  const isEn = AppState.lang === "en";
+  const modalContainer = document.getElementById("modalContainer");
+  if (!modalContainer) return;
+
+  const phase = AppState.data.agencyRoadmap.phases[phaseIdx];
+  if (!phase || !phase.deliverables[delIdx]) return;
+  const del = phase.deliverables[delIdx];
+
+  AppState.modalOpen = "deliverableModal";
+
+  modalContainer.innerHTML = `
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-scaleUp">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+            <h3 class="text-lg font-bold text-[#323B3F]">
+              ${isEn ? "Edit Deliverable / Timeframe" : "Editar Entregable / Plazo"}
+            </h3>
+          </div>
+          <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700 font-bold text-lg">&times;</button>
+        </div>
+
+        <form id="editDeliverableForm" onsubmit="handleEditDeliverableSubmit(event, ${phaseIdx}, ${delIdx})" class="space-y-4 pt-4 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">${isEn ? "Deliverable Title" : "Título del Entregable"}:</label>
+            <input type="text" id="editDelName" required value="${del.name.replace(/"/g, '&quot;')}"
+                   class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-medium text-slate-900 focus:ring-2 focus:ring-[#96EE89]" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">${t("responsible")}:</label>
+              <select id="editDelOwner" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-medium text-slate-800">
+                <option value="onmove Dev Lead" ${(del.owner || '').includes("Dev") ? "selected" : ""}>🏢 onmove Dev Lead</option>
+                <option value="onmove UX/Design" ${(del.owner || '').includes("UX") || (del.owner || '').includes("Design") ? "selected" : ""}>🎨 onmove UX/Design</option>
+                <option value="Luis Rastelli (WTWV)" ${(del.owner || '').includes("Luis") ? "selected" : ""}>👤 Luis Rastelli (WTWV Lead)</option>
+                <option value="Joshua (Clinical Lead)" ${(del.owner || '').includes("Joshua") ? "selected" : ""}>🩺 Joshua (Clinical Lead)</option>
+                <option value="Lachlan (Area Lead)" ${(del.owner || '').includes("Lachlan") ? "selected" : ""}>👑 Lachlan (Area Lead)</option>
+                <option value="Yassmen (Translations)" ${(del.owner || '').includes("Yassmen") ? "selected" : ""}>🌐 Yassmen (Translations)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">${t("status")}:</label>
+              <select id="editDelStatus" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-medium text-slate-800">
+                <option value="pending" ${del.status === 'pending' || del.status === 'todo' ? 'selected' : ''}>${isEn ? "To Do" : "Por Hacer"}</option>
+                <option value="in_progress" ${del.status === 'in_progress' || del.status === 'in_review' ? 'selected' : ''}>${isEn ? "In Progress" : "En Desarrollo"}</option>
+                <option value="completed" ${del.status === 'completed' ? 'selected' : ''}>${isEn ? "Completed" : "Completado"}</option>
+                <option value="blocked" ${del.status === 'blocked' || del.status === 'attention' ? 'selected' : ''}>${isEn ? "Blocked" : "Bloqueado"}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">${t("etaCommitted")}:</label>
+              <input type="text" id="editDelDate" value="${del.date || ''}" placeholder="YYYY-MM-DD"
+                     class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-medium text-slate-800" />
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">${isEn ? "Notes or Dependencies" : "Notas o Dependencias"}:</label>
+              <input type="text" id="editDelNote" value="${(del.note || '').replace(/"/g, '&quot;')}"
+                     class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 font-medium text-slate-800" />
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold">
+              ${isEn ? "Cancel" : "Cancelar"}
+            </button>
+            <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow">
+              ${isEn ? "Update Deliverable" : "Actualizar Entregable"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+}
+
+function handleEditDeliverableSubmit(e, phaseIdx, delIdx) {
+  e.preventDefault();
+  const phase = AppState.data.agencyRoadmap.phases[phaseIdx];
+  if (phase && phase.deliverables[delIdx]) {
+    phase.deliverables[delIdx].name = document.getElementById("editDelName").value;
+    phase.deliverables[delIdx].owner = document.getElementById("editDelOwner").value;
+    phase.deliverables[delIdx].status = document.getElementById("editDelStatus").value;
+    phase.deliverables[delIdx].date = document.getElementById("editDelDate").value;
+    phase.deliverables[delIdx].note = document.getElementById("editDelNote").value;
+
+    const completedCount = phase.deliverables.filter(d => d.status === "completed").length;
+    phase.progress = Math.round((completedCount / phase.deliverables.length) * 100);
+
+    saveAppState();
+    closeModal();
+    renderAgencyView();
+    showToast(AppState.lang === "en" ? "Deliverable updated successfully" : "Entregable actualizado exitosamente", "success");
+  }
+}
+
+// Exporta resumen oficial de sprints para Lachlan
+function exportAgencySprintToLachlan() {
+  const agency = AppState.data.agencyRoadmap;
+  const isEn = AppState.lang === "en";
+
+  let report = `========================================================\n`;
+  report += `WITNESS TO WAR & VIOLENCE — OFFICIAL WEBSITE SPRINT TIMEFRAME\n`;
+  report += `Agency: onmove (${agency.website}) | Total Contracted: ${agency.totalHours} hrs ($${agency.totalBudgetExGst} AUD ex GST)\n`;
+  report += `Status Date: ${new Date().toLocaleDateString('en-AU')}\n`;
+  report += `========================================================\n\n`;
+
+  agency.phases.forEach((phase, idx) => {
+    report += `SPRINT ${idx + 1}: ${phase.name.toUpperCase()}\n`;
+    report += `Status: ${phase.status.toUpperCase()} | Progress: ${phase.progress}% | ETA: ${phase.eta}\n`;
+    report += `Internal STARTTS Dependency: ${phase.clientDependencies || 'None'}\n`;
+    report += `Deliverables:\n`;
+    (phase.deliverables || []).forEach(d => {
+      const mark = d.status === 'completed' ? '[x] COMPLETED' : d.status === 'in_progress' ? '[~] IN PROGRESS' : d.status === 'blocked' ? '[!] BLOCKED' : '[ ] TO DO';
+      report += `  ${mark} - ${d.name} (Owner: ${d.owner || 'onmove'}, ETA: ${d.date || 'TBD'})\n`;
+    });
+    report += `\n`;
+  });
+
+  navigator.clipboard.writeText(report).then(() => {
+    showToast(isEn ? "Sprint schedule copied to clipboard for Lachlan" : "Cronograma de sprint copiado para enviar a Lachlan", "success");
+  }).catch(() => {
+    alert(report);
+  });
+}
+
+// =========================================================================
+// MÓDULO NUEVO: REVISIÓN DE ALCANCE (GET HELP, FASSTT & VIDEOS)
+// =========================================================================
+function renderScopeReviewsView() {
+  const reviews = AppState.data.websiteReviews || (window.WTW_INITIAL_DATA && window.WTW_INITIAL_DATA.websiteReviews) || {};
+  const isEn = AppState.lang === "en";
+
+  const getHelp = reviews.getHelp || {};
+  const aboutUs = reviews.aboutUs || {};
+  const fasstt = reviews.fassttNetwork || {};
+  const videos = reviews.videoContent || {};
+  const starttsPending = reviews.starttsPending || {};
+
+  // Filtrado de oficinas FASSTT por estado
+  let offices = fasstt.offices || [];
+  if (AppState.fassttFilter && AppState.fassttFilter !== "all") {
+    offices = offices.filter(o => o.state === AppState.fassttFilter);
+  }
+
+  const isFeelingsSignedOff = getHelp.isSignedOff || false;
+
+  return `
+    <div class="space-y-8 animate-fadeIn">
+      
+      <!-- HEADER PRINCIPAL DEL MÓDULO -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 bg-purple-900 text-[#96EE89] rounded-lg text-xs font-bold uppercase tracking-wider">
+                ${isEn ? "Scope Reviews & Deliverables" : "Revisión de Alcance & Entregables"}
+              </span>
+              <span class="text-xs text-slate-500">${isEn ? "Clinical sign-off & multi-state coverage" : "Validación clínica y cobertura interestatal"}</span>
+            </div>
+            <h2 class="text-2xl font-bold text-[#323B3F] mt-2">${t("scopeTitle")}</h2>
+            <p class="text-sm text-slate-600 mt-1">${t("scopeSubtitle")}</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <a href="#scope-gethelp" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-all">Get Help</a>
+            <a href="#scope-aboutus" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-all">About Us</a>
+            <a href="#scope-fasstt" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-all">FASSTT (8)</a>
+            <a href="#scope-videos" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-all">Videos</a>
+            <a href="#scope-startts" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded-lg transition-all">STARTTS Pending</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 1: GET HELP & SESIÓN DE WIREFRAMES DE MAÑANA (VIERNES 16 OCT) -->
+      <div id="scope-gethelp" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
+        
+        <!-- Alerta de Sesión de Mañana con onmove -->
+        <div class="bg-gradient-to-r from-purple-50 via-purple-100/60 to-indigo-50 border-l-4 border-purple-600 p-5 rounded-xl shadow-sm">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex items-start gap-3">
+              <div class="p-2.5 bg-purple-600 text-white rounded-xl shadow-sm flex-shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-purple-200 text-purple-900 uppercase">
+                    ${isEn ? "Tomorrow Friday 16 Oct" : "Mañana Viernes 16 Oct"}
+                  </span>
+                  <span class="text-xs font-bold text-purple-900">${getHelp.title}</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 mt-0.5">${t("tomorrowAlertTitle")}</h3>
+                <p class="text-xs text-slate-600 mt-1">${t("tomorrowAlertDesc")}</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <a href="https://www.figma.com/design/LH0VieeERNHhgVh4La9TtB/Witness-to-war?node-id=1492-6" target="_blank"
+                 class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl shadow flex items-center gap-2 transition-all">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+                </svg>
+                ${isEn ? "Open Figma Wireframes" : "Ver Wireframes en Figma"}
+              </a>
+            </div>
+          </div>
+
+          <!-- Checklist de Verificación de Wireframes para la Reunión de Mañana -->
+          <div class="mt-4 pt-4 border-t border-purple-200/80 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+            <div class="flex items-center gap-2 bg-white/80 p-2.5 rounded-lg border border-purple-200">
+              <span class="text-emerald-600 font-bold">✓</span>
+              <span>${isEn ? "Mobile tap targets & WCAG 2.1 AA" : "Áreas táctiles móviles y WCAG 2.1"}</span>
+            </div>
+            <div class="flex items-center gap-2 bg-white/80 p-2.5 rounded-lg border border-purple-200">
+              <span class="text-emerald-600 font-bold">✓</span>
+              <span>${isEn ? "Single feeling tag selector UX" : "Selector de emoción único"}</span>
+            </div>
+            <div class="flex items-center gap-2 bg-white/80 p-2.5 rounded-lg border border-purple-200">
+              <span class="text-amber-600 font-bold">⚠️</span>
+              <span>${isEn ? "RTL layout mirror (Arabic/Hebrew)" : "Espejo RTL para Árabe/Hebreo"}</span>
+            </div>
+            <div class="flex items-center gap-2 bg-white/80 p-2.5 rounded-lg border border-purple-200">
+              <span class="text-blue-600 font-bold">ℹ</span>
+              <span>${isEn ? "Safety exit persistent on screen" : "Botón de salida segura visible"}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Columnas: Temas Cerrados, Técnicas Cerradas, y 8 Emociones Pendientes de Joshua -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Columna 1: 4 Temas Cerrados -->
+          <div class="p-5 bg-slate-50 rounded-2xl border border-slate-200">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+              <span class="text-xs font-bold text-slate-700 uppercase">${t("lockedTopics")}</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-100 text-emerald-800">4 Locked</span>
+            </div>
+            <ul class="mt-3 space-y-2 text-xs text-slate-800">
+              ${(getHelp.lockedTopics || []).map(topic => `
+                <li class="flex items-start gap-2 p-2 bg-white rounded-lg border border-slate-100 shadow-2xs">
+                  <span class="text-emerald-600 font-bold mt-0.5">✓</span>
+                  <span class="font-medium">${topic}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+
+          <!-- Columna 2: 4 Técnicas de Autoayuda Cerradas -->
+          <div class="p-5 bg-slate-50 rounded-2xl border border-slate-200">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+              <span class="text-xs font-bold text-slate-700 uppercase">${t("lockedTechniques")}</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-100 text-emerald-800">4 Locked</span>
+            </div>
+            <ul class="mt-3 space-y-2 text-xs text-slate-800">
+              ${(getHelp.lockedTechniques || []).map(tech => `
+                <li class="flex items-start gap-2 p-2 bg-white rounded-lg border border-slate-100 shadow-2xs">
+                  <span class="text-emerald-600 font-bold mt-0.5">✓</span>
+                  <span class="font-medium">${tech}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+
+          <!-- Columna 3: 8 Emociones / Sentimientos Pendientes de Firma de Joshua -->
+          <div class="p-5 bg-amber-50/70 rounded-2xl border border-amber-200">
+            <div class="flex items-center justify-between pb-3 border-b border-amber-200">
+              <span class="text-xs font-bold text-amber-900 uppercase">${isEn ? "8 Emotional States" : "8 Estados Emocionales"}</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-extrabold ${isFeelingsSignedOff ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-200 text-amber-900'}">
+                ${isFeelingsSignedOff ? 'Signed-off' : 'Pending Joshua'}
+              </span>
+            </div>
+            <p class="text-[11px] text-amber-800 mt-2">
+              ${isEn ? "Joshua must formally sign off on this clinical taxonomy to unblock Bricks Builder filters." : "Joshua debe firmar esta taxonomía clínica para desbloquear los filtros en Bricks Builder."}
+            </p>
+            <div class="mt-3 flex flex-wrap gap-1.5">
+              ${(getHelp.pendingFeelingsSignoff || []).map(feeling => `
+                <span class="px-2.5 py-1 bg-white border border-amber-200 text-amber-900 rounded-lg text-xs font-bold">
+                  ${feeling}
+                </span>
+              `).join('')}
+            </div>
+            <div class="mt-4 pt-3 border-t border-amber-200">
+              <button onclick="toggleJoshuaSignoff()" class="w-full py-2 px-3 rounded-xl text-xs font-extrabold shadow transition-all ${
+                isFeelingsSignedOff ? 'bg-slate-200 text-slate-700 hover:bg-slate-300' : 'bg-amber-600 hover:bg-amber-700 text-white'
+              }">
+                ${isFeelingsSignedOff ? t("alreadySignedOff") : t("signoffAsJoshua")}
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- HOJA DE RUTA Y FECHAS DE ENTREGA DE GET HELP -->
+        <div class="mt-6 pt-6 border-t border-slate-200">
+          <h4 class="text-sm font-bold text-slate-900 mb-3">${t("getHelpRoadmap")}</h4>
+          <div class="space-y-3">
+            ${(getHelp.nextSteps || []).map(step => `
+              <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="flex items-start gap-3">
+                  <span class="w-2.5 h-2.5 rounded-full ${step.status === 'upcoming' ? 'bg-purple-500 animate-pulse' : 'bg-slate-400'} mt-1.5"></span>
+                  <div>
+                    <h5 class="text-xs font-bold text-slate-900">${step.step}</h5>
+                    <p class="text-[11px] text-slate-500 mt-0.5">${step.note}</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3 text-right">
+                  <span class="px-2.5 py-1 bg-white rounded-lg text-xs font-bold text-slate-700 border border-slate-200">
+                    👤 ${step.owner}
+                  </span>
+                  <span class="px-2.5 py-1 bg-slate-900 text-[#96EE89] rounded-lg text-xs font-bold">
+                    📅 ${step.date}
+                  </span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SECCIÓN 2: ABOUT US (REVISIÓN DE QUÉ SE HIZO Y QUÉ FALTA) -->
+      <div id="scope-aboutus" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Website Section</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800">In Review</span>
+            </div>
+            <h3 class="text-lg font-bold text-[#323B3F] mt-1">${t("aboutUsTitle")}</h3>
+            <p class="text-xs text-slate-500">${t("aboutUsSubtitle")}</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+          ${(aboutUs.checklist || []).map((item, idx) => `
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex items-start justify-between gap-3">
+              <div class="flex items-start gap-2.5">
+                <input type="checkbox" 
+                       ${item.status === 'completed' ? 'checked' : ''} 
+                       onchange="toggleAboutUsItem(${idx})"
+                       class="mt-1 rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4 border-slate-300 cursor-pointer" />
+                <div>
+                  <span class="text-xs font-bold ${item.status === 'completed' ? 'line-through text-slate-400' : 'text-slate-900'}">
+                    ${item.item}
+                  </span>
+                  <p class="text-[11px] text-slate-500 mt-0.5">${item.note}</p>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-extrabold whitespace-nowrap ${
+                item.status === 'completed' ? 'bg-emerald-100 text-emerald-800' :
+                item.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
+                item.status === 'pending_review' ? 'bg-purple-100 text-purple-800' : 'bg-slate-200 text-slate-700'
+              }">
+                ${item.status === 'completed' ? 'Done' : item.status === 'pending_review' ? 'Needs Review' : 'In Progress'}
+              </span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- SECCIÓN 3: RED NACIONAL DE SOCIOS FASSTT (OFICINAS EN TODA AUSTRALIA) -->
+      <div id="scope-fasstt" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-blue-100 text-blue-800 uppercase">National Network</span>
+              <span class="text-xs text-slate-500">${isEn ? "8 States & Territories" : "8 Estados y Territorios"}</span>
+            </div>
+            <h3 class="text-lg font-bold text-[#323B3F] mt-1">${t("fassttTitle")}</h3>
+            <p class="text-xs text-slate-500">${t("fassttSubtitle")}</p>
+          </div>
+
+          <!-- Filtro por Estado (Pills) -->
+          <div class="flex flex-wrap items-center gap-1.5">
+            ${["all", "NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"].map(st => `
+              <button onclick="setFassttFilter('${st}')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                AppState.fassttFilter === st ? 'bg-slate-900 text-[#96EE89] shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }">
+                ${st === 'all' ? t("allStates") : st}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Grid de Tarjetas de Oficinas FASSTT -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+          ${offices.map(partner => `
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-col justify-between hover:border-slate-300 transition-all ${partner.isLead ? 'ring-2 ring-emerald-400 bg-emerald-50/30' : ''}">
+              <div>
+                <div class="flex items-center justify-between">
+                  <span class="px-2 py-0.5 bg-slate-800 text-[#96EE89] rounded text-[11px] font-extrabold">
+                    ${partner.state}
+                  </span>
+                  ${partner.isLead ? `
+                    <span class="px-2 py-0.5 bg-emerald-600 text-white rounded text-[10px] font-bold">
+                      NSW Lead
+                    </span>
+                  ` : ''}
+                </div>
+                <h4 class="text-sm font-bold text-slate-900 mt-2">${partner.agency}</h4>
+                <p class="text-[11px] text-slate-600 mt-0.5 line-clamp-2">${partner.name}</p>
+                <div class="mt-3 text-[11px] text-slate-500">
+                  <strong>Locations:</strong> ${partner.locations}
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs">
+                <a href="tel:${partner.phone.replace(/[^0-9]/g, '')}" class="text-blue-700 font-bold hover:underline flex items-center gap-1">
+                  📞 ${partner.phone}
+                </a>
+                <a href="${partner.website}" target="_blank" class="text-slate-500 hover:text-slate-900 font-semibold text-[11px] flex items-center gap-0.5">
+                  Web &rarr;
+                </a>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- SECCIÓN 4: CREACIÓN DE CONTENIDO DE VIDEOS (4 GET HELP + 1 INSTITUCIONAL) -->
+      <div id="scope-videos" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-indigo-100 text-indigo-800 uppercase">Video Production</span>
+              <span class="text-xs text-slate-500">4 Toolkits + 1 Brand Story</span>
+            </div>
+            <h3 class="text-lg font-bold text-[#323B3F] mt-1">${t("videosTitle")}</h3>
+            <p class="text-xs text-slate-500">${t("videosSubtitle")}</p>
+          </div>
+        </div>
+
+        <div class="space-y-3 pt-2">
+          ${(videos.videos || []).map((video, vIdx) => `
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:border-slate-300 transition-all">
+              <div class="flex items-start gap-3">
+                <div class="p-2.5 bg-indigo-100 text-indigo-700 rounded-xl flex-shrink-0 mt-0.5">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 bg-slate-200 text-slate-800 rounded text-[10px] font-bold">${video.type}</span>
+                    <span class="text-[11px] text-slate-400">Subtitles: ${video.subtitles}</span>
+                  </div>
+                  <h4 class="text-sm font-bold text-slate-900 mt-1">${video.title}</h4>
+                  <p class="text-xs text-slate-600 mt-0.5">${video.specs}</p>
+                </div>
+              </div>
+
+              <!-- Selector de Estado de Video y Fecha Comprometida -->
+              <div class="flex flex-wrap items-center gap-2.5">
+                <div class="text-right">
+                  <span class="text-[11px] text-slate-400 block">${isEn ? "Owner:" : "Líder:"} <strong>${video.owner}</strong></span>
+                  <input type="text" 
+                         value="${video.eta}" 
+                         onchange="updateVideoEta(${vIdx}, this.value)"
+                         class="text-xs font-bold text-slate-800 bg-white border border-slate-300 rounded px-2 py-1 mt-1 w-28 focus:ring-1 focus:ring-[#96EE89]" />
+                </div>
+
+                <select onchange="updateVideoStatus(${vIdx}, this.value)"
+                        class="text-xs font-bold rounded-lg px-2.5 py-1.5 border focus:ring-2 focus:ring-[#96EE89] cursor-pointer ${
+                          video.status === 'ready' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' :
+                          video.status === 'filming' || video.status === 'editing' ? 'bg-blue-50 text-blue-800 border-blue-200' :
+                          'bg-indigo-50 text-indigo-800 border-indigo-200'
+                        }">
+                  <option value="scripting" ${video.status === 'scripting' ? 'selected' : ''}>📝 Scripting</option>
+                  <option value="storyboard" ${video.status === 'storyboard' ? 'selected' : ''}>🎨 Storyboard</option>
+                  <option value="filming" ${video.status === 'filming' ? 'selected' : ''}>🎬 Filming</option>
+                  <option value="editing" ${video.status === 'editing' ? 'selected' : ''}>✂️ Editing</option>
+                  <option value="subtitles" ${video.status === 'subtitles' ? 'selected' : ''}>🌐 Subtitling (6 langs)</option>
+                  <option value="ready" ${video.status === 'ready' ? 'selected' : ''}>✓ Ready / Published</option>
+                </select>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- SECCIÓN 5: ENTREGABLES PENDIENTES POR PARTE DE STARTTS (HACIA LA AGENCIA) -->
+      <div id="scope-startts" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-amber-100 text-amber-800 uppercase">STARTTS Internal</span>
+              <span class="text-xs text-slate-500">${isEn ? "Avoid deflection of agency delays" : "Evitar que la agencia defienda demoras"}</span>
+            </div>
+            <h3 class="text-lg font-bold text-[#323B3F] mt-1">${t("starttsPendingTitle")}</h3>
+            <p class="text-xs text-slate-500">${t("starttsPendingSubtitle")}</p>
+          </div>
+        </div>
+
+        <div class="space-y-3 pt-2">
+          ${(starttsPending.items || []).map((item, idx) => `
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:border-slate-300 transition-all">
+              <div class="flex items-start gap-3">
+                <input type="checkbox" 
+                       ${item.status === 'completed' ? 'checked' : ''} 
+                       onchange="toggleStarttsPendingItem(${idx})"
+                       class="mt-1 rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4 border-slate-300 cursor-pointer" />
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold ${item.status === 'completed' ? 'line-through text-slate-400' : 'text-slate-900'}">
+                      ${item.title}
+                    </span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-extrabold ${
+                      item.urgency === 'critical' ? 'bg-red-100 text-red-800' :
+                      item.urgency === 'high' ? 'bg-amber-100 text-amber-800' : 'bg-slate-200 text-slate-700'
+                    }">
+                      ${item.urgency.toUpperCase()}
+                    </span>
+                  </div>
+                  <p class="text-[11px] text-slate-500 mt-0.5">${item.note}</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2.5 text-right whitespace-nowrap">
+                <span class="text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-lg px-2.5 py-1">
+                  👤 ${item.owner}
+                </span>
+                <span class="text-xs font-bold ${item.dueDate === '2026-10-16' ? 'bg-purple-100 text-purple-900 border border-purple-300' : 'bg-slate-900 text-[#96EE89]'} rounded-lg px-2.5 py-1">
+                  📅 ${item.dueDate}
+                </span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+    </div>
+  `;
+}
+
+// Handlers interactivos para Scope Reviews
+function toggleJoshuaSignoff() {
+  const getHelp = AppState.data.websiteReviews.getHelp;
+  getHelp.isSignedOff = !getHelp.isSignedOff;
+  saveAppState();
+  renderScopeReviewsView();
+  showToast(getHelp.isSignedOff 
+    ? (AppState.lang === "en" ? "8 Feelings signed-off as Joshua (Clinical Lead)" : "8 Emociones firmadas clínicamente por Joshua")
+    : (AppState.lang === "en" ? "Sign-off reversed to Pending" : "Firma revertida a Pendiente"), 
+    getHelp.isSignedOff ? "success" : "info"
+  );
+}
+
+function toggleAboutUsItem(idx) {
+  const checklist = AppState.data.websiteReviews.aboutUs.checklist;
+  if (checklist && checklist[idx]) {
+    checklist[idx].status = checklist[idx].status === 'completed' ? 'pending_review' : 'completed';
+    saveAppState();
+    renderScopeReviewsView();
+    showToast(AppState.lang === "en" ? "About Us checklist updated" : "Checklist de About Us actualizado", "success");
+  }
+}
+
+function setFassttFilter(stateCode) {
+  AppState.fassttFilter = stateCode;
+  renderScopeReviewsView();
+}
+
+function updateVideoStatus(idx, newStatus) {
+  const videos = AppState.data.websiteReviews.videoContent.videos;
+  if (videos && videos[idx]) {
+    videos[idx].status = newStatus;
+    saveAppState();
+    renderScopeReviewsView();
+    showToast(AppState.lang === "en" ? "Video status updated" : "Estado del video actualizado", "success");
+  }
+}
+
+function updateVideoEta(idx, newEta) {
+  const videos = AppState.data.websiteReviews.videoContent.videos;
+  if (videos && videos[idx]) {
+    videos[idx].eta = newEta;
+    saveAppState();
+    showToast(AppState.lang === "en" ? "Video ETA updated" : "Fecha de entrega del video actualizada", "success");
+  }
+}
+
+function toggleStarttsPendingItem(idx) {
+  const items = AppState.data.websiteReviews.starttsPending.items;
+  if (items && items[idx]) {
+    items[idx].status = items[idx].status === 'completed' ? 'in_progress' : 'completed';
+    saveAppState();
+    renderScopeReviewsView();
+    showToast(AppState.lang === "en" ? "STARTTS deliverable status updated" : "Estado del pendiente de STARTTS actualizado", "success");
   }
 }
 
