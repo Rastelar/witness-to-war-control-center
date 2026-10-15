@@ -1,0 +1,824 @@
+{
+  "project": {
+    "name": "Witness to War & Violence (WTWV)",
+    "initiative": "STARTTS / NSW Health Department",
+    "lastUpdated": "2026-10-14",
+    "overallHealth": "attention",
+    "summary": "Plataforma de soporte y crisis para personas afectadas por guerras y violencia en Australia. Enfoque multilingüe, campaña de llamadas directas y desarrollo del nuevo ecosistema digital.",
+    "budget": {
+      "totalApproved": 58500,
+      "allocated": 56655,
+      "spent": 31205.34,
+      "currency": "AUD"
+    }
+  },
+  "strategicRadar": {
+    "whereWeAre": {
+      "title": "1. ¿Dónde estamos HOY?",
+      "status": "attention",
+      "headline": "Branding aprobado, Campaña Meta Fase 1 activa, y Wireframes Web en revisión técnica.",
+      "points": [
+        {
+          "label": "Identidad & Branding",
+          "desc": "100% completado por la agencia onmove ($27,300 + GST). Todos los manuales, logos multilingües y swatches Pantone 2267 C recibidos.",
+          "badge": "Completado",
+          "badgeColor": "emerald"
+        },
+        {
+          "label": "Campaña Meta Ads Fase 1",
+          "desc": "Activa con $2,500 en 7 conjuntos de anuncios (Árabe, Farsi/Dari, Ucraniano, Hebreo, Inglés). Enfoque 100% llamadas directas.",
+          "badge": "En Ejecución",
+          "badgeColor": "blue"
+        },
+        {
+          "label": "Sitio Web (onmove)",
+          "desc": "Fase 1 de Estrategia e Información avanzada al 85%. Los wireframes de 'Get Help' están diseñados en Figma pero TRABADOS en validación de contenidos.",
+          "badge": "Cuello de Botella",
+          "badgeColor": "amber"
+        },
+        {
+          "label": "Merchandising & Banners",
+          "desc": "Primer lote de impresión (tarjetas, folletos, roll-up banners) pagado y recibido en Snap Wetherill Park ($905.34). Cotizaciones de merchandising masivo solicitadas a 4 proveedores.",
+          "badge": "En Cotización",
+          "badgeColor": "indigo"
+        }
+      ]
+    },
+    "whereWeAreGoing": {
+      "title": "2. ¿Hacia dónde vamos? (Próximos Hitos)",
+      "status": "healthy",
+      "headline": "Hacia el lanzamiento del sitio web multilingüe y la expansión nacional de llamadas.",
+      "milestones": [
+        {
+          "timeframe": "Semanas 1-2 (Octubre)",
+          "title": "Desbloqueo de Contenidos & Timeframe de onmove",
+          "desc": "Aprobación clínica de las 8 emociones del Get Help por Joshua y entrega formal del cronograma semana a semana por parte de onmove.",
+          "owner": "Joshua / onmove",
+          "status": "pending"
+        },
+        {
+          "timeframe": "Semanas 3-5 (Noviembre)",
+          "title": "Desarrollo WordPress en Bricks Builder",
+          "desc": "Construcción del CMS, integración de las rutas de crisis ('Safety Exit'), buscador de recursos y estructura en 6 idiomas.",
+          "owner": "onmove",
+          "status": "upcoming"
+        },
+        {
+          "timeframe": "Semanas 6-8 (Diciembre)",
+          "title": "Evaluación Meta Ads Fase 1 & Cierre de Campaña",
+          "desc": "Medición del volumen de llamadas fuera de NSW (Melbourne, Adelaide, Shepparton) vs Sydney. Cierre de campaña previo al receso de verano (14 Dic).",
+          "owner": "Luis Rastelli",
+          "status": "upcoming"
+        },
+        {
+          "timeframe": "Enero 2027",
+          "title": "Decisión Reserva Google Ads ($2,500) y Lanzamiento Web",
+          "desc": "Si el costo por llamada de Meta es menor a $100, se escala Meta; si no, se activa Google Search / Call-only. QA y despliegue del sitio en vivo.",
+          "owner": "Lachlan / Luis",
+          "status": "strategic"
+        }
+      ]
+    },
+    "nextStep": {
+      "title": "3. ¿Cuál es el paso a seguir INMEDIATO?",
+      "status": "critical",
+      "headline": "Acciones concretas requeridas hoy para romper los dos cuellos de botella principales.",
+      "actions": [
+        {
+          "id": "act-1",
+          "urgent": true,
+          "owner": "onmove (Agencia)",
+          "reviewer": "Luis Rastelli / Lachlan",
+          "title": "Exigir el 'Timeframe & Sprint Schedule' formal a onmove",
+          "desc": "onmove debe comprometer por escrito las fechas de entrega de la Fase 2 (Visual UX), Fase 3 (Desarrollo Bricks) y Fase 4 (Testing). Sin estas fechas, Lachlan no puede presentar avances al board de STARTTS.",
+          "sla": "48 horas",
+          "actionBtnText": "Copiar Correo para onmove",
+          "emailTemplate": {
+            "subject": "Witness to War - Requerimiento de Cronograma y Timeframes de Desarrollo Web",
+            "body": "Estimado equipo de onmove,\n\nPara poder coordinar el lanzamiento institucional y reportar al liderazgo de área (Lachlan) y al directorio de STARTTS, necesitamos que nos confirmen el cronograma definitivo con fechas estimadas (ETAs) para las siguientes entregas de la propuesta de $21,450:\n\n1. Finalización y aprobación de UX/UI en Figma.\n2. Inicio y finalización del desarrollo en WordPress / Bricks Builder.\n3. Período de integración de los 6 idiomas y revisión de accesibilidad WCAG 2.1 AA.\n4. Ventana estimada de Staging y Lanzamiento en vivo.\n\nPor favor, actualicen estas fechas directamente en el tablero de control o envíennos el detalle antes de finalizar esta semana.\n\nSaludos cordiales,\nEquipo Witness to War"
+          }
+        },
+        {
+          "id": "act-2",
+          "urgent": true,
+          "owner": "Joshua (Líder Clínico)",
+          "reviewer": "Yassmen Yahya",
+          "title": "Firma clínica de las 8 emociones del Get Help Toolkit",
+          "desc": "Validar que la lista de 8 emociones (Ansiedad, Desconexión, Depresión, Miedo, Soledad, Agobio, Inquietud, Preocupación) sea clínicamente precisa para víctimas de trauma.",
+          "sla": "72 horas",
+          "actionBtnText": "Reclamar a Joshua",
+          "emailTemplate": {
+            "subject": "Witness to War - Aprobación clínica pendiente: Lista de emociones para 'Get Help'",
+            "body": "Hola Joshua,\n\nTe recordamos que tenemos pendiente tu validación técnica sobre la lista de 8 emociones/sentimientos para el autoayuda ('Get Help') del nuevo sitio web de Witness to War. La agencia está detenida a la espera de este contenido para cerrar la arquitectura de información.\n\n¿Podrías confirmarnos si esta lista tiene el visto bueno clínico o si requiere ajustes?\n\nMuchas gracias,\nEquipo Witness to War"
+          }
+        },
+        {
+          "id": "act-3",
+          "urgent": false,
+          "owner": "Maria",
+          "reviewer": "Luis Rastelli",
+          "title": "Consolidar cotizaciones de merchandising (4 proveedores)",
+          "desc": "Reunir las respuestas de SOS Promotions, Everything Branded, Fast Promos y Vivid Ads para presentar comparativa de precios a Lachlan.",
+          "sla": "Viernes",
+          "actionBtnText": "Ver Proveedores"
+        }
+      ]
+    }
+  },
+  "agencyRoadmap": {
+    "agencyName": "onmove",
+    "website": "www.onmove.com.au",
+    "totalHours": 165,
+    "ratePerHour": 130,
+    "totalBudgetExGst": 21450,
+    "currency": "AUD",
+    "platform": "WordPress CMS + Bricks Builder",
+    "languagesCount": 6,
+    "languages": [
+      "English",
+      "Arabic",
+      "Dari",
+      "Farsi",
+      "Ukrainian",
+      "Hebrew"
+    ],
+    "overallStatus": "attention",
+    "stalledReason": "La agencia no ha publicado los timeframes exactos de inicio de desarrollo y testeo.",
+    "phases": [
+      {
+        "id": "p1",
+        "name": "Fase 1: Estrategia de Sitio & Arquitectura de Información",
+        "hours": 30,
+        "budget": 3900,
+        "progress": 85,
+        "status": "in_progress",
+        "eta": "2026-10-20",
+        "responsible": "onmove / Luis",
+        "deliverables": [
+          {
+            "name": "Arquitectura web y sitemap general",
+            "status": "completed",
+            "date": "2026-08-15"
+          },
+          {
+            "name": "Mapeo de rutas de soporte en crisis",
+            "status": "completed",
+            "date": "2026-08-20"
+          },
+          {
+            "name": "Estructura de la sección 'Get Help' y toolkit",
+            "status": "in_review",
+            "date": "2026-10-18",
+            "note": "Wireframes listos en Figma (frames 1492-6, 1853-7561). Falta cierre de textos clínicos."
+          },
+          {
+            "name": "Estructura multilingüe (rutas por idioma)",
+            "status": "pending",
+            "date": "2026-10-22"
+          }
+        ],
+        "clientDependencies": "Validación del brief clínico de 'Get Help' por parte de Joshua y Yassmen."
+      },
+      {
+        "id": "p2",
+        "name": "Fase 2: Diseño Visual & Experiencia de Usuario (UX/UI)",
+        "hours": 45,
+        "budget": 5850,
+        "progress": 40,
+        "status": "attention",
+        "eta": "2026-11-05",
+        "responsible": "onmove",
+        "deliverables": [
+          {
+            "name": "Concepto visual y dirección de Homepage",
+            "status": "in_progress",
+            "date": "2026-10-28",
+            "note": "Aplicando paleta Renewal Green #96EE89 y Grounded Slate #323B3F."
+          },
+          {
+            "name": "Diseño de plantillas para páginas de contenido clave",
+            "status": "pending",
+            "date": "2026-11-02"
+          },
+          {
+            "name": "Maquetas de layouts para el Hub de Recursos y Toolkit",
+            "status": "pending",
+            "date": "2026-11-05"
+          },
+          {
+            "name": "Componente de salida segura inmediata ('Safety Exit')",
+            "status": "pending",
+            "date": "2026-11-08"
+          },
+          {
+            "name": "Diseño responsivo para móviles y tablets",
+            "status": "pending",
+            "date": "2026-11-12"
+          }
+        ],
+        "clientDependencies": "Aprobación de la dirección visual de Homepage por Lachlan."
+      },
+      {
+        "id": "p3",
+        "name": "Fase 3: Desarrollo en WordPress (Bricks Builder)",
+        "hours": 80,
+        "budget": 10400,
+        "progress": 10,
+        "status": "pending_eta",
+        "eta": "Por Confirmar por onmove",
+        "responsible": "onmove",
+        "deliverables": [
+          {
+            "name": "Instalación y configuración de WordPress + Bricks Builder",
+            "status": "pending",
+            "date": "TBD"
+          },
+          {
+            "name": "Desarrollo del theme accesible y modular",
+            "status": "pending",
+            "date": "TBD"
+          },
+          {
+            "name": "Implementación del Hub de Recursos con filtros por sentimiento",
+            "status": "pending",
+            "date": "TBD"
+          },
+          {
+            "name": "Configuración multilingüe en 6 idiomas (RTL para Árabe/Hebreo/Farsi/Dari)",
+            "status": "pending",
+            "date": "TBD"
+          },
+          {
+            "name": "Integración de donaciones (sistema embebido)",
+            "status": "pending",
+            "date": "TBD"
+          },
+          {
+            "name": "Optimización técnica y SEO básico",
+            "status": "pending",
+            "date": "TBD"
+          }
+        ],
+        "clientDependencies": "Entrega de textos traducidos en los 6 idiomas e infraestructura de hosting/licencia de plugins."
+      },
+      {
+        "id": "p4",
+        "name": "Fase 4: Testing, Accesibilidad & Lanzamiento",
+        "hours": 10,
+        "budget": 1300,
+        "progress": 0,
+        "status": "not_started",
+        "eta": "Por Confirmar por onmove",
+        "responsible": "onmove / STARTTS",
+        "deliverables": [
+          {
+            "name": "Control de calidad funcional (QA cross-browser)",
+            "status": "pending",
+            "date": "TBD"
+          },
+          {
+            "name": "Auditoría de accesibilidad WCAG 2.1 AA",
+            "status": "pending",
+            "date": "TBD"
+          },
+          {
+            "name": "Capacitación de CMS para el equipo (5 horas incluidas)",
+            "status": "pending",
+            "date": "TBD"
+          },
+          {
+            "name": "Despliegue a producción y verificación en vivo",
+            "status": "pending",
+            "date": "TBD"
+          },
+          {
+            "name": "Soporte post-lanzamiento (15 horas incluidas)",
+            "status": "pending",
+            "date": "TBD"
+          }
+        ],
+        "clientDependencies": "Aprobación final formal de Lachlan y STARTTS IT."
+      }
+    ]
+  },
+  "teamOperations": {
+    "rules": [
+      {
+        "rule": "Regla del Dueño Único",
+        "desc": "Cada tarea tiene exactamente UNA persona asignada. Prohibido 'el equipo se encarga'."
+      },
+      {
+        "rule": "SLA de Revisión 48h",
+        "desc": "Cualquier revisión clínica o de contenido que supere 48 horas sin dictamen activa alerta roja al líder de área."
+      },
+      {
+        "rule": "Flujo Unidireccional",
+        "desc": "Las tareas siguen: Solicitado -> Redacción -> Revisión Técnica -> Revisión Clínica -> Aprobación Área -> En Producción."
+      }
+    ],
+    "members": [
+      {
+        "id": "lachlan",
+        "name": "Lachlan",
+        "role": "Área Leader / Executive Sponsor",
+        "email": "lachlan@health.nsw.gov.au",
+        "avatar": "L"
+      },
+      {
+        "id": "luis",
+        "name": "Ernesto Luis Rastelli",
+        "role": "Marketing, Growth & Digital PM",
+        "email": "ErnestoLuis.Rastelli@health.nsw.gov.au",
+        "phone": "0481 065 318",
+        "avatar": "ER"
+      },
+      {
+        "id": "yassmen",
+        "name": "Yassmen Yahya",
+        "role": "Team Leader - Witness to War",
+        "email": "Yassmen.Yahya@health.nsw.gov.au",
+        "avatar": "YY"
+      },
+      {
+        "id": "jasmina",
+        "name": "Jasmina Bajraktarevic",
+        "role": "Community Development Coordinator",
+        "email": "Jasmina.Bajraktarevic@health.nsw.gov.au",
+        "avatar": "JB"
+      },
+      {
+        "id": "joshua",
+        "name": "Joshua",
+        "role": "Clinical Section Lead (STARTTS)",
+        "email": "joshua.clinical@health.nsw.gov.au",
+        "avatar": "J"
+      },
+      {
+        "id": "maria",
+        "name": "Maria",
+        "role": "Project Support & Socials",
+        "email": "maria@health.nsw.gov.au",
+        "avatar": "M"
+      },
+      {
+        "id": "onmove",
+        "name": "onmove Agency",
+        "role": "External Web & Design Partner",
+        "email": "projects@onmove.com.au",
+        "avatar": "OM"
+      }
+    ],
+    "tasks": [
+      {
+        "id": "task-01",
+        "title": "Definición final de la lista de emociones para 'Get Help'",
+        "track": "website",
+        "assignee": "joshua",
+        "accountable": "lachlan",
+        "consulted": "yassmen",
+        "informed": "luis",
+        "stage": "clinical_review",
+        "priority": "high",
+        "dueDate": "2026-10-17",
+        "daysInStage": 4,
+        "isBlocked": true,
+        "blockerReason": "Joshua no ha emitido dictamen en 4 días sobre el listado de 8 sentimientos.",
+        "notes": "En Figma se propuso: Anxiety, Disconnection, Depression, Fear, Loneliness, Overwhelm, Restlessness, Worry. Requiere aprobación clínica."
+      },
+      {
+        "id": "task-02",
+        "title": "Solicitud y fijación del cronograma oficial de onmove",
+        "track": "agency",
+        "assignee": "luis",
+        "accountable": "lachlan",
+        "consulted": "onmove",
+        "informed": "jasmina",
+        "stage": "tech_review",
+        "priority": "critical",
+        "dueDate": "2026-10-16",
+        "daysInStage": 2,
+        "isBlocked": true,
+        "blockerReason": "onmove no envió los timeframes de desarrollo en su propuesta inicial.",
+        "notes": "Enviar correo formal exigiendo fechas para cada sprint antes de liberar más pagos."
+      },
+      {
+        "id": "task-03",
+        "title": "Monitoreo semanal del registro de llamadas telefónicas de Meta Ads",
+        "track": "media",
+        "assignee": "yassmen",
+        "accountable": "luis",
+        "consulted": "maria",
+        "informed": "lachlan",
+        "stage": "in_prep",
+        "priority": "medium",
+        "dueDate": "2026-10-21",
+        "daysInStage": 1,
+        "isBlocked": false,
+        "blockerReason": null,
+        "notes": "Asegurar que los operadores del conmutador pregunten '¿Cómo escuchó sobre nosotros?' para atribuir llamadas de Instagram/Facebook."
+      },
+      {
+        "id": "task-04",
+        "title": "Cotización comparativa de merchandising masivo (4 proveedores)",
+        "track": "merch",
+        "assignee": "maria",
+        "accountable": "luis",
+        "consulted": "lachlan",
+        "informed": "yassmen",
+        "stage": "in_prep",
+        "priority": "high",
+        "dueDate": "2026-10-19",
+        "daysInStage": 3,
+        "isBlocked": false,
+        "blockerReason": null,
+        "notes": "Recopilar respuestas de Danny Cohen (SOS Promotions), Everything Branded, Fast Promos y Vivid Ads."
+      },
+      {
+        "id": "task-05",
+        "title": "Traducción oficial de contenidos de folletos a 5 idiomas",
+        "track": "merch",
+        "assignee": "yassmen",
+        "accountable": "jasmina",
+        "consulted": "luis",
+        "informed": "lachlan",
+        "stage": "area_approval",
+        "priority": "high",
+        "dueDate": "2026-10-24",
+        "daysInStage": 2,
+        "isBlocked": false,
+        "blockerReason": null,
+        "notes": "Árabe, Dari, Farsi, Ucraniano y Hebreo para los folletos A4 de Snap y brochures."
+      },
+      {
+        "id": "task-06",
+        "title": "Verificación de licencias de Bricks Builder y plugins WordPress",
+        "track": "website",
+        "assignee": "luis",
+        "accountable": "lachlan",
+        "consulted": "onmove",
+        "informed": "jasmina",
+        "stage": "tech_review",
+        "priority": "medium",
+        "dueDate": "2026-10-26",
+        "daysInStage": 1,
+        "isBlocked": false,
+        "blockerReason": null,
+        "notes": "Asegurar que las licencias queden a nombre de STARTTS y no de onmove para evitar dependencia futura."
+      },
+      {
+        "id": "task-07",
+        "title": "Plan de difusión Ukrainian Fellowship 2026",
+        "track": "media",
+        "assignee": "maria",
+        "accountable": "luis",
+        "consulted": "jasmina",
+        "informed": "lachlan",
+        "stage": "in_prep",
+        "priority": "medium",
+        "dueDate": "2026-10-28",
+        "daysInStage": 1,
+        "isBlocked": false,
+        "blockerReason": null,
+        "notes": "Armar calendario de posteos con las bios de los 6 becarios ucranianos."
+      }
+    ]
+  },
+  "paidMedia": {
+    "phase1Meta": {
+      "name": "WTWV - Meta Ads Fase 1 (Nacional + Regional Focus)",
+      "status": "active",
+      "startDate": "2026-09-07",
+      "endDate": "2026-12-13",
+      "totalBudget": 2500,
+      "spentToDate": 1045.2,
+      "objective": "Click-to-Call (Llamadas Directas al Servicio Telefónico)",
+      "landingPage": "Ninguna (Directo al marcador telefónico / Mon-Fri 9-18hs + Voicemail)",
+      "keyChallengeSolved": "El 90% de llamadas históricas venían de NSW. Esta campaña financia explícitamente el crecimiento fuera de NSW.",
+      "benchmarks": {
+        "baselineCallsPerWeek": 45.3,
+        "campaignLiftCallsPerWeek": 79.5,
+        "percentageLift": 75.5,
+        "estimatedCostPerCall": 1.97,
+        "metaRawCostPerCall": 102
+      },
+      "adSets": [
+        {
+          "id": "adset-1",
+          "name": "Árabe - NSW (Canterbury-Bankstown, Fairfield)",
+          "budget": 185,
+          "spent": 82.5,
+          "clicks": 210,
+          "callsReported": 14,
+          "status": "active",
+          "geo": "Sydney / NSW",
+          "notes": "Comunidad más numerosa (~367k en Australia). Alta respuesta histórica."
+        },
+        {
+          "id": "adset-2",
+          "name": "Árabe - Resto de Australia (Melbourne focus)",
+          "budget": 375,
+          "spent": 154.2,
+          "clicks": 340,
+          "callsReported": 19,
+          "status": "active",
+          "geo": "VIC (Hume, Brimbank, Dandenong) + Resto AU",
+          "notes": "Caja de crecimiento regional ponderada doblemente para descentralizar NSW."
+        },
+        {
+          "id": "adset-3",
+          "name": "Farsi / Dari - NSW (Blacktown, Fairfield)",
+          "budget": 185,
+          "spent": 76,
+          "clicks": 165,
+          "callsReported": 11,
+          "status": "active",
+          "geo": "Sydney / NSW",
+          "notes": "Audiencia consolidada iraní/afgana en NSW."
+        },
+        {
+          "id": "adset-4",
+          "name": "Farsi / Dari - Resto de Australia (Melb, Adelaide, Shepparton)",
+          "budget": 375,
+          "spent": 168,
+          "clicks": 380,
+          "callsReported": 22,
+          "status": "active",
+          "geo": "VIC (Casey-Cranbourne), SA (Salisbury) y Shepparton regional",
+          "notes": "La mayor concentración de afganos/hazaras vive fuera de NSW. Gran rendimiento."
+        },
+        {
+          "id": "adset-5",
+          "name": "Ucraniano - Nacional (Ucraniano + Ruso)",
+          "budget": 560,
+          "spent": 245,
+          "clicks": 290,
+          "callsReported": 18,
+          "status": "active",
+          "geo": "Australia Nacional",
+          "notes": "En 2025 fue la comunidad con mayor incremento porcentual (+111%)."
+        },
+        {
+          "id": "adset-6",
+          "name": "Hebreo - Nacional (Glen Eira & Eastern Sydney)",
+          "budget": 560,
+          "spent": 215.5,
+          "clicks": 140,
+          "callsReported": 3,
+          "status": "active",
+          "geo": "Melbourne (Glen Eira) + Sydney Este",
+          "notes": "Presencia institucional y equidad de servicio según compromiso de fondos."
+        },
+        {
+          "id": "adset-7",
+          "name": "Inglés - Nacional (Cap fijo referidores & familias)",
+          "budget": 260,
+          "spent": 104,
+          "clicks": 195,
+          "callsReported": 9,
+          "status": "active",
+          "geo": "Australia Nacional (Eventos de vida: Lejos del hogar)",
+          "notes": "Tope estricto de presupuesto para que el inglés no consuma los fondos de minorías."
+        }
+      ]
+    },
+    "phase2Google": {
+      "name": "WTWV - Google Ads Fase 2 (En Reserva)",
+      "status": "reserved",
+      "plannedBudget": 2500,
+      "activationGate": "Enero 2027",
+      "decisionCriteria": "Se activará si el costo por llamada de Meta se mantiene por debajo de benchmark o si se requiere capturar intención de búsqueda de alta urgencia.",
+      "channelsPlanned": [
+        "Google Search Call-Only",
+        "Google Display de apoyo"
+      ],
+      "targetKeywords": [
+        "witness to war helpline",
+        "refugee trauma counselling",
+        "trauma support arabic",
+        "mental health support farsi",
+        "afghan support helpline australia"
+      ],
+      "notes": "El presupuesto de $5,000 total se dividió en $2,500 prueba Meta y $2,500 reserva Google."
+    }
+  },
+  "merchandising": {
+    "totalBudget": 4750,
+    "spentToDate": 905.34,
+    "committedQuotes": 3200,
+    "suppliers": [
+      {
+        "id": "snap",
+        "name": "Snap Wetherill Park",
+        "contact": "SharonC",
+        "email": "wp@snap.com.au",
+        "phone": "02 9609 5577",
+        "address": "Unit 12, 19 Chifley St, Smithfield NSW 2164",
+        "status": "invoiced_and_paid",
+        "notes": "Excelente calidad en papel lino y banners. Factura #29460 pagada el 12/06/2026 ($905.34)."
+      },
+      {
+        "id": "sos",
+        "name": "SOS Promotions",
+        "contact": "Danny Cohen",
+        "email": "danny@sospromotions.com.au",
+        "phone": "02 9555 8822",
+        "status": "quote_requested",
+        "notes": "Proveedor principal para merchandising corporativo (remeras, lapiceras, bolsas, manteles)."
+      },
+      {
+        "id": "everything_branded",
+        "name": "Everything Branded AU",
+        "contact": "Sales Team",
+        "email": "quotes@everythingbranded.com.au",
+        "phone": "1800 955 777",
+        "status": "quote_requested",
+        "notes": "Cotización comparativa para pelotas antiestrés y botellas."
+      },
+      {
+        "id": "fast_promos",
+        "name": "Fast Promos",
+        "contact": "Online Desk",
+        "email": "sales@fastpromos.com.au",
+        "phone": "1300 008 300",
+        "status": "quote_requested",
+        "notes": "Lanyards y gorras promocionales."
+      },
+      {
+        "id": "vivid_ads",
+        "name": "Vivid Ads",
+        "contact": "Quotes Dept",
+        "email": "support@vividads.com.au",
+        "phone": "1300 72 16 14",
+        "status": "quote_requested",
+        "notes": "Especialistas en manteles para ferias (tablecloths) y displays de eventos."
+      }
+    ],
+    "items": [
+      {
+        "id": "m-01",
+        "item": "Business Cards (Linen)",
+        "category": "Print",
+        "specs": "100 unidades en papel lino 350gsm, full colour 2 caras",
+        "quantity": 100,
+        "supplier": "snap",
+        "status": "delivered",
+        "unitPrice": 1.05,
+        "totalCost": 105,
+        "paid": true,
+        "invoiceNo": "F065-29460",
+        "deliveryDate": "2026-06-12",
+        "brandColor": "Grounded Slate & White"
+      },
+      {
+        "id": "m-02",
+        "item": "A4 Flyers (Silk)",
+        "category": "Print",
+        "specs": "200 unidades (2 modelos x 100 c/u) en 150gsm seda, 1 cara color",
+        "quantity": 200,
+        "supplier": "snap",
+        "status": "delivered",
+        "unitPrice": 0.81,
+        "totalCost": 162.25,
+        "paid": true,
+        "invoiceNo": "F065-29460",
+        "deliveryDate": "2026-06-12",
+        "brandColor": "Renewal Green #96EE89 & Slate"
+      },
+      {
+        "id": "m-03",
+        "item": "A4 Flyers plegados DL",
+        "category": "Print",
+        "specs": "100 unidades en 150gsm seda, 2 caras color plegado a DL",
+        "quantity": 100,
+        "supplier": "snap",
+        "status": "delivered",
+        "unitPrice": 2.05,
+        "totalCost": 205.79,
+        "paid": true,
+        "invoiceNo": "F065-29460",
+        "deliveryDate": "2026-06-12",
+        "brandColor": "Multicolor"
+      },
+      {
+        "id": "m-04",
+        "item": "Pull Up Banners (Silver Base)",
+        "category": "Displays",
+        "specs": "2 banners roll-up retráctiles base plata, 850x2000mm color",
+        "quantity": 2,
+        "supplier": "snap",
+        "status": "delivered",
+        "unitPrice": 175,
+        "totalCost": 350,
+        "paid": true,
+        "invoiceNo": "F065-29460",
+        "deliveryDate": "2026-06-12",
+        "brandColor": "Renewal Green & Slate"
+      },
+      {
+        "id": "m-05",
+        "item": "Tablecloths para Ferias & Eventos",
+        "category": "Merch",
+        "specs": "Mantel ajustado de 4 pies con logo frontal monoline continuo",
+        "quantity": 2,
+        "supplier": "sos",
+        "status": "quote_requested",
+        "unitPrice": 180,
+        "totalCost": 360,
+        "paid": false,
+        "invoiceNo": "Pendiente",
+        "deliveryDate": "2026-11-15",
+        "brandColor": "Renewal Green #96EE89 base"
+      },
+      {
+        "id": "m-06",
+        "item": "Remeras del Equipo (Apparel)",
+        "category": "Merch",
+        "specs": "Remeras de algodón premium con isotipo vertical en pecho",
+        "quantity": 20,
+        "supplier": "sos",
+        "status": "quote_requested",
+        "unitPrice": 28.5,
+        "totalCost": 570,
+        "paid": false,
+        "invoiceNo": "Pendiente",
+        "deliveryDate": "2026-11-15",
+        "brandColor": "Grounded Slate con logo Renewal Green"
+      },
+      {
+        "id": "m-07",
+        "item": "Lapiceras Promocionales (Pens)",
+        "category": "Merch",
+        "specs": "Lapiceras grabadas con teléfono gratuito y logo en bucle",
+        "quantity": 2000,
+        "supplier": "sos",
+        "status": "quote_requested",
+        "unitPrice": 0.65,
+        "totalCost": 1300,
+        "paid": false,
+        "invoiceNo": "Pendiente",
+        "deliveryDate": "2026-11-20",
+        "brandColor": "Blanco / Slate / Renewal Green"
+      },
+      {
+        "id": "m-08",
+        "item": "Pelotas Antiestrés (Stress Balls)",
+        "category": "Merch",
+        "specs": "1,000 unidades en dos modelos (bucle ergonómico y corazón suave)",
+        "quantity": 1000,
+        "supplier": "everything_branded",
+        "status": "quote_requested",
+        "unitPrice": 1.45,
+        "totalCost": 1450,
+        "paid": false,
+        "invoiceNo": "Pendiente",
+        "deliveryDate": "2026-11-20",
+        "brandColor": "Renewal Green & Soft Pastel Blue"
+      },
+      {
+        "id": "m-09",
+        "item": "Bolsas de Algodón / Tote Bags",
+        "category": "Merch",
+        "specs": "Bolsas ecológicas de lona de algodón con logo vertical y texto",
+        "quantity": 2000,
+        "supplier": "sos",
+        "status": "quote_requested",
+        "unitPrice": 1.85,
+        "totalCost": 3700,
+        "paid": false,
+        "invoiceNo": "Pendiente",
+        "deliveryDate": "2026-11-25",
+        "brandColor": "Color crudo natural con estampa Slate"
+      },
+      {
+        "id": "m-10",
+        "item": "Lanyards y Gorras para Eventos",
+        "category": "Merch",
+        "specs": "20 sets de credencial colgante y gorras bordadas para voluntarios",
+        "quantity": 20,
+        "supplier": "fast_promos",
+        "status": "quote_requested",
+        "unitPrice": 19,
+        "totalCost": 380,
+        "paid": false,
+        "invoiceNo": "Pendiente",
+        "deliveryDate": "2026-11-15",
+        "brandColor": "Slate & Renewal Green"
+      },
+      {
+        "id": "m-11",
+        "item": "Botellas Reutilizables de Agua",
+        "category": "Merch",
+        "specs": "Botellas de aluminio libres de BPA grabadas en láser",
+        "quantity": 20,
+        "supplier": "everything_branded",
+        "status": "quote_requested",
+        "unitPrice": 14.5,
+        "totalCost": 290,
+        "paid": false,
+        "invoiceNo": "Pendiente",
+        "deliveryDate": "2026-11-15",
+        "brandColor": "Slate mate con grabado plateado"
+      }
+    ]
+  }
+}

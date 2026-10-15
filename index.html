@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-[#F8F9F5]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Witness to War & Violence — Centro de Control Digital & Operaciones</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandSlate: '#323B3F',
+            brandGreen: '#96EE89',
+            brandStone: '#F8F9F5',
+            brandBlue: '#BCD9EF',
+            brandYellow: '#FFD64E',
+            brandLavender: '#EAC1FF'
+          },
+          fontFamily: {
+            sans: ['Noto Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            serif: ['Noto Serif', 'Georgia', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Noto Sans (Official Brand Font) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Noto Sans', sans-serif;
+      color: #323B3F;
+      background-color: #F8F9F5;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes scaleUp {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .animate-scaleUp {
+      animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Estilos específicos para impresión (Generador de PDF para Lachlan / Board) */
+    @media print {
+      body {
+        background-color: white !important;
+        color: black !important;
+      }
+      .no-print, header, nav, #headerMetrics, button, select, .btn-action {
+        display: none !important;
+      }
+      #mainContentContainer {
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .bg-white, .bg-slate-50, .bg-slate-900 {
+        background: transparent !important;
+        color: black !important;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+      }
+      .print-header {
+        display: block !important;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #323B3F;
+        padding-bottom: 10px;
+      }
+    }
+
+    .print-header {
+      display: none;
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col">
+
+  <!-- ENCABEZADO DE IMPRESIÓN (Solo visible al imprimir o guardar como PDF) -->
+  <div class="print-header p-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-black text-[#323B3F]">Witness to War & Violence — Reporte Ejecutivo de Estado</h1>
+        <p class="text-xs text-slate-600">STARTTS / NSW Health Department · Fecha: 14 Octubre 2026</p>
+      </div>
+      <div class="text-right text-xs font-semibold">
+        <span>Confidencial · Presentación para Lachlan & Junta Directiva</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER PRINCIPAL DEL APLICATIVO -->
+  <header class="bg-[#323B3F] text-white sticky top-0 z-40 shadow-md border-b border-slate-700/60 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Identidad Visual de Marca (Logo Oficial) -->
+        <div class="flex items-center gap-4">
+          <div class="bg-white p-2 rounded-xl shadow-sm flex items-center justify-center">
+            <img src="assets/logos/W2W_logo-01.svg" alt="Witness to War Logo" class="h-8 md:h-10 w-auto" />
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-[#96EE89] uppercase tracking-wider">Mission Control</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
+                STARTTS / NSW Health
+              </span>
+            </div>
+            <h1 class="text-lg md:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+              Witness to War & Violence
+            </h1>
+          </div>
+        </div>
+
+        <!-- Métricas Rápidas & Selector de Roles -->
+        <div class="flex items-center gap-3">
+          
+          <!-- Contenedor de Métricas del Header -->
+          <div id="headerMetrics" class="hidden lg:flex items-center">
+            <!-- Inyectado dinámicamente por app.js -->
+          </div>
+
+          <!-- Selector de Rol (Vistas Personalizadas) -->
+          <div class="flex items-center gap-1.5 bg-slate-800/80 p-1 rounded-xl border border-slate-700">
+            <span class="text-[11px] font-bold text-slate-400 pl-2 hidden sm:inline">Rol:</span>
+            <select id="roleSelector" class="bg-slate-900 text-white text-xs font-semibold rounded-lg px-2.5 py-1.5 border-0 focus:ring-2 focus:ring-[#96EE89] cursor-pointer">
+              <option value="executive">👑 Vista Ejecutiva (Lachlan)</option>
+              <option value="agency">🏢 Vista Agencia (onmove)</option>
+              <option value="operations">👥 Vista Operativa (Equipo W2W)</option>
+              <option value="media">📈 Vista Growth & Redes (Luis)</option>
+              <option value="merch">📦 Vista Merchandising & Eventos</option>
+            </select>
+          </div>
+
+          <!-- Indicador de Sincronización en Vivo -->
+          <div id="syncBadge" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-800 text-emerald-300 border border-slate-700">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="syncStatusText">En Vivo</span>
+          </div>
+
+          <!-- Botón de Compartir Enlace con Roles & Túnel Seguro -->
+          <button onclick="openShareModal()" title="Compartir Enlaces por Rol & Túnel Seguro" 
+                  class="flex items-center gap-1.5 px-3 py-1.5 bg-[#96EE89] hover:bg-[#82d675] text-[#323B3F] text-xs font-bold rounded-lg shadow-sm transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+            </svg>
+            <span class="hidden md:inline">Compartir</span>
+          </button>
+
+          <!-- Botones de Acción Globales (Exportar, Imprimir, Menú) -->
+          <div class="flex items-center gap-1">
+            <!-- Imprimir / PDF -->
+            <button onclick="printExecutiveReport()" title="Exportar Reporte Ejecutivo a PDF" 
+                    class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+              </svg>
+            </button>
+
+            <!-- Exportar JSON -->
+            <button onclick="exportDataAsJSON()" title="Descargar Copia de Respaldo JSON" 
+                    class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+              </svg>
+            </button>
+
+            <!-- Importar JSON -->
+            <button onclick="importDataFromJSON()" title="Cargar Copia de Respaldo JSON" 
+                    class="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+              </svg>
+            </button>
+
+            <!-- Restaurar Datos Originales -->
+            <button onclick="resetToDefaultData()" title="Restablecer Datos de Fábrica" 
+                    class="p-2 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- BARRA DE NAVEGACIÓN SECUNDARIA (PESTAÑAS) -->
+  <nav class="bg-white border-b border-slate-200 sticky top-20 z-30 shadow-sm no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-14 overflow-x-auto no-scrollbar gap-2">
+        <div class="flex items-center gap-1.5 flex-nowrap">
+          
+          <!-- Pestaña 1: Radar Estratégico -->
+          <button data-nav-tab="radar" class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold bg-[#323B3F] text-[#96EE89] shadow-sm transition-all whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+            <span>🧭 Radar Estratégico</span>
+          </button>
+
+          <!-- Pestaña 2: Sitio Web & Agencia onmove -->
+          <button data-nav-tab="agency" class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+            </svg>
+            <span>🌐 Sitio Web & onmove (Timeframes)</span>
+          </button>
+
+          <!-- Pestaña 3: Flujo Interno & Anti-Cuellos de Botella -->
+          <button data-nav-tab="workflow" class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            <span>⚡ Flujo Interno & Anti-Cuellos</span>
+          </button>
+
+          <!-- Pestaña 4: Redes & Google Ads -->
+          <button data-nav-tab="media" class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+            </svg>
+            <span>📊 Campañas & Telefonía (Meta/Google)</span>
+          </button>
+
+          <!-- Pestaña 5: Merchandising & Presupuestos -->
+          <button data-nav-tab="merch" class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+            </svg>
+            <span>🎁 Merchandising & Impresión</span>
+          </button>
+
+          <!-- Pestaña 6: Matriz RACI & Contactos -->
+          <button data-nav-tab="raci" class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+            <span>👥 Matriz RACI</span>
+          </button>
+
+          <!-- Pestaña 7: Cronograma & Roadmap -->
+          <button data-nav-tab="timeline" class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <span>📅 Cronograma & Roadmap</span>
+          </button>
+
+        </div>
+
+        <!-- Búsqueda Global Rápida -->
+        <div class="hidden sm:flex items-center gap-2">
+          <div class="relative">
+            <input type="text" id="globalSearchInput" placeholder="Buscar tarea, proveedor..." 
+                   class="bg-slate-100 border border-slate-200 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#96EE89] w-48" />
+            <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENEDOR PRINCIPAL REACTIVO -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div id="mainContentContainer">
+      <!-- El contenido dinámico se inyecta desde app.js según la pestaña y rol activo -->
+      <div class="flex items-center justify-center p-12">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#323B3F]"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- CONTENEDOR DE MODALES -->
+  <div id="modalContainer"></div>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 py-6 mt-auto text-xs text-slate-500 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-slate-700">Witness to War & Violence</span>
+        <span>·</span>
+        <span>STARTTS NSW Health</span>
+        <span>·</span>
+        <span>Colores de Marca: Renewal Green (#96EE89) & Grounded Slate (#323B3F)</span>
+      </div>
+      <div>
+        <span>Datos sincronizados localmente en este navegador.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts del Sistema -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
