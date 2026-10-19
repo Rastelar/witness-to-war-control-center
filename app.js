@@ -213,7 +213,7 @@ let AppState = {
   isServerSyncActive: false
 };
 
-// Helper de traducción con fallback
+// Helper de traducción de claves con fallback
 function t(key, fallback = "") {
   const currentLang = AppState.lang || "en";
   if (I18N[currentLang] && I18N[currentLang][key]) {
@@ -223,6 +223,253 @@ function t(key, fallback = "") {
     return I18N.en[key];
   }
   return fallback || key;
+}
+
+// Helper bilingüe conciso: si lang === "en", devuelve enText, si no esText
+function tr(esText, enText) {
+  return AppState.lang === "en" ? enText : esText;
+}
+
+// Diccionario de traducción dinámica de contenidos y entidades
+const CONTENT_TRANSLATIONS = {
+  // Strategic Radar - Where we are
+  "1. ¿Dónde estamos HOY?": "1. Where are we TODAY?",
+  "Branding aprobado, Campaña Meta Fase 1 activa, y Wireframes Web en revisión técnica.": "Branding approved, Phase 1 Meta Ads active, and Website Wireframes under technical review.",
+  "Identidad & Branding": "Identity & onmove Branding",
+  "100% completado por la agencia onmove ($27,300 + GST). Todos los manuales, logos multilingües y swatches Pantone 2267 C recibidos.": "100% completed by onmove ($27,300 AUD + GST). All brand guidelines, multilingual logos and Pantone 2267 C swatches delivered on Drive.",
+  "Completado": "Completed",
+  "Campaña Meta Ads Fase 1": "Phase 1 Meta Ads Campaign",
+  "Activa con $2,500 en 7 conjuntos de anuncios (Árabe, Farsi/Dari, Ucraniano, Hebreo, Inglés). Enfoque 100% llamadas directas.": "Active with $2,500 AUD across 7 ad sets (Arabic, Farsi/Dari, Ukrainian, Hebrew, English). Focused 100% on direct phone inquiries.",
+  "En Ejecución": "In Execution",
+  "Sitio Web (onmove)": "Website (onmove)",
+  "Fase 1 de Estrategia e Información avanzada al 85%. Los wireframes de 'Get Help' están diseñados en Figma pero TRABADOS en validación de contenidos.": "Sprint 1 Strategy & IA at 85%. 'Get Help' wireframes designed in Figma but HELD pending content sign-off.",
+  "Cuello de Botella": "Bottleneck",
+  "Merchandising & Banners": "Merchandise & Banners",
+  "Primer lote de impresión (tarjetas, folletos, roll-up banners) pagado y recibido en Snap Wetherill Park ($905.34). Cotizaciones de merchandising masivo solicitadas a 4 proveedores.": "Initial print batch (cards, brochures, pull-up banners) paid and received from Snap Wetherill Park ($905.34 AUD). Bulk merchandise quotes requested from 4 suppliers.",
+  "En Cotización": "Tendering / Quoting",
+
+  // Strategic Radar - Where we are going
+  "2. ¿Hacia dónde vamos? (Próximos Hitos)": "2. Where are we HEADED? (Upcoming Milestones)",
+  "Hacia el lanzamiento del sitio web multilingüe y la expansión nacional de llamadas.": "Towards the multilingual website go-live and nationwide call expansion.",
+  "Semanas 1-2 (Octubre)": "Weeks 1-2 (October)",
+  "Desbloqueo de Contenidos & Timeframe de onmove": "Content Sign-off & onmove Timeframe Commitment",
+  "Aprobación clínica de las 8 emociones del Get Help por Joshua y entrega formal del cronograma semana a semana por parte de onmove.": "Clinical sign-off on 8 Get Help emotional states by Joshua and formal delivery of weekly sprint schedule by onmove.",
+  "Semanas 3-5 (Noviembre)": "Weeks 3-5 (November)",
+  "Desarrollo WordPress en Bricks Builder": "WordPress Build in Bricks Builder",
+  "Construcción del CMS, integración de las rutas de crisis ('Safety Exit'), buscador de recursos y estructura en 6 idiomas.": "CMS build, crisis routing integration ('Safety Exit'), resource finder, and 6-language RTL architecture.",
+  "Semanas 6-8 (Diciembre)": "Weeks 6-8 (December)",
+  "Evaluación Meta Ads Fase 1 & Cierre de Campaña": "Meta Ads Phase 1 Review & Campaign Wrap-up",
+  "Medición del volumen de llamadas fuera de NSW (Melbourne, Adelaide, Shepparton) vs Sydney. Cierre de campaña previo al receso de verano (14 Dic).": "Measuring call volume outside NSW (Melbourne, Adelaide, Shepparton) vs Sydney. Campaign wrap-up before summer recess (14 Dec).",
+  "Enero 2027": "January 2027",
+  "Decisión Reserva Google Ads ($2,500) y Lanzamiento Web": "Google Ads Reserve Decision ($2,500 AUD) & Web Go-Live",
+  "Si el costo por llamada de Meta es menor a $100, se escala Meta; si no, se activa Google Search / Call-only. QA y despliegue del sitio en vivo.": "If Meta cost-per-call is under $100, scale Meta; otherwise activate Google Search / Call-only reserve. QA and live deployment.",
+
+  // Strategic Radar - Next Step
+  "3. ¿Cuál es el paso a seguir INMEDIATO?": "3. What is our IMMEDIATE NEXT STEP?",
+  "Acciones concretas requeridas hoy para romper los dos cuellos de botella principales.": "Concrete actions required today to break the two primary bottlenecks.",
+  "Exigir el 'Timeframe & Sprint Schedule' formal a onmove": "Demand formal 'Timeframe & Sprint Schedule' from onmove",
+  "onmove debe comprometer por escrito las fechas de entrega de la Fase 2 (Visual UX), Fase 3 (Desarrollo Bricks) y Fase 4 (Testing). Sin estas fechas, Lachlan no puede presentar avances al board de STARTTS.": "onmove must formally commit in writing to milestone delivery dates for Phase 2 (UX/UI), Phase 3 (Bricks Build), and Phase 4 (QA/Launch). Without these, Lachlan cannot report progress to the STARTTS board.",
+  "Copiar Correo para onmove": "Copy Formal Notice for onmove",
+  "Firma clínica de las 8 emociones del Get Help Toolkit": "Clinical sign-off on 8 emotional states for Get Help Toolkit",
+  "Validar que la lista de 8 emociones (Ansiedad, Desconexión, Depresión, Miedo, Soledad, Agobio, Inquietud, Preocupación) sea clínicamente precisa para víctimas de trauma.": "Validate that the taxonomy of 8 emotional states is clinically accurate for trauma-affected communities.",
+  "Reclamar a Joshua": "Follow-up with Joshua",
+  "Consolidar cotizaciones de merchandising (4 proveedores)": "Consolidate merchandise quotes (4 suppliers)",
+  "Reunir las respuestas de SOS Promotions, Everything Branded, Fast Promos y Vivid Ads para presentar comparativa de precios a Lachlan.": "Consolidate supplier quotes from SOS Promotions, Everything Branded, Fast Promos, and Vivid Ads for Lachlan's sign-off.",
+  "Ver Proveedores": "View Suppliers",
+
+  // Sprints / Fases
+  "Fase 1: Estrategia de Sitio & Arquitectura de Información": "Sprint 1: Website Strategy & Information Architecture",
+  "Fase 2: Diseño Visual & Experiencia de Usuario (UX/UI)": "Sprint 2: Visual Design & User Experience (UX/UI)",
+  "Fase 3: Desarrollo en WordPress (Bricks Builder)": "Sprint 3: WordPress Development (Bricks Builder)",
+  "Fase 4: Testing, Accesibilidad & Lanzamiento": "Sprint 4: QA Testing, WCAG 2.1 AA Accessibility & Go-Live",
+
+  // Entregables
+  "Arquitectura web y sitemap general": "Website architecture & master sitemap",
+  "Mapeo de rutas de soporte en crisis": "Crisis support user journeys mapping",
+  "Estructura de la sección 'Get Help' y toolkit": "'Get Help' section layout & toolkit structure",
+  "Estructura multilingüe (rutas por idioma)": "Multilingual routing (6 languages)",
+  "Concepto visual y dirección de Homepage": "Homepage visual concept & creative direction",
+  "Diseño de plantillas para páginas de contenido clave": "Key content page templates design",
+  "Maquetas de layouts para el Hub de Recursos y Toolkit": "Self-Help Hub & Resource directory layouts",
+  "Componente de salida segura inmediata ('Safety Exit')": "Immediate Safety Exit component",
+  "Diseño responsivo para móviles y tablets": "Responsive mobile & tablet layouts",
+  "Instalación y configuración de WordPress + Bricks Builder": "WordPress + Bricks Builder core setup & config",
+  "Desarrollo del theme accesible y modular": "Accessible & modular custom theme development",
+  "Implementación del Hub de Recursos con filtros por sentimiento": "Resource Hub build with emotion tag filters",
+  "Configuración multilingüe en 6 idiomas (RTL para Árabe/Hebreo/Farsi/Dari)": "6 Languages setup with RTL (Arabic, Hebrew, Farsi, Dari)",
+  "Integración de donaciones (sistema embebido)": "Embedded donation system integration",
+  "Optimización técnica y SEO básico": "Technical optimisation & baseline SEO",
+  "Control de calidad funcional (QA cross-browser)": "Cross-browser functional QA testing",
+  "Auditoría de accesibilidad WCAG 2.1 AA": "WCAG 2.1 AA accessibility audit & sign-off",
+  "Capacitación de CMS para el equipo (5 horas incluidas)": "CMS training for WTWV team (5 hrs included)",
+  "Despliegue a producción y verificación en vivo": "Production deployment & live verification",
+  "Soporte post-lanzamiento (15 horas incluidas)": "Post-launch warranty & hypercare support (15 hrs included)",
+
+  // Notas y Dependencias
+  "Wireframes listos en Figma (frames 1492-6, 1853-7561). Falta cierre de textos clínicos.": "Figma wireframes ready (frames 1492-6, 1853-7561). Pending clinical text sign-off.",
+  "Aplicando paleta Renewal Green #96EE89 y Grounded Slate #323B3F.": "Applying Renewal Green #96EE89 and Grounded Slate #323B3F palette.",
+  "Validación del brief clínico de 'Get Help' por parte de Joshua y Yassmen.": "Validation of 'Get Help' clinical brief by Joshua and Yassmen.",
+  "Aprobación de la dirección visual de Homepage por Lachlan.": "Approval of Homepage visual direction by Lachlan.",
+  "Entrega de textos traducidos en los 6 idiomas e infraestructura de hosting/licencia de plugins.": "Delivery of translated copy in 6 languages and hosting/licence infrastructure.",
+  "Entrega de credenciales de hosting y contenidos finales aprobados.": "Delivery of hosting credentials and final approved content.",
+
+  // Get Help Topics
+  "Preocupación por familiares en el extranjero (Worried about family overseas)": "Worried about family overseas (Overseas conflict impact)",
+  "Impacto del trauma y la violencia en la vida diaria (Trauma & daily impact)": "Trauma & daily life impact (Somatic and emotional distress)",
+  "Navegando noticias y medios de comunicación (Navigating news and media triggers)": "Navigating news and media triggers (Information overload)",
+  "Apoyo a niños y jóvenes afectados por la guerra (Supporting children and youth)": "Supporting children and youth affected by war (Family care)",
+
+  // Get Help Techniques
+  "Gentle Belly Breathing (Respiración abdominal suave)": "Gentle Belly Breathing (Slow diaphragmatic exercise)",
+  "5-4-3-2-1 Grounding (Anclaje sensorial)": "5-4-3-2-1 Grounding Technique (Sensory anchor for acute panic)",
+  "Orient to the Present (Orientación al momento presente)": "Orient to the Present (Safe room orientation)",
+  "Five Senses Treasure Hunt (Exploración de los cinco sentidos)": "Five Senses Treasure Hunt (Multigenerational sensory scan)",
+
+  // 8 Emotional States (Feelings Taxonomy)
+  "1. Ansiedad y Pánico": "1. Anxiety & Panic",
+  "2. Aislamiento y Soledad": "2. Isolation & Loneliness",
+  "3. Desesperanza y Tristeza": "3. Hopelessness & Sadness",
+  "4. Culpa del Sobreviviente": "4. Survivor Guilt",
+  "5. Ira e Impotencia": "5. Anger & Helplessness",
+  "6. Insomnio y Pesadillas": "6. Insomnia & Nightmares",
+  "7. Agobio Sensorial": "7. Sensory Overload",
+  "8. Dificultad para Concentrarse": "8. Concentration Difficulties",
+
+  // Get Help Next Steps
+  "Sesión de validación de wireframes con onmove": "Wireframes validation review session with onmove",
+  "Revisar frames 1492-6 y 1853-7561 en Figma con Luis y equipo clínico.": "Review Figma frames 1492-6 and 1853-7561 with Luis and clinical team.",
+  "Firma clínica de 8 sentimientos por Joshua": "Clinical sign-off on 8 feelings by Joshua",
+  "Requerido para que onmove cierre la taxonomía de filtros en WordPress.": "Required for onmove to configure taxonomy filters in WordPress.",
+  "Entrega de copys traducidos a los 5 idiomas adicionales": "Delivery of translated copy across remaining 5 languages",
+  "Árabe, Hebreo, Farsi, Dari y Ucraniano para cargar en CMS.": "Arabic, Hebrew, Farsi, Dari and Ukrainian for CMS import.",
+  "Aprobación de la dirección visual de Homepage": "Homepage visual design sign-off",
+  "Lachlan debe dar el OK a la maqueta de alta fidelidad en Figma.": "Lachlan must give final sign-off on high-fidelity Figma mockup.",
+
+  // About Us
+  "Declaración de Misión y Enfoque Informado en Trauma": "Trauma-informed mission statement & clinical framework",
+  "Redactado y alineado con los principios de atención de trauma de STARTTS.": "Drafted and aligned with STARTTS trauma-informed care principles.",
+  "Co-branding Institucional: STARTTS / NSW Health": "Institutional co-branding: STARTTS / NSW Health",
+  "Logos y jerarquía visual aprobados. NSW Health arriba a la izquierda, STARTTS co-sponsor.": "Approved logos & visual hierarchy. NSW Health top-left, STARTTS co-sponsor.",
+  "Respaldo y Lockup de la Red Nacional FASSTT": "FASSTT National Network endorsement & lockup",
+  "Revisar si se incluye el logo de FASSTT o si se menciona solo en el directorio interestatal.": "Review whether FASSTT logo is included or referenced in interstate directory.",
+  "Protocolos de Confidencialidad y Privacidad Médica": "Medical confidentiality & clinical privacy protocols",
+  "Aclarar explícitamente que las llamadas y consultas no quedan registradas en bases de datos policiales ni migratorias.": "Explicitly state calls/inquiries are never shared with police or immigration authorities.",
+  "Biografías del Equipo Clínico / Testimonios": "Clinical staff biographies vs anonymous profiles",
+  "Decidir si se publican nombres reales de terapeutas o perfiles protegidos por seguridad comunitaria.": "Decision needed: publish real therapist names or protected profiles for community security.",
+  "Botón de Salida Segura Inmediata ('Safety Exit')": "Immediate Safety Exit component",
+  "Requisito de seguridad digital: botón flotante persistente que redirige a Google y borra el historial de navegación.": "Digital safety requirement: persistent floating button redirecting to weather/Google and clearing cache.",
+  "Traducción Oficial en los 6 Idiomas": "Official accredited translation in 6 languages",
+  "Asegurar que los textos sobre STARTTS y NSW Health estén acreditados por traductores NAATI.": "Ensure all institutional copy is accredited by NAATI professional translators.",
+
+  // Videos
+  "Gentle Belly Breathing (Respiración Abdominal)": "Gentle Belly Breathing (Slow Diaphragmatic Exercise)",
+  "5-4-3-2-1 Sensory Grounding (Anclaje Sensorial)": "5-4-3-2-1 Sensory Grounding Technique",
+  "Orient to the Present (Orientación al Presente)": "Orient to the Present (Safe Space Orientation)",
+  "Five Senses Treasure Hunt (Caza de Sentidos)": "Five Senses Treasure Hunt (Multigenerational Scan)",
+  "Witness to War: Institucional & Historia de Marca": "Witness to War: Institutional Brand Story",
+
+  // STARTTS Pending
+  "Validación de Wireframes de 'Get Help' en reunión de mañana": "Validation of 'Get Help' wireframes in tomorrow's meeting",
+  "Reunión agendada para el viernes 16 Oct. Luis y Joshua deben dar feedback definitivo sobre frames Figma.": "Meeting scheduled for Friday 16 Oct. Luis and Joshua must provide final feedback on Figma frames.",
+  "Aprobación clínica final del listado de 8 emociones": "Final clinical sign-off on 8 emotional states",
+  "Joshua debe firmar el documento de Google Docs para que la agencia configure las taxonomías en WordPress.": "Joshua must sign off in Google Docs so onmove can configure WordPress taxonomy filters.",
+  "Entrega de textos traducidos en 5 idiomas a onmove": "Delivery of translated copy in 5 languages to onmove",
+  "Yassmen y equipo de traducción deben entregar las hojas de cálculo con textos para carga en CMS.": "Yassmen & translation team must deliver copy spreadsheets for CMS upload.",
+  "Confirmación de licencias Bricks Builder y hosting": "Bricks Builder licences & hosting infrastructure confirmation",
+  "Definir si el hosting lo provee STARTTS/NSW Health o si onmove gestiona el entorno cloud.": "Decide whether hosting is provisioned by STARTTS/NSW Health or managed by onmove.",
+
+  // Team Operations Tasks & Blocker Reasons
+  "Definición final de la lista de emociones para 'Get Help'": "Final sign-off on emotions taxonomy for 'Get Help'",
+  "Joshua no ha emitido dictamen en 4 días sobre el listado de 8 sentimientos.": "Joshua has not provided clinical sign-off on the 8 feelings list in 4 days.",
+  "Solicitud y fijación del cronograma oficial de onmove": "Request and formal locking of onmove's official timeframe",
+  "onmove no envió los timeframes de desarrollo en su propuesta inicial.": "onmove did not include development timeframes in their initial proposal.",
+  "Monitoreo semanal del registro de llamadas telefónicas de Meta Ads": "Weekly monitoring of Meta Ads phone call log",
+  "Cotización comparativa de merchandising masivo (4 proveedores)": "Competitive quoting for bulk merchandise (4 suppliers)",
+  "Traducción oficial de contenidos de folletos a 5 idiomas": "Official translation of brochure copy into 5 languages",
+  "Verificación de licencias de Bricks Builder y plugins WordPress": "Verification of Bricks Builder licences & WordPress plugins",
+  "Plan de difusión Ukrainian Fellowship 2026": "Promotion plan for Ukrainian Fellowship 2026",
+
+  // Paid Media Ad Sets & Notes
+  "Árabe - NSW (Canterbury-Bankstown, Fairfield)": "Arabic - NSW (Canterbury-Bankstown, Fairfield)",
+  "Comunidad más numerosa (~367k en Australia). Alta respuesta histórica.": "Largest community (~367k in Australia). High historical response rate.",
+  "Árabe - Resto de Australia (Melbourne focus)": "Arabic - Rest of Australia (Melbourne focus)",
+  "Caja de crecimiento regional ponderada doblemente para descentralizar NSW.": "Regional growth budget weighted double to decentralise beyond NSW.",
+  "Farsi / Dari - NSW (Blacktown, Fairfield)": "Farsi / Dari - NSW (Blacktown, Fairfield)",
+  "Audiencia consolidada iraní/afgana en NSW.": "Consolidated Iranian/Afghan community in NSW.",
+  "Farsi / Dari - Resto de Australia (Melb, Adelaide, Shepparton)": "Farsi / Dari - Rest of Australia (Melb, Adelaide, Shepparton)",
+  "La mayor concentración de afganos/hazaras vive fuera de NSW. Gran rendimiento.": "Highest concentration of Afghan/Hazara diaspora lives outside NSW. Strong performance.",
+  "Ucraniano - Nacional (Ucraniano + Ruso)": "Ukrainian - Nationwide (Ukrainian + Russian)",
+  "En 2025 fue la comunidad con mayor incremento porcentual (+111%).": "In 2025 this community achieved the highest percentage call growth (+111%).",
+  "Hebreo - Nacional (Glen Eira & Eastern Sydney)": "Hebrew - Nationwide (Glen Eira & Eastern Sydney)",
+  "Presencia institucional y equidad de servicio según compromiso de fondos.": "Institutional presence and service equity as per funding agreement.",
+  "Inglés - Nacional (Cap fijo referidores & familias)": "English - Nationwide (Capped budget for referrers & families)",
+  "Tope estricto de presupuesto para que el inglés no consuma los fondos de minorías.": "Strict budget cap ensuring English ads do not cannibalise minority language funds.",
+  "VIC (Hume, Brimbank, Dandenong) + Resto AU": "VIC (Hume, Brimbank, Dandenong) + Rest of AU",
+  "VIC (Casey-Cranbourne), SA (Salisbury) y Shepparton regional": "VIC (Casey-Cranbourne), SA (Salisbury) & Regional Shepparton",
+  "Australia Nacional": "Australia Nationwide",
+  "Melbourne (Glen Eira) + Sydney Este": "Melbourne (Glen Eira) + Eastern Sydney",
+  "Australia Nacional (Eventos de vida: Lejos del hogar)": "Australia Nationwide (Life events: Far from home)",
+
+  // Merchandising Items, Specs & Colors
+  "Business Cards (Linen)": "Business Cards (Linen)",
+  "100 unidades en papel lino 350gsm, full colour 2 caras": "100 units on 350gsm linen stock, double-sided full colour",
+  "Grounded Slate & White": "Grounded Slate & White",
+  "A4 Flyers (Silk)": "A4 Flyers (Silk)",
+  "200 unidades (2 modelos x 100 c/u) en 150gsm seda, 1 cara color": "200 units (2 designs x 100 ea) on 150gsm silk, single-sided colour",
+  "Renewal Green #96EE89 & Slate": "Renewal Green #96EE89 & Slate",
+  "A4 Flyers plegados DL": "DL Folded A4 Brochures",
+  "100 unidades en 150gsm seda, 2 caras color plegado a DL": "100 units on 150gsm silk, double-sided colour roll-folded to DL",
+  "Multicolor": "Multicolour",
+  "Pull Up Banners (Silver Base)": "Pull Up Banners (Silver Base)",
+  "2 banners roll-up retráctiles base plata, 850x2000mm color": "2 retractable roll-up banners silver base, 850x2000mm full colour",
+  "Renewal Green & Slate": "Renewal Green & Slate",
+  "Tablecloths para Ferias & Eventos": "Event Tablecloths (Fitted 4ft)",
+  "Mantel ajustado de 4 pies con logo frontal monoline continuo": "Fitted 4-foot tablecloth with continuous monoline loop front logo",
+  "Renewal Green #96EE89 base": "Renewal Green #96EE89 base",
+  "Remeras del Equipo (Apparel)": "Staff T-Shirts (Apparel)",
+  "Remeras de algodón premium con isotipo vertical en pecho": "Premium cotton tees with vertical chest icon & sleeve tagline",
+  "Grounded Slate con logo Renewal Green": "Grounded Slate with Renewal Green logo",
+  "Lapiceras Promocionales (Pens)": "Branded Pens (Loop Logo & 1800 No)",
+  "Lapiceras grabadas con teléfono gratuito y logo en bucle": "Printed ballpoint pens with toll-free 1800 number and loop logo",
+  "Blanco / Slate / Renewal Green": "White / Slate / Renewal Green",
+  "Pelotas Antiestrés (Stress Balls)": "Stress Relief Foam Balls (2 Designs)",
+  "1,000 unidades en dos modelos (bucle ergonómico y corazón suave)": "1,000 units across two moulds (ergonomic loop and soft heart)",
+  "Renewal Green & Soft Pastel Blue": "Renewal Green & Soft Pastel Blue",
+  "Bolsas de Algodón / Tote Bags": "Heavyweight Cotton Calico Bags",
+  "Bolsas ecológicas de lona de algodón con logo vertical y texto": "Heavy-duty canvas calico bags with vertical branding and toll-free number",
+  "Color crudo natural con estampa Slate": "Natural raw calico with Slate screen-print",
+  "Lanyards y Gorras para Eventos": "Volunteer Lanyards & Embroidered Caps",
+  "20 sets de credencial colgante y gorras bordadas para voluntarios": "20 sets of woven lanyards with cardholder and embroidered event caps",
+  "Slate & Renewal Green": "Slate & Renewal Green",
+  "Botellas Reutilizables de Agua": "Laser-Engraved Aluminium Drink Bottles",
+  "Botellas de aluminio libres de BPA grabadas en láser": "BPA-free matte aluminium drink bottles with laser-etched branding",
+  "Print": "Print",
+  "Displays": "Displays",
+  "Merch": "Merchandise",
+
+  // Supplier Notes
+  "Excelente calidad en papel lino y banners. Factura #29460 pagada el 12/06/2026 ($905.34).": "High quality linen stock and pull-up banners. Invoice #29460 paid on 12/06/2026 ($905.34 AUD).",
+  "Proveedor principal para merchandising corporativo (remeras, lapiceras, bolsas, manteles).": "Primary corporate merchandise supplier (apparel, pens, calico bags, tablecloths).",
+  "Cotización comparativa para pelotas antiestrés y botellas.": "Competitive quote requested for tactile stress relief balls and water bottles.",
+  "Lanyards y gorras promocionales.": "Branded lanyards and embroidered promotional caps.",
+  "Especialistas en manteles para ferias (tablecloths) y displays de eventos.": "Specialists in event tablecloths, fabric trade-show runners and pull-up displays.",
+
+  // Team Roles
+  "Área Leader / Executive Sponsor": "Area Leader / Executive Sponsor",
+  "Marketing, Growth & Digital PM": "Marketing, Growth & Digital PM",
+  "Team Leader - Witness to War": "Team Leader - Witness to War",
+  "Community Development Coordinator": "Community Development Coordinator",
+  "Clinical Section Lead (STARTTS)": "Clinical Section Lead (STARTTS)",
+  "Project Support & Socials": "Project Support & Socials",
+  "External Web & Design Partner": "External Web & Design Partner"
+};
+
+function translateContent(text) {
+  if (!text) return "";
+  if (AppState.lang === "en" && CONTENT_TRANSLATIONS[text]) {
+    return CONTENT_TRANSLATIONS[text];
+  }
+  return text;
 }
 
 // Cambia el idioma de la aplicación (Australian English principal + Español)
@@ -235,6 +482,7 @@ function setLanguage(lang) {
   if (langSelector) langSelector.value = lang;
 
   updateI18nStaticUI();
+  updateNavigationUI();
   renderApp();
 
   const msg = lang === "en" 
@@ -518,6 +766,9 @@ function setupEventListeners() {
 /**
  * Cambia el rol activo y adapta la vista
  */
+/**
+ * Cambia el rol activo y adapta la vista
+ */
 function setRole(role) {
   AppState.currentRole = role;
   
@@ -536,40 +787,89 @@ function setRole(role) {
 
   updateNavigationUI();
   renderApp();
-  showToast(`Vista cambiada a: ${getRoleDisplayName(role)}`, "info");
+  showToast(tr(`Vista cambiada a: ${getRoleDisplayName(role)}`, `View changed to: ${getRoleDisplayName(role)}`), "info");
 }
 
 function getRoleDisplayName(role) {
+  const isEn = AppState.lang === "en";
   switch (role) {
-    case "executive": return "👑 Vista Ejecutiva (Lachlan)";
-    case "agency": return "🏢 Vista Agencia (onmove)";
-    case "operations": return "👥 Vista Operativa (Equipo W2W)";
-    case "media": return "📈 Vista Growth & Redes (Luis)";
-    case "merch": return "📦 Vista Merchandising & Eventos";
-    default: return "Vista General";
+    case "executive": return isEn ? "👑 Executive View (Lachlan)" : "👑 Vista Ejecutiva (Lachlan)";
+    case "agency": return isEn ? "🏢 Agency Portal (onmove - Restricted Scope)" : "🏢 Portal Agencia (onmove - Alcance Restringido)";
+    case "operations": return isEn ? "👥 Operations (WTWV Team)" : "👥 Vista Operativa (Equipo W2W)";
+    case "media": return isEn ? "📈 Growth & Media (Luis)" : "📈 Vista Growth & Redes (Luis)";
+    case "merch": return isEn ? "📦 Merchandising & Events" : "📦 Vista Merchandising & Eventos";
+    default: return isEn ? "General View" : "Vista General";
   }
 }
 
 /**
- * Cambia la pestaña activa
+ * Cambia la pestaña activa con control de acceso por rol
  */
 function setActiveTab(tab) {
+  const isAgency = AppState.currentRole === "agency";
+  const restrictedForAgency = ["radar", "workflow", "media", "merch", "raci"];
+  
+  // Si la agencia intenta entrar a un área restringida, redirigir a 'agency'
+  if (isAgency && restrictedForAgency.includes(tab)) {
+    tab = "agency";
+    showToast(tr("Acceso restringido: vista interna de STARTTS", "Access restricted: STARTTS internal view"), "info");
+  }
+
   AppState.activeTab = tab;
   updateNavigationUI();
   renderCurrentTab();
 }
 
+/**
+ * Control de visibilidad de pestañas y restricciones por rol
+ */
 function updateNavigationUI() {
+  const isAgency = AppState.currentRole === "agency";
+  const restrictedForAgency = ["radar", "workflow", "media", "merch", "raci"];
+
+  // Si el rol es agencia y está en una pestaña restringida, forzar hacia 'agency'
+  if (isAgency && restrictedForAgency.includes(AppState.activeTab)) {
+    AppState.activeTab = "agency";
+  }
+
   document.querySelectorAll("[data-nav-tab]").forEach(btn => {
     const tabName = btn.getAttribute("data-nav-tab");
-    if (tabName === AppState.activeTab) {
-      btn.className = "flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold bg-[#323B3F] text-[#96EE89] shadow-sm transition-all";
+    
+    // Ocultar pestañas internas al rol agencia
+    if (isAgency && restrictedForAgency.includes(tabName)) {
+      btn.style.display = "none";
+      return;
     } else {
-      btn.className = "flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all";
+      btn.style.display = "flex";
+    }
+
+    if (tabName === AppState.activeTab) {
+      btn.className = "flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold bg-[#323B3F] text-[#96EE89] shadow-sm transition-all whitespace-nowrap";
+    } else {
+      btn.className = "flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all whitespace-nowrap";
     }
   });
 
-  // Selector de Rol sincronizado
+  // Actualizar etiquetas dinámicas según rol
+  const tabLabelTimeline = document.getElementById("tabLabelTimeline");
+  if (tabLabelTimeline) {
+    if (isAgency) {
+      tabLabelTimeline.textContent = tr("Cronograma Web (onmove)", "Website Roadmap (onmove)");
+    } else {
+      tabLabelTimeline.textContent = t("tabTimeline");
+    }
+  }
+
+  const tabLabelScopeReviews = document.getElementById("tabLabelScopeReviews");
+  if (tabLabelScopeReviews) {
+    if (isAgency) {
+      tabLabelScopeReviews.textContent = tr("Get Help & Alcance Web", "Get Help & Web Scope");
+    } else {
+      tabLabelScopeReviews.textContent = t("tabScopeReviews");
+    }
+  }
+
+  // Sincronizar selector de rol
   const roleSelect = document.getElementById("roleSelector");
   if (roleSelect && roleSelect.value !== AppState.currentRole) {
     roleSelect.value = AppState.currentRole;
@@ -586,60 +886,103 @@ function renderApp() {
 }
 
 /**
- * Renderiza métricas rápidas del header
- */
-/**
- * Renderiza métricas rápidas del header en tema oscuro de alto contraste
+ * Renderiza métricas rápidas del header en tema oscuro con filtro de confidencialidad para la agencia
  */
 function renderHeaderMetrics() {
   const container = document.getElementById("headerMetrics");
   if (!container || !AppState.data) return;
 
   const data = AppState.data;
-  const totalTasks = data.teamOperations ? data.teamOperations.tasks.length : 0;
-  const blockedTasks = data.teamOperations ? data.teamOperations.tasks.filter(t => t.isBlocked).length : 0;
-  const metaSpent = data.paidMedia ? data.paidMedia.phase1Meta.spentToDate : 0;
-  const metaBudget = data.paidMedia ? data.paidMedia.phase1Meta.totalBudget : 3000;
+  const isEn = AppState.lang === "en";
+  const isAgency = AppState.currentRole === "agency";
+
   const websiteProgress = data.agencyRoadmap ? Math.round(
     data.agencyRoadmap.phases.reduce((acc, p) => acc + (p.progress || 0), 0) / data.agencyRoadmap.phases.length
   ) : 0;
 
-  const isEn = AppState.lang === "en";
+  // VISTA DE MÉTRICAS EXCLUSIVA PARA LA AGENCIA ONMOVE (Cero filtración de datos de pauta ni cuellos internos)
+  if (isAgency) {
+    container.innerHTML = `
+      <div class="flex flex-wrap items-center gap-2.5">
+        <!-- Indicador de Alcance Agencia -->
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-[#96EE89] border border-slate-700">
+          <span class="w-2 h-2 rounded-full bg-[#96EE89]"></span>
+          <span>${tr("Portal Agencia (Alcance Sitio Web & Get Help)", "Agency Portal (Website & Get Help Scope)")}</span>
+        </div>
+
+        <!-- Progreso de Sprints Web -->
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800/90 text-slate-300 border border-slate-700">
+          <span class="text-slate-400">${tr("Sprints Web:", "Website Sprints:")}</span>
+          <span class="font-bold text-[#96EE89]">${websiteProgress}%</span>
+        </div>
+
+        <!-- Alcance Contratado -->
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800/90 text-slate-300 border border-slate-700">
+          <span class="text-slate-400">${tr("Alcance Contratado:", "Contracted Scope:")}</span>
+          <span class="font-bold text-white">165 hrs ($21,450 AUD)</span>
+        </div>
+
+        <!-- Stack Tecnológico -->
+        <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800/90 text-slate-300 border border-slate-700">
+          <span class="text-slate-400">${tr("Plataforma:", "Platform:")}</span>
+          <span class="font-bold text-slate-200">WordPress + Bricks Builder (WCAG 2.1 AA)</span>
+        </div>
+      </div>
+
+      <!-- Próximo Hito Crítico -->
+      <div class="flex items-center gap-2">
+        <button onclick="setActiveTab('scope-reviews')" class="flex items-center gap-1.5 px-2.5 py-1 bg-purple-950/90 hover:bg-purple-900 text-purple-200 border border-purple-800 rounded-lg text-xs font-bold transition-all">
+          <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
+          <span>${tr("📅 Viernes 16 Oct: Sesión de Wireframes", "📅 Fri 16 Oct: Wireframes Session")}</span>
+          <svg class="w-3.5 h-3.5 text-purple-300 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  // VISTA DE MÉTRICAS COMPLETA PARA EQUIPO INTERNO, LACHLAN Y MARKETING
+  const totalTasks = data.teamOperations ? data.teamOperations.tasks.length : 0;
+  const blockedTasks = data.teamOperations ? data.teamOperations.tasks.filter(t => t.isBlocked).length : 0;
+  const metaSpent = data.paidMedia ? data.paidMedia.phase1Meta.spentToDate : 0;
+  const metaBudget = data.paidMedia ? data.paidMedia.phase1Meta.totalBudget : 3000;
 
   container.innerHTML = `
     <div class="flex flex-wrap items-center gap-2.5">
-      <!-- Bottleneck Status -->
+      <!-- Cuellos de Botella -->
       <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold ${
         blockedTasks > 0 ? "bg-amber-950/80 text-amber-300 border border-amber-800" : "bg-emerald-950/80 text-emerald-300 border border-emerald-800"
       }">
         <span class="w-2 h-2 rounded-full ${blockedTasks > 0 ? "bg-amber-400 animate-pulse" : "bg-emerald-400"}"></span>
-        <span>${blockedTasks > 0 ? `${blockedTasks} ${isEn ? "Bottlenecks" : "Cuellos de Botella"}` : (isEn ? "Workflow Clear" : "Flujo Despejado")}</span>
+        <span>${blockedTasks > 0 ? `${blockedTasks} ${tr("Cuellos de Botella", "Bottlenecks")}` : tr("Flujo Despejado", "Workflow Clear")}</span>
       </div>
 
-      <!-- Website Progress -->
+      <!-- Progreso Sitio Web -->
       <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800/90 text-slate-300 border border-slate-700">
-        <span class="text-slate-400">${isEn ? "Website Sprints:" : "Sitio Web:"}</span>
+        <span class="text-slate-400">${tr("Sitio Web:", "Website Sprints:")}</span>
         <span class="font-bold text-[#96EE89]">${websiteProgress}%</span>
       </div>
 
-      <!-- Meta Ads Spent -->
+      <!-- Pauta Meta Ads -->
       <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800/90 text-slate-300 border border-slate-700">
         <span class="text-slate-400">Meta Ads:</span>
         <span class="font-bold text-white">$${metaSpent.toFixed(0)} / $${metaBudget} AUD</span>
       </div>
 
-      <!-- Languages -->
+      <!-- Idiomas -->
       <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800/90 text-slate-300 border border-slate-700">
-        <span class="text-slate-400">${isEn ? "Languages:" : "Idiomas:"}</span>
+        <span class="text-slate-400">${tr("Idiomas:", "Languages:")}</span>
         <span class="font-bold text-slate-200">6 (EN, AR, FA, DA, UK, HE)</span>
       </div>
     </div>
 
-    <!-- Próximo Hito Crítico: Mañana Viernes 16 Octubre -->
+    <!-- Próximo Hito Crítico -->
     <div class="flex items-center gap-2">
       <button onclick="setActiveTab('scope-reviews')" class="flex items-center gap-1.5 px-2.5 py-1 bg-purple-950/90 hover:bg-purple-900 text-purple-200 border border-purple-800 rounded-lg text-xs font-bold transition-all">
         <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
-        <span>${isEn ? "📅 Fri 16 Oct: onmove Wireframes Session" : "📅 Viernes 16 Oct: Wireframes onmove"}</span>
+        <span>${tr("📅 Viernes 16 Oct: Wireframes onmove", "📅 Fri 16 Oct: onmove Wireframes Session")}</span>
         <svg class="w-3.5 h-3.5 text-purple-300 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
         </svg>
@@ -702,6 +1045,7 @@ function renderRadarView() {
   const radar = AppState.data.strategicRadar;
   const tasks = AppState.data.teamOperations.tasks;
   const blockedTasks = tasks.filter(t => t.isBlocked);
+  const isEn = AppState.lang === "en";
 
   return `
     <div class="space-y-8 animate-fadeIn">
@@ -715,16 +1059,20 @@ function renderRadarView() {
               </svg>
             </div>
             <div>
-              <h4 class="text-sm font-bold text-amber-900 uppercase tracking-wider">Atención de Liderazgo Requerida</h4>
+              <h4 class="text-sm font-bold text-amber-900 uppercase tracking-wider">
+                ${tr("Atención de Liderazgo Requerida", "Executive Leadership Attention Required")}
+              </h4>
               <p class="text-slate-800 text-sm mt-0.5">
-                Hay <strong>${blockedTasks.length} tareas detenidas</strong> afectando el cronograma del sitio web y la presentación de Lachlan. 
-                Principal bloqueo: <span class="underline font-semibold">${blockedTasks[0].title}</span> (${blockedTasks[0].blockerReason})
+                ${tr(
+                  `Hay <strong>${blockedTasks.length} tareas detenidas</strong> afectando el cronograma del sitio web y la presentación de Lachlan. Principal bloqueo: <span class="underline font-semibold">${translateContent(blockedTasks[0].title)}</span> (${translateContent(blockedTasks[0].blockerReason)})`,
+                  `There are <strong>${blockedTasks.length} blocked tasks</strong> impacting the website delivery timeline and Lachlan's presentation. Primary bottleneck: <span class="underline font-semibold">${translateContent(blockedTasks[0].title)}</span> (${translateContent(blockedTasks[0].blockerReason)})`
+                )}
               </p>
             </div>
           </div>
           <button onclick="setActiveTab('workflow'); AppState.filters.onlyBlocked=true; renderCurrentTab();" 
                   class="whitespace-nowrap px-4 py-2 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] text-xs font-bold rounded-lg shadow transition-all">
-            Desbloquear Cuellos de Botella &rarr;
+            ${tr("Desbloquear Cuellos de Botella &rarr;", "Unblock Bottlenecks &rarr;")}
           </button>
         </div>
       ` : ''}
@@ -737,32 +1085,32 @@ function renderRadarView() {
           <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 to-[#96EE89]"></div>
           <div>
             <div class="flex items-center justify-between mb-4">
-              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Fase Actual</span>
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">${tr("Fase Actual", "Current Phase")}</span>
               <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-blue-100 text-blue-800">
-                Octubre 2026
+                ${tr("Octubre 2026", "October 2026")}
               </span>
             </div>
-            <h3 class="text-xl font-bold text-[#323B3F] mb-1">${radar.whereWeAre.title}</h3>
-            <p class="text-xs text-slate-500 mb-5">${radar.whereWeAre.headline}</p>
+            <h3 class="text-xl font-bold text-[#323B3F] mb-1">${translateContent(radar.whereWeAre.title)}</h3>
+            <p class="text-xs text-slate-500 mb-5">${translateContent(radar.whereWeAre.headline)}</p>
 
             <div class="space-y-4">
               ${radar.whereWeAre.points.map(pt => `
                 <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
                   <div class="flex items-center justify-between mb-1">
-                    <span class="text-xs font-bold text-slate-800">${pt.label}</span>
+                    <span class="text-xs font-bold text-slate-800">${translateContent(pt.label)}</span>
                     <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full ${
                       pt.badgeColor === 'emerald' ? 'bg-emerald-100 text-emerald-800' :
                       pt.badgeColor === 'amber' ? 'bg-amber-100 text-amber-800' :
                       pt.badgeColor === 'blue' ? 'bg-blue-100 text-blue-800' : 'bg-slate-200 text-slate-700'
-                    }">${pt.badge}</span>
+                    }">${translateContent(pt.badge)}</span>
                   </div>
-                  <p class="text-xs text-slate-600 leading-relaxed">${pt.desc}</p>
+                  <p class="text-xs text-slate-600 leading-relaxed">${translateContent(pt.desc)}</p>
                 </div>
               `).join('')}
             </div>
           </div>
           <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span>Presupuesto Ejecutado:</span>
+            <span>${tr("Presupuesto Ejecutado:", "Budget Executed:")}</span>
             <span class="font-bold text-slate-800">$${AppState.data.project.budget.spent.toLocaleString()} / $${AppState.data.project.budget.totalApproved.toLocaleString()} AUD</span>
           </div>
         </div>
@@ -772,13 +1120,13 @@ function renderRadarView() {
           <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#96EE89] to-emerald-500"></div>
           <div>
             <div class="flex items-center justify-between mb-4">
-              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Horizonte de Entrega</span>
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">${tr("Horizonte de Entrega", "Delivery Horizon")}</span>
               <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800">
-                Hitos Clave
+                ${tr("Hitos Clave", "Key Milestones")}
               </span>
             </div>
-            <h3 class="text-xl font-bold text-[#323B3F] mb-1">${radar.whereWeAreGoing.title}</h3>
-            <p class="text-xs text-slate-500 mb-5">${radar.whereWeAreGoing.headline}</p>
+            <h3 class="text-xl font-bold text-[#323B3F] mb-1">${translateContent(radar.whereWeAreGoing.title)}</h3>
+            <p class="text-xs text-slate-500 mb-5">${translateContent(radar.whereWeAreGoing.headline)}</p>
 
             <div class="space-y-4">
               ${radar.whereWeAreGoing.milestones.map((ms, idx) => `
@@ -786,11 +1134,11 @@ function renderRadarView() {
                   <div class="absolute -left-1.5 top-0.5 w-3 h-3 rounded-full ${
                     idx === 0 ? 'bg-amber-500 ring-4 ring-amber-100' : 'bg-slate-400'
                   }"></div>
-                  <span class="text-[11px] font-bold text-slate-400 block uppercase">${ms.timeframe}</span>
-                  <h5 class="text-xs font-bold text-slate-900 mt-0.5">${ms.title}</h5>
-                  <p class="text-xs text-slate-600 mt-1 leading-relaxed">${ms.desc}</p>
+                  <span class="text-[11px] font-bold text-slate-400 block uppercase">${translateContent(ms.timeframe)}</span>
+                  <h5 class="text-xs font-bold text-slate-900 mt-0.5">${translateContent(ms.title)}</h5>
+                  <p class="text-xs text-slate-600 mt-1 leading-relaxed">${translateContent(ms.desc)}</p>
                   <div class="mt-2 flex items-center gap-2">
-                    <span class="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">Líder: ${ms.owner}</span>
+                    <span class="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">${tr(`Líder: ${ms.owner}`, `Lead: ${ms.owner}`)}</span>
                   </div>
                 </div>
               `).join('')}
@@ -798,7 +1146,7 @@ function renderRadarView() {
           </div>
           <div class="mt-6 pt-4 border-t border-slate-100 text-center">
             <button onclick="setActiveTab('agency')" class="text-xs font-bold text-[#323B3F] hover:text-emerald-700 flex items-center justify-center gap-1 w-full">
-              Ver Cronograma de la Agencia onmove &rarr;
+              ${tr("Ver Cronograma de la Agencia onmove &rarr;", "View onmove Agency Roadmap &rarr;")}
             </button>
           </div>
         </div>
@@ -812,13 +1160,13 @@ function renderRadarView() {
           </div>
           <div>
             <div class="flex items-center justify-between mb-4">
-              <span class="text-xs font-bold text-[#96EE89] uppercase tracking-wider">Acción Inmediata</span>
+              <span class="text-xs font-bold text-[#96EE89] uppercase tracking-wider">${tr("Acción Inmediata", "Immediate Action")}</span>
               <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-red-500/20 text-red-300 border border-red-500/30">
-                Prioridad Crítica
+                ${tr("Prioridad Crítica", "Critical Priority")}
               </span>
             </div>
-            <h3 class="text-xl font-bold text-white mb-1">${radar.nextStep.title}</h3>
-            <p class="text-xs text-slate-300 mb-5">${radar.nextStep.headline}</p>
+            <h3 class="text-xl font-bold text-white mb-1">${translateContent(radar.nextStep.title)}</h3>
+            <p class="text-xs text-slate-300 mb-5">${translateContent(radar.nextStep.headline)}</p>
 
             <div class="space-y-4">
               ${radar.nextStep.actions.map(act => `
@@ -829,8 +1177,8 @@ function renderRadarView() {
                       SLA: ${act.sla}
                     </span>
                   </div>
-                  <h5 class="text-sm font-bold text-white mb-1">${act.title}</h5>
-                  <p class="text-xs text-slate-300 mb-3 leading-relaxed">${act.desc}</p>
+                  <h5 class="text-sm font-bold text-white mb-1">${translateContent(act.title)}</h5>
+                  <p class="text-xs text-slate-300 mb-3 leading-relaxed">${translateContent(act.desc)}</p>
                   
                   ${act.emailTemplate ? `
                     <button onclick="openEmailModal('${act.id}')" 
@@ -838,12 +1186,12 @@ function renderRadarView() {
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                       </svg>
-                      ${act.actionBtnText}
+                      ${translateContent(act.actionBtnText)}
                     </button>
                   ` : `
                     <button onclick="setActiveTab('merch')" 
                             class="w-full py-2 px-3 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-all">
-                      ${act.actionBtnText} &rarr;
+                      ${translateContent(act.actionBtnText)} &rarr;
                     </button>
                   `}
                 </div>
@@ -851,7 +1199,7 @@ function renderRadarView() {
             </div>
           </div>
           <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400">
-            <span>Regla de Oro:</span> Un solo responsable por acción para evitar dispersión.
+            <span>${tr("Regla de Oro:", "Golden Rule:")}</span> ${tr("Un solo responsable por acción para evitar dispersión.", "Single designated owner per action to avoid diffusion of responsibility.")}
           </div>
         </div>
 
@@ -859,23 +1207,23 @@ function renderRadarView() {
 
       <!-- RESUMEN DE PROGRESO DE LOS 5 FRENTES DEL PROYECTO -->
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-        <h4 class="text-base font-bold text-[#323B3F] mb-4">Estado Consolidado por Frentes de Trabajo</h4>
+        <h4 class="text-base font-bold text-[#323B3F] mb-4">${tr("Estado Consolidado por Frentes de Trabajo", "Consolidated Status by Project Workstream")}</h4>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <!-- Frente 1: Branding -->
           <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
-                <span class="font-bold text-slate-800">1. Branding & Identidad</span>
+                <span class="font-bold text-slate-800">${tr("1. Branding & Identidad", "1. Branding & Identity")}</span>
                 <span class="font-bold text-emerald-600">100%</span>
               </div>
               <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-2">
                 <div class="bg-emerald-500 h-2 rounded-full" style="width: 100%"></div>
               </div>
-              <p class="text-[11px] text-slate-600">Logos multilingües, guía de estilo y mockups recibidos en Drive.</p>
+              <p class="text-[11px] text-slate-600">${tr("Logos multilingües, guía de estilo y mockups recibidos en Drive.", "Multilingual logos, style guide, and mockups delivered on Drive.")}</p>
             </div>
             <span class="mt-3 text-[10px] text-emerald-700 font-bold flex items-center gap-1">
-              ✓ Entregado por onmove
+              ${tr("✓ Entregado por onmove", "✓ Delivered by onmove")}
             </span>
           </div>
 
@@ -883,16 +1231,16 @@ function renderRadarView() {
           <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
-                <span class="font-bold text-slate-800">2. Sitio Web (onmove)</span>
+                <span class="font-bold text-slate-800">${tr("2. Sitio Web (onmove)", "2. Website (onmove)")}</span>
                 <span class="font-bold text-amber-600">35%</span>
               </div>
               <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-2">
                 <div class="bg-amber-500 h-2 rounded-full" style="width: 35%"></div>
               </div>
-              <p class="text-[11px] text-slate-600">Fase 1 al 85%. Falta validación clínica de 'Get Help' y cronograma.</p>
+              <p class="text-[11px] text-slate-600">${tr("Fase 1 al 85%. Falta validación clínica de 'Get Help' y cronograma.", "Sprint 1 at 85%. Awaiting clinical sign-off of 'Get Help' and timeframe.")}</p>
             </div>
             <button onclick="setActiveTab('agency')" class="mt-3 text-[10px] text-amber-700 font-bold hover:underline flex items-center gap-1">
-              Ver Timeframes &rarr;
+              ${tr("Ver Timeframes &rarr;", "View Timeframes &rarr;")}
             </button>
           </div>
 
@@ -900,16 +1248,16 @@ function renderRadarView() {
           <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
-                <span class="font-bold text-slate-800">3. Campaña Meta Ads</span>
-                <span class="font-bold text-blue-600">Activa ($2.5k)</span>
+                <span class="font-bold text-slate-800">${tr("3. Campaña Meta Ads", "3. Meta Ads Campaign")}</span>
+                <span class="font-bold text-blue-600">${tr("Activa ($2.5k)", "Active ($2.5k AUD)")}</span>
               </div>
               <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-2">
                 <div class="bg-blue-500 h-2 rounded-full" style="width: 42%"></div>
               </div>
-              <p class="text-[11px] text-slate-600">7 conjuntos activos. Monitoreo del volumen de llamadas fuera de NSW.</p>
+              <p class="text-[11px] text-slate-600">${tr("7 conjuntos activos. Monitoreo del volumen de llamadas fuera de NSW.", "7 active ad sets. Monitoring call volume outside NSW.")}</p>
             </div>
             <button onclick="setActiveTab('media')" class="mt-3 text-[10px] text-blue-700 font-bold hover:underline flex items-center gap-1">
-              Ver Rendimiento &rarr;
+              ${tr("Ver Rendimiento &rarr;", "View Performance &rarr;")}
             </button>
           </div>
 
@@ -917,16 +1265,16 @@ function renderRadarView() {
           <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
-                <span class="font-bold text-slate-800">4. Merchandising</span>
+                <span class="font-bold text-slate-800">${tr("4. Merchandising", "4. Merchandise & Print")}</span>
                 <span class="font-bold text-indigo-600">55%</span>
               </div>
               <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-2">
                 <div class="bg-indigo-500 h-2 rounded-full" style="width: 55%"></div>
               </div>
-              <p class="text-[11px] text-slate-600">Snap impreso ($905.34). 4 proveedores en cotización de manteles y kits.</p>
+              <p class="text-[11px] text-slate-600">${tr("Snap impreso ($905.34). 4 proveedores en cotización de manteles y kits.", "Snap printed ($905.34 AUD). 4 suppliers tendering on runners & kits.")}</p>
             </div>
             <button onclick="setActiveTab('merch')" class="mt-3 text-[10px] text-indigo-700 font-bold hover:underline flex items-center gap-1">
-              Ver Cotizaciones &rarr;
+              ${tr("Ver Cotizaciones &rarr;", "View Quotes &rarr;")}
             </button>
           </div>
         </div>
@@ -1155,15 +1503,15 @@ function renderAgencyView() {
                   <!-- Nombre y notas del entregable -->
                   <td class="py-3 px-3">
                     <div class="font-bold text-slate-900 ${item.status === 'completed' ? 'line-through text-slate-400' : ''}">
-                      ${item.name}
+                      ${translateContent(item.name)}
                     </div>
-                    ${item.note ? `<div class="text-[11px] text-slate-500 mt-0.5">${item.note}</div>` : ''}
+                    ${item.note ? `<div class="text-[11px] text-slate-500 mt-0.5">${translateContent(item.note)}</div>` : ''}
                   </td>
 
                   <!-- Sprint / Fase -->
                   <td class="py-3 px-3">
                     <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700 whitespace-nowrap">
-                      ${item.phaseName.split(':')[0]}
+                      ${translateContent(item.phaseName).split(':')[0]}
                     </span>
                   </td>
 
@@ -1252,7 +1600,7 @@ function renderAgencyView() {
                   </span>
                   <span class="text-xs text-slate-400 font-medium">${phase.hours} ${isEn ? 'Hours' : 'Horas'} | $${phase.budget.toLocaleString()} AUD</span>
                 </div>
-                <h3 class="text-lg font-bold text-[#323B3F] mt-1">${phase.name}</h3>
+                <h3 class="text-lg font-bold text-[#323B3F] mt-1">${translateContent(phase.name)}</h3>
               </div>
 
               <!-- Input editable para la fecha comprometida (ETA) de la fase -->
@@ -1300,9 +1648,9 @@ function renderAgencyView() {
                              class="mt-1 rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4 border-slate-300 cursor-pointer" />
                       <div>
                         <span class="text-xs font-semibold ${del.status === 'completed' ? 'line-through text-slate-400' : 'text-slate-800'}">
-                          ${del.name}
+                          ${translateContent(del.name)}
                         </span>
-                        ${del.note ? `<p class="text-[11px] text-slate-500 mt-0.5">${del.note}</p>` : ''}
+                        ${del.note ? `<p class="text-[11px] text-slate-500 mt-0.5">${translateContent(del.note)}</p>` : ''}
                       </div>
                     </div>
                     <div class="text-right">
@@ -1323,7 +1671,7 @@ function renderAgencyView() {
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 <div>
-                  <strong>${t("clientDependency")}</strong> ${phase.clientDependencies}
+                  <strong>${t("clientDependency")}</strong> ${translateContent(phase.clientDependencies)}
                 </div>
               </div>
             ` : ''}
@@ -1783,7 +2131,7 @@ function renderScopeReviewsView() {
               ${(getHelp.lockedTopics || []).map(topic => `
                 <li class="flex items-start gap-2 p-2 bg-white rounded-lg border border-slate-100 shadow-2xs">
                   <span class="text-emerald-600 font-bold mt-0.5">✓</span>
-                  <span class="font-medium">${topic}</span>
+                  <span class="font-medium">${translateContent(topic)}</span>
                 </li>
               `).join('')}
             </ul>
@@ -1799,7 +2147,7 @@ function renderScopeReviewsView() {
               ${(getHelp.lockedTechniques || []).map(tech => `
                 <li class="flex items-start gap-2 p-2 bg-white rounded-lg border border-slate-100 shadow-2xs">
                   <span class="text-emerald-600 font-bold mt-0.5">✓</span>
-                  <span class="font-medium">${tech}</span>
+                  <span class="font-medium">${translateContent(tech)}</span>
                 </li>
               `).join('')}
             </ul>
@@ -1810,7 +2158,7 @@ function renderScopeReviewsView() {
             <div class="flex items-center justify-between pb-3 border-b border-amber-200">
               <span class="text-xs font-bold text-amber-900 uppercase">${isEn ? "8 Emotional States" : "8 Estados Emocionales"}</span>
               <span class="px-2 py-0.5 rounded text-[10px] font-extrabold ${isFeelingsSignedOff ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-200 text-amber-900'}">
-                ${isFeelingsSignedOff ? 'Signed-off' : 'Pending Joshua'}
+                ${isFeelingsSignedOff ? (isEn ? 'Signed-off' : 'Firmado') : (isEn ? 'Pending Joshua' : 'Pendiente Joshua')}
               </span>
             </div>
             <p class="text-[11px] text-amber-800 mt-2">
@@ -1819,7 +2167,7 @@ function renderScopeReviewsView() {
             <div class="mt-3 flex flex-wrap gap-1.5">
               ${(getHelp.pendingFeelingsSignoff || []).map(feeling => `
                 <span class="px-2.5 py-1 bg-white border border-amber-200 text-amber-900 rounded-lg text-xs font-bold">
-                  ${feeling}
+                  ${translateContent(feeling)}
                 </span>
               `).join('')}
             </div>
@@ -1843,8 +2191,8 @@ function renderScopeReviewsView() {
                 <div class="flex items-start gap-3">
                   <span class="w-2.5 h-2.5 rounded-full ${step.status === 'upcoming' ? 'bg-purple-500 animate-pulse' : 'bg-slate-400'} mt-1.5"></span>
                   <div>
-                    <h5 class="text-xs font-bold text-slate-900">${step.step}</h5>
-                    <p class="text-[11px] text-slate-500 mt-0.5">${step.note}</p>
+                    <h5 class="text-xs font-bold text-slate-900">${translateContent(step.step)}</h5>
+                    <p class="text-[11px] text-slate-500 mt-0.5">${translateContent(step.note)}</p>
                   </div>
                 </div>
                 <div class="flex items-center gap-3 text-right">
@@ -1885,9 +2233,9 @@ function renderScopeReviewsView() {
                        class="mt-1 rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4 border-slate-300 cursor-pointer" />
                 <div>
                   <span class="text-xs font-bold ${item.status === 'completed' ? 'line-through text-slate-400' : 'text-slate-900'}">
-                    ${item.item}
+                    ${translateContent(item.item)}
                   </span>
-                  <p class="text-[11px] text-slate-500 mt-0.5">${item.note}</p>
+                  <p class="text-[11px] text-slate-500 mt-0.5">${translateContent(item.note)}</p>
                 </div>
               </div>
               <span class="px-2 py-0.5 rounded text-[10px] font-extrabold whitespace-nowrap ${
@@ -1895,7 +2243,7 @@ function renderScopeReviewsView() {
                 item.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
                 item.status === 'pending_review' ? 'bg-purple-100 text-purple-800' : 'bg-slate-200 text-slate-700'
               }">
-                ${item.status === 'completed' ? 'Done' : item.status === 'pending_review' ? 'Needs Review' : 'In Progress'}
+                ${item.status === 'completed' ? (isEn ? 'Done' : 'Listo') : item.status === 'pending_review' ? (isEn ? 'Needs Review' : 'En Revisión') : (isEn ? 'In Progress' : 'En Curso')}
               </span>
             </div>
           `).join('')}
@@ -1967,7 +2315,7 @@ function renderScopeReviewsView() {
           <div>
             <div class="flex items-center gap-2">
               <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-indigo-100 text-indigo-800 uppercase">Video Production</span>
-              <span class="text-xs text-slate-500">4 Toolkits + 1 Brand Story</span>
+              <span class="text-xs text-slate-500">${isEn ? "4 Toolkits + 1 Brand Story" : "4 Técnicas + 1 Institucional"}</span>
             </div>
             <h3 class="text-lg font-bold text-[#323B3F] mt-1">${t("videosTitle")}</h3>
             <p class="text-xs text-slate-500">${t("videosSubtitle")}</p>
@@ -1985,11 +2333,11 @@ function renderScopeReviewsView() {
                 </div>
                 <div>
                   <div class="flex items-center gap-2">
-                    <span class="px-2 py-0.5 bg-slate-200 text-slate-800 rounded text-[10px] font-bold">${video.type}</span>
-                    <span class="text-[11px] text-slate-400">Subtitles: ${video.subtitles}</span>
+                    <span class="px-2 py-0.5 bg-slate-200 text-slate-800 rounded text-[10px] font-bold">${translateContent(video.type)}</span>
+                    <span class="text-[11px] text-slate-400">${isEn ? "Subtitles: 6 languages" : `Subtítulos: ${video.subtitles}`}</span>
                   </div>
-                  <h4 class="text-sm font-bold text-slate-900 mt-1">${video.title}</h4>
-                  <p class="text-xs text-slate-600 mt-0.5">${video.specs}</p>
+                  <h4 class="text-sm font-bold text-slate-900 mt-1">${translateContent(video.title)}</h4>
+                  <p class="text-xs text-slate-600 mt-0.5">${translateContent(video.specs)}</p>
                 </div>
               </div>
 
@@ -2046,7 +2394,7 @@ function renderScopeReviewsView() {
                 <div>
                   <div class="flex items-center gap-2">
                     <span class="text-xs font-bold ${item.status === 'completed' ? 'line-through text-slate-400' : 'text-slate-900'}">
-                      ${item.title}
+                      ${translateContent(item.title)}
                     </span>
                     <span class="px-2 py-0.5 rounded text-[10px] font-extrabold ${
                       item.urgency === 'critical' ? 'bg-red-100 text-red-800' :
@@ -2055,7 +2403,7 @@ function renderScopeReviewsView() {
                       ${item.urgency.toUpperCase()}
                     </span>
                   </div>
-                  <p class="text-[11px] text-slate-500 mt-0.5">${item.note}</p>
+                  <p class="text-[11px] text-slate-500 mt-0.5">${translateContent(item.note)}</p>
                 </div>
               </div>
 
@@ -2158,12 +2506,12 @@ function renderWorkflowView() {
   }
 
   const stages = [
-    { id: "requested", label: "1. Solicitado", color: "slate" },
-    { id: "in_prep", label: "2. En Redacción / Prep", color: "blue" },
-    { id: "tech_review", label: "3. Revisión Técnica (Luis)", color: "indigo" },
-    { id: "clinical_review", label: "4. Revisión Clínica (Joshua)", color: "amber" },
-    { id: "area_approval", label: "5. Aprobación Área (Lachlan)", color: "purple" },
-    { id: "completed", label: "6. Listo / En Producción", color: "emerald" }
+    { id: "requested", label: tr("1. Solicitado", "1. Requested"), color: "slate" },
+    { id: "in_prep", label: tr("2. En Redacción / Prep", "2. In Drafting / Prep"), color: "blue" },
+    { id: "tech_review", label: tr("3. Revisión Técnica (Luis)", "3. Tech Review (Luis)"), color: "indigo" },
+    { id: "clinical_review", label: tr("4. Revisión Clínica (Joshua)", "4. Clinical Review (Joshua)"), color: "amber" },
+    { id: "area_approval", label: tr("5. Aprobación Área (Lachlan)", "5. Area Approval (Lachlan)"), color: "purple" },
+    { id: "completed", label: tr("6. Listo / En Producción", "6. Ready / In Production"), color: "emerald" }
   ];
 
   return `
@@ -2171,17 +2519,20 @@ function renderWorkflowView() {
       <!-- Reglas Anti-Caos -->
       <div class="bg-gradient-to-r from-slate-900 to-[#323B3F] text-white p-5 rounded-2xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <span class="text-[10px] font-bold text-[#96EE89] uppercase tracking-wider">Protocolo de Eficiencia</span>
-          <h3 class="text-lg font-bold text-white mt-0.5">Motor Operativo Anti-Cuellos de Botella</h3>
+          <span class="text-[10px] font-bold text-[#96EE89] uppercase tracking-wider">${tr("Protocolo de Eficiencia", "Efficiency Protocol")}</span>
+          <h3 class="text-lg font-bold text-white mt-0.5">${tr("Motor Operativo Anti-Cuellos de Botella", "Operational Bottleneck Elimination Engine")}</h3>
           <p class="text-xs text-slate-300 mt-1 max-w-2xl">
-            Solución al problema histórico: <strong>cada tarea tiene UN solo dueño</strong>, SLA estricto de revisión de 48h, y prohibición de pasos circulares.
+            ${tr(
+              "Solución al problema histórico: <strong>cada tarea tiene UN solo dueño</strong>, SLA estricto de revisión de 48h, y prohibición de pasos circulares.",
+              "Solution to team delays: <strong>every task has ONE single owner</strong>, strict 48h review SLA, and prohibition of circular handoffs."
+            )}
           </p>
         </div>
         <button onclick="openNewTaskModal()" class="px-4 py-2 bg-[#96EE89] hover:bg-[#85de79] text-[#323B3F] text-xs font-bold rounded-xl shadow transition-all flex items-center gap-1.5 whitespace-nowrap">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
           </svg>
-          Nueva Tarea / Aprobación
+          ${tr("Nueva Tarea / Aprobación", "New Task / Approval")}
         </button>
       </div>
 
@@ -2190,10 +2541,10 @@ function renderWorkflowView() {
         <div class="flex flex-wrap items-center gap-3">
           <!-- Filtro por Responsable -->
           <div class="flex items-center gap-1.5">
-            <span class="font-bold text-slate-600">Responsable:</span>
+            <span class="font-bold text-slate-600">${tr("Responsable:", "Assignee:")}</span>
             <select onchange="AppState.filters.assignee=this.value; renderWorkflowView();" 
                     class="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-semibold text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#96EE89]">
-              <option value="all">Todos los miembros</option>
+              <option value="all">${tr("Todos los miembros", "All members")}</option>
               ${ops.members.map(m => `
                 <option value="${m.id}" ${AppState.filters.assignee === m.id ? 'selected' : ''}>${m.name} (${m.role.split(' ')[0]})</option>
               `).join('')}
@@ -2202,13 +2553,13 @@ function renderWorkflowView() {
 
           <!-- Filtro por Prioridad -->
           <div class="flex items-center gap-1.5">
-            <span class="font-bold text-slate-600">Prioridad:</span>
+            <span class="font-bold text-slate-600">${tr("Prioridad:", "Priority:")}</span>
             <select onchange="AppState.filters.priority=this.value; renderWorkflowView();" 
                     class="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-semibold text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#96EE89]">
-              <option value="all">Todas</option>
-              <option value="critical" ${AppState.filters.priority === 'critical' ? 'selected' : ''}>Crítica</option>
-              <option value="high" ${AppState.filters.priority === 'high' ? 'selected' : ''}>Alta</option>
-              <option value="medium" ${AppState.filters.priority === 'medium' ? 'selected' : ''}>Media</option>
+              <option value="all">${tr("Todas", "All")}</option>
+              <option value="critical" ${AppState.filters.priority === 'critical' ? 'selected' : ''}>${tr("Crítica", "Critical")}</option>
+              <option value="high" ${AppState.filters.priority === 'high' ? 'selected' : ''}>${tr("Alta", "High")}</option>
+              <option value="medium" ${AppState.filters.priority === 'medium' ? 'selected' : ''}>${tr("Media", "Medium")}</option>
             </select>
           </div>
 
@@ -2218,12 +2569,12 @@ function renderWorkflowView() {
                    ${AppState.filters.onlyBlocked ? 'checked' : ''} 
                    onchange="AppState.filters.onlyBlocked=this.checked; renderWorkflowView();"
                    class="rounded text-amber-600 focus:ring-amber-500 h-4 w-4" />
-            <span class="text-amber-900">Solo Cuellos de Botella (${ops.tasks.filter(t => t.isBlocked).length})</span>
+            <span class="text-amber-900">${tr("Solo Cuellos de Botella", "Only Bottlenecks")} (${ops.tasks.filter(t => t.isBlocked).length})</span>
           </label>
         </div>
 
         <div class="text-slate-400 font-medium">
-          Mostrando ${tasks.length} de ${ops.tasks.length} tareas
+          ${tr(`Mostrando ${tasks.length} de ${ops.tasks.length} tareas`, `Showing ${tasks.length} of ${ops.tasks.length} tasks`)}
         </div>
       </div>
 
@@ -2245,7 +2596,7 @@ function renderWorkflowView() {
                 ${stageTasks.map(task => renderTaskCard(task)).join('')}
                 ${stageTasks.length === 0 ? `
                   <div class="h-24 border-2 border-dashed border-slate-200 rounded-xl flex items-center justify-center text-[11px] text-slate-400 font-medium">
-                    Sin tareas pendientes
+                    ${tr("Sin tareas pendientes", "No pending tasks")}
                   </div>
                 ` : ''}
               </div>
@@ -2273,12 +2624,12 @@ function renderTaskCard(task) {
         <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
           task.priority === 'critical' ? 'bg-red-100 text-red-800' :
           task.priority === 'high' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'
-        }">${task.priority}</span>
+        }">${task.priority.toUpperCase()}</span>
 
         ${task.isBlocked ? `
           <span class="text-[9px] font-bold bg-amber-500 text-white px-2 py-0.5 rounded-full flex items-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
-            Trabado (${task.daysInStage}d)
+            ${tr(`Trabado (${task.daysInStage}d)`, `Blocked (${task.daysInStage}d)`)}
           </span>
         ` : `
           <span class="text-[10px] text-slate-400 font-medium">${task.dueDate}</span>
@@ -2286,12 +2637,12 @@ function renderTaskCard(task) {
       </div>
 
       <!-- Título de la tarea -->
-      <h4 class="text-xs font-bold text-slate-900 leading-snug mb-1.5">${task.title}</h4>
+      <h4 class="text-xs font-bold text-slate-900 leading-snug mb-1.5">${translateContent(task.title)}</h4>
 
       <!-- Motivo de bloqueo si existe -->
       ${task.isBlocked ? `
         <div class="p-2 bg-amber-50 rounded-lg border border-amber-200 text-[10px] text-amber-900 font-medium mb-2 leading-relaxed">
-          <strong>Cuello de botella:</strong> ${task.blockerReason}
+          <strong>${tr("Cuello de botella:", "Bottleneck:")}</strong> ${translateContent(task.blockerReason)}
         </div>
       ` : ''}
 
@@ -2357,20 +2708,22 @@ function renderMediaView() {
           <div>
             <div class="flex items-center gap-2">
               <span class="px-3 py-1 bg-blue-600 text-white rounded-lg text-xs font-bold uppercase tracking-wider">
-                Estrategia de Crecimiento & Telefonía
+                ${tr("Estrategia de Crecimiento & Telefonía", "Growth & Telephony Strategy")}
               </span>
-              <span class="text-xs text-slate-500">Campaña Activa: <strong>${meta.startDate} a ${meta.endDate}</strong></span>
+              <span class="text-xs text-slate-500">${tr("Campaña Activa:", "Active Campaign:")} <strong>${meta.startDate} ${tr("a", "to")} ${meta.endDate}</strong></span>
             </div>
-            <h2 class="text-2xl font-bold text-[#323B3F] mt-2">Campaña Meta Ads Fase 1 & Reserva Google Ads</h2>
+            <h2 class="text-2xl font-bold text-[#323B3F] mt-2">${tr("Campaña Meta Ads Fase 1 & Reserva Google Ads", "Phase 1 Meta Ads Campaign & Google Ads Reserve")}</h2>
             <p class="text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
-              Objetivo: <strong>100% Llamadas directas al conmutador</strong>. Segmentación por idiomas y regionalización estratégica 
-              para romper el monopolio histórico de llamadas de NSW y alcanzar comunidades vulnerables en Victoria y South Australia.
+              ${tr(
+                "Objetivo: <strong>100% Llamadas directas al conmutador</strong>. Segmentación por idiomas y regionalización estratégica para romper el monopolio histórico de llamadas de NSW y alcanzar comunidades vulnerables en Victoria y South Australia.",
+                "Objective: <strong>100% Direct Switchboard Inquiries</strong>. Language segmentation and interstate targeting to break the historical NSW call monopoly and reach vulnerable communities across Victoria and South Australia."
+              )}
             </p>
           </div>
 
           <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
-              <span class="text-slate-400 block font-semibold">Inversión Fase 1:</span>
+              <span class="text-slate-400 block font-semibold">${tr("Inversión Fase 1:", "Phase 1 Spend:")}</span>
               <span class="text-lg font-black text-slate-900">$${meta.spentToDate.toFixed(2)} / $${meta.totalBudget} AUD</span>
             </div>
           </div>
@@ -2379,27 +2732,27 @@ function renderMediaView() {
         <!-- Métricas de Impacto Telefónico Real (Reporte 2025 vs Actual) -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-6">
           <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <span class="text-xs font-bold text-slate-500 uppercase">Llamadas Línea Base</span>
-            <div class="text-2xl font-black text-slate-800 mt-1">${meta.benchmarks.baselineCallsPerWeek} / sem</div>
-            <span class="text-[11px] text-slate-500">Promedio sin publicidad activa</span>
+            <span class="text-xs font-bold text-slate-500 uppercase">${tr("Llamadas Línea Base", "Baseline Inquiries")}</span>
+            <div class="text-2xl font-black text-slate-800 mt-1">${meta.benchmarks.baselineCallsPerWeek} ${tr("/ sem", "/ wk")}</div>
+            <span class="text-[11px] text-slate-500">${tr("Promedio sin publicidad activa", "Average volume without active ads")}</span>
           </div>
 
           <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-            <span class="text-xs font-bold text-emerald-800 uppercase">Impacto Campaña</span>
-            <div class="text-2xl font-black text-emerald-700 mt-1">${meta.benchmarks.campaignLiftCallsPerWeek} / sem</div>
-            <span class="text-[11px] text-emerald-600 font-bold">+${meta.benchmarks.percentageLift}% de aumento real</span>
+            <span class="text-xs font-bold text-emerald-800 uppercase">${tr("Impacto Campaña", "Campaign Uplift")}</span>
+            <div class="text-2xl font-black text-emerald-700 mt-1">${meta.benchmarks.campaignLiftCallsPerWeek} ${tr("/ sem", "/ wk")}</div>
+            <span class="text-[11px] text-emerald-600 font-bold">+${meta.benchmarks.percentageLift}% ${tr("de aumento real", "actual uplift")}</span>
           </div>
 
           <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <span class="text-xs font-bold text-slate-500 uppercase">Costo Real x Llamada</span>
+            <span class="text-xs font-bold text-slate-500 uppercase">${tr("Costo Real x Llamada", "Effective Cost per Call")}</span>
             <div class="text-2xl font-black text-[#323B3F] mt-1">~$${meta.benchmarks.estimatedCostPerCall.toFixed(2)} AUD</div>
-            <span class="text-[11px] text-slate-500">Medido contra registro de llamadas</span>
+            <span class="text-[11px] text-slate-500">${tr("Medido contra registro de llamadas", "Measured against incoming call registry")}</span>
           </div>
 
           <div class="p-4 bg-purple-50 rounded-xl border border-purple-100">
-            <span class="text-xs font-bold text-purple-800 uppercase">Reserva Google Ads</span>
+            <span class="text-xs font-bold text-purple-800 uppercase">${tr("Reserva Google Ads", "Google Ads Reserve")}</span>
             <div class="text-2xl font-black text-purple-700 mt-1">$${google.plannedBudget.toLocaleString()} AUD</div>
-            <span class="text-[11px] text-purple-600">Decisión Enero 2027</span>
+            <span class="text-[11px] text-purple-600">${tr("Decisión Enero 2027", "Decision Point January 2027")}</span>
           </div>
         </div>
       </div>
@@ -2408,8 +2761,8 @@ function renderMediaView() {
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
         <div class="flex items-center justify-between mb-4">
           <div>
-            <h3 class="text-lg font-bold text-[#323B3F]">Rendimiento por Idioma & Región (7 Conjuntos de Anuncios)</h3>
-            <p class="text-xs text-slate-500">Presupuestos protegidos mediante ABO para garantizar presencia equitativa.</p>
+            <h3 class="text-lg font-bold text-[#323B3F]">${tr("Rendimiento por Idioma & Región (7 Conjuntos de Anuncios)", "Performance by Language & Region (7 Ad Sets)")}</h3>
+            <p class="text-xs text-slate-500">${tr("Presupuestos protegidos mediante ABO para garantizar presencia equitativa.", "ABO protected budgets ensuring equitable community representation.")}</p>
           </div>
         </div>
 
@@ -2417,30 +2770,30 @@ function renderMediaView() {
           <table class="w-full text-left text-xs">
             <thead>
               <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-bold">
-                <th class="py-3 px-4">Idioma & Enfoque</th>
-                <th class="py-3 px-4">Área Geográfica</th>
-                <th class="py-3 px-4 text-right">Presupuesto</th>
-                <th class="py-3 px-4 text-right">Gastado</th>
-                <th class="py-3 px-4 text-right">Clics</th>
-                <th class="py-3 px-4 text-right">Llamadas Estimadas</th>
-                <th class="py-3 px-4 text-center">Estado</th>
+                <th class="py-3 px-4">${tr("Idioma & Enfoque", "Language & Targeting")}</th>
+                <th class="py-3 px-4">${tr("Área Geográfica", "Geographic Area")}</th>
+                <th class="py-3 px-4 text-right">${tr("Presupuesto", "Budget")}</th>
+                <th class="py-3 px-4 text-right">${tr("Gastado", "Spent")}</th>
+                <th class="py-3 px-4 text-right">${tr("Clics", "Clicks")}</th>
+                <th class="py-3 px-4 text-right">${tr("Llamadas Estimadas", "Reported Calls")}</th>
+                <th class="py-3 px-4 text-center">${tr("Estado", "Status")}</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 font-medium">
               ${meta.adSets.map(ad => `
                 <tr class="hover:bg-slate-50 transition-colors">
                   <td class="py-3 px-4">
-                    <div class="font-bold text-slate-900">${ad.name}</div>
-                    <div class="text-[11px] text-slate-500">${ad.notes}</div>
+                    <div class="font-bold text-slate-900">${translateContent(ad.name)}</div>
+                    <div class="text-[11px] text-slate-500">${translateContent(ad.notes)}</div>
                   </td>
-                  <td class="py-3 px-4 text-slate-700 font-semibold">${ad.geo}</td>
+                  <td class="py-3 px-4 text-slate-700 font-semibold">${translateContent(ad.geo)}</td>
                   <td class="py-3 px-4 text-right font-bold text-slate-800">$${ad.budget}</td>
                   <td class="py-3 px-4 text-right text-slate-600">$${ad.spent.toFixed(2)}</td>
                   <td class="py-3 px-4 text-right font-semibold text-blue-600">${ad.clicks}</td>
                   <td class="py-3 px-4 text-right font-bold text-emerald-600">${ad.callsReported}</td>
                   <td class="py-3 px-4 text-center">
                     <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                      Activo
+                      ${tr("Activo", "Active")}
                     </span>
                   </td>
                 </tr>
@@ -2454,15 +2807,17 @@ function renderMediaView() {
       <div class="bg-gradient-to-r from-purple-900 to-indigo-900 text-white rounded-2xl shadow-sm p-6">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <span class="text-[10px] font-bold text-[#96EE89] uppercase tracking-wider">Fase 2 Planificada</span>
-            <h3 class="text-xl font-bold text-white mt-1">Estrategia de Reserva Google Ads ($2,500 AUD)</h3>
+            <span class="text-[10px] font-bold text-[#96EE89] uppercase tracking-wider">${tr("Fase 2 Planificada", "Phase 2 Reserve")}</span>
+            <h3 class="text-xl font-bold text-white mt-1">${tr("Estrategia de Reserva Google Ads ($2,500 AUD)", "Google Ads Strategic Reserve Strategy ($2,500 AUD)")}</h3>
             <p class="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
-              Criterio de decisión acordado con Luis y Lachlan: Al cierre de la Fase 1 en Diciembre, evaluaremos el registro de llamadas. 
-              Si Meta mantiene un costo por llamada incremental menor a $100 AUD en árabe y farsi, escalamos Meta. Si no, activamos Google Search Call-Only.
+              ${tr(
+                "Criterio de decisión acordado con Luis y Lachlan: Al cierre de la Fase 1 en Diciembre, evaluaremos el registro de llamadas. Si Meta mantiene un costo por llamada incremental menor a $100 AUD en árabe y farsi, escalamos Meta. Si no, activamos Google Search Call-Only.",
+                "Decision criteria agreed with Luis and Lachlan: Following Phase 1 completion in December, incoming call logs will be assessed. If Meta maintains an incremental cost per call under $100 AUD in Arabic and Farsi, scale Meta; otherwise, activate Google Search Call-Only."
+              )}
             </p>
           </div>
           <div class="bg-purple-800/60 p-4 rounded-xl border border-purple-700/60 text-xs">
-            <span class="text-purple-300 font-semibold block">Palabras Clave Preparadas:</span>
+            <span class="text-purple-300 font-semibold block">${tr("Palabras Clave Preparadas:", "Staged Target Keywords:")}</span>
             <div class="flex flex-wrap gap-1.5 mt-2">
               ${google.targetKeywords.map(kw => `
                 <span class="px-2 py-0.5 bg-purple-700 text-purple-100 rounded text-[10px] font-medium">${kw}</span>
@@ -2490,13 +2845,13 @@ function renderMerchView() {
           <div>
             <div class="flex items-center gap-2">
               <span class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-xs font-bold uppercase tracking-wider">
-                Eventos & Materiales
+                ${tr("Eventos & Materiales", "Events & Collateral")}
               </span>
-              <span class="text-xs text-slate-500">Gestión de Proveedores, Cotizaciones e Inventario</span>
+              <span class="text-xs text-slate-500">${tr("Gestión de Proveedores, Cotizaciones e Inventario", "Supplier Management, Quotes & Inventory Tracking")}</span>
             </div>
-            <h2 class="text-2xl font-bold text-[#323B3F] mt-2">Control de Merchandising, Impresión & Presupuestos</h2>
+            <h2 class="text-2xl font-bold text-[#323B3F] mt-2">${tr("Control de Merchandising, Impresión & Presupuestos", "Merchandise, Print Procurement & Budget Control")}</h2>
             <p class="text-sm text-slate-600 mt-1">
-              Colores oficiales: <strong>Renewal Green (#96EE89 / Pantone 2267 C)</strong> y <strong>Grounded Slate (#323B3F)</strong>.
+              ${tr("Colores oficiales:", "Official brand colours:")} <strong>Renewal Green (#96EE89 / Pantone 2267 C)</strong> ${tr("y", "and")} <strong>Grounded Slate (#323B3F)</strong>.
             </p>
           </div>
 
@@ -2505,7 +2860,7 @@ function renderMerchView() {
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
               </svg>
-              Agregar Item de Merch
+              ${tr("Agregar Item de Merch", "Add Merch Item")}
             </button>
           </div>
         </div>
@@ -2513,46 +2868,46 @@ function renderMerchView() {
         <!-- Indicadores Financieros de Merchandising -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-6">
           <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <span class="text-xs font-bold text-slate-500 uppercase">Presupuesto Merch</span>
+            <span class="text-xs font-bold text-slate-500 uppercase">${tr("Presupuesto Merch", "Merchandise Budget")}</span>
             <div class="text-2xl font-black text-[#323B3F] mt-1">$${merch.totalBudget.toLocaleString()} AUD</div>
-            <span class="text-[11px] text-slate-500">Asignación para eventos y lanzamientos</span>
+            <span class="text-[11px] text-slate-500">${tr("Asignación para eventos y lanzamientos", "Allocation for launches & events")}</span>
           </div>
 
           <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-            <span class="text-xs font-bold text-emerald-800 uppercase">Pagado / Facturado</span>
+            <span class="text-xs font-bold text-emerald-800 uppercase">${tr("Pagado / Facturado", "Invoiced & Paid")}</span>
             <div class="text-2xl font-black text-emerald-700 mt-1">$${merch.spentToDate.toLocaleString()} AUD</div>
-            <span class="text-[11px] text-emerald-600 font-semibold">Factura Snap #29460 pagada</span>
+            <span class="text-[11px] text-emerald-600 font-semibold">${tr("Factura Snap #29460 pagada", "Snap invoice #29460 paid")}</span>
           </div>
 
           <div class="p-4 bg-amber-50 rounded-xl border border-amber-100">
-            <span class="text-xs font-bold text-amber-800 uppercase">Cotizaciones en Curso</span>
+            <span class="text-xs font-bold text-amber-800 uppercase">${tr("Cotizaciones en Curso", "Pending Quotes")}</span>
             <div class="text-2xl font-black text-amber-700 mt-1">~$${merch.committedQuotes.toLocaleString()} AUD</div>
-            <span class="text-[11px] text-amber-600">4 proveedores consultados</span>
+            <span class="text-[11px] text-amber-600">${tr("4 proveedores consultados", "4 suppliers tendered")}</span>
           </div>
 
           <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <span class="text-xs font-bold text-slate-500 uppercase">Saldo Disponible</span>
+            <span class="text-xs font-bold text-slate-500 uppercase">${tr("Saldo Disponible", "Available Balance")}</span>
             <div class="text-2xl font-black text-slate-800 mt-1">$${(merch.totalBudget - merch.spentToDate).toLocaleString()} AUD</div>
-            <span class="text-[11px] text-slate-500">Margen restante para aprobar</span>
+            <span class="text-[11px] text-slate-500">${tr("Margen restante para aprobar", "Remaining uncommitted budget")}</span>
           </div>
         </div>
       </div>
 
       <!-- TABLA DE ARTÍCULOS PEDIDOS, CANTIDADES Y ESTADO -->
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-        <h3 class="text-lg font-bold text-[#323B3F] mb-4">Inventario de Materiales & Artículos Solicitados</h3>
+        <h3 class="text-lg font-bold text-[#323B3F] mb-4">${tr("Inventario de Materiales & Artículos Solicitados", "Materials & Requested Items Inventory")}</h3>
 
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs">
             <thead>
               <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-bold">
-                <th class="py-3 px-4">Artículo & Especificaciones</th>
-                <th class="py-3 px-4">Categoría</th>
-                <th class="py-3 px-4 text-center">Cantidad</th>
-                <th class="py-3 px-4">Proveedor</th>
-                <th class="py-3 px-4 text-right">Costo Est.</th>
-                <th class="py-3 px-4 text-center">Estado</th>
-                <th class="py-3 px-4 text-center">Acción</th>
+                <th class="py-3 px-4">${tr("Artículo & Especificaciones", "Item & Specifications")}</th>
+                <th class="py-3 px-4">${tr("Categoría", "Category")}</th>
+                <th class="py-3 px-4 text-center">${tr("Cantidad", "Quantity")}</th>
+                <th class="py-3 px-4">${tr("Proveedor", "Supplier")}</th>
+                <th class="py-3 px-4 text-right">${tr("Costo Est.", "Est. Cost")}</th>
+                <th class="py-3 px-4 text-center">${tr("Estado", "Status")}</th>
+                <th class="py-3 px-4 text-center">${tr("Acción", "Action")}</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 font-medium">
@@ -2561,11 +2916,11 @@ function renderMerchView() {
                 return `
                   <tr class="hover:bg-slate-50 transition-colors">
                     <td class="py-3 px-4">
-                      <div class="font-bold text-slate-900">${item.item}</div>
-                      <div class="text-[11px] text-slate-500">${item.specs}</div>
-                      <div class="text-[10px] text-indigo-600 font-semibold mt-0.5">Color: ${item.brandColor}</div>
+                      <div class="font-bold text-slate-900">${translateContent(item.item)}</div>
+                      <div class="text-[11px] text-slate-500">${translateContent(item.specs)}</div>
+                      <div class="text-[10px] text-indigo-600 font-semibold mt-0.5">${tr("Color:", "Colour:")} ${translateContent(item.brandColor)}</div>
                     </td>
-                    <td class="py-3 px-4 text-slate-600 font-semibold">${item.category}</td>
+                    <td class="py-3 px-4 text-slate-600 font-semibold">${translateContent(item.category)}</td>
                     <td class="py-3 px-4 text-center font-bold text-slate-800">${item.quantity.toLocaleString()}</td>
                     <td class="py-3 px-4 text-slate-700 font-semibold">${supp.name}</td>
                     <td class="py-3 px-4 text-right font-bold text-slate-900">$${item.totalCost.toFixed(2)}</td>
@@ -2575,14 +2930,14 @@ function renderMerchView() {
                         item.status === 'in_production' ? 'bg-blue-100 text-blue-800' :
                         item.status === 'approved' ? 'bg-purple-100 text-purple-800' : 'bg-amber-100 text-amber-800'
                       }">
-                        ${item.status === 'delivered' ? '✓ Entregado' :
-                          item.status === 'in_production' ? 'En Producción' :
-                          item.status === 'approved' ? 'Aprobado' : 'Cotización Pedida'}
+                        ${item.status === 'delivered' ? tr('✓ Entregado', '✓ Delivered') :
+                          item.status === 'in_production' ? tr('En Producción', 'In Production') :
+                          item.status === 'approved' ? tr('Aprobado', 'Approved') : tr('Cotización Pedida', 'Quote Requested')}
                       </span>
                     </td>
                     <td class="py-3 px-4 text-center">
                       <button onclick="toggleMerchItemStatus(${idx})" class="text-[11px] font-bold text-indigo-600 hover:text-indigo-900 hover:underline">
-                        Cambiar Estado
+                        ${tr("Cambiar Estado", "Update Status")}
                       </button>
                     </td>
                   </tr>
@@ -2595,7 +2950,7 @@ function renderMerchView() {
 
       <!-- DIRECTORIO DE LOS 5 PROVEEDORES COMPARADOS -->
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-        <h3 class="text-lg font-bold text-[#323B3F] mb-4">Directorio de Proveedores & Contactos</h3>
+        <h3 class="text-lg font-bold text-[#323B3F] mb-4">${tr("Directorio de Proveedores & Contactos", "Supplier Directory & Key Contacts")}</h3>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           ${merch.suppliers.map(s => `
@@ -2605,12 +2960,12 @@ function renderMerchView() {
                   <h4 class="font-bold text-slate-900 text-sm">${s.name}</h4>
                   <span class="text-[9px] font-bold px-2 py-0.5 rounded ${
                     s.status === 'invoiced_and_paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
-                  }">${s.status === 'invoiced_and_paid' ? 'Facturado' : 'En Cotización'}</span>
+                  }">${s.status === 'invoiced_and_paid' ? tr('Facturado', 'Invoiced') : tr('En Cotización', 'Quoting')}</span>
                 </div>
-                <p class="text-xs text-slate-600 mb-1">Contacto: <strong>${s.contact}</strong></p>
+                <p class="text-xs text-slate-600 mb-1">${tr("Contacto:", "Contact:")} <strong>${s.contact}</strong></p>
                 <p class="text-xs text-slate-500 mb-1">Email: <a href="mailto:${s.email}" class="text-blue-600 hover:underline">${s.email}</a></p>
-                <p class="text-xs text-slate-500">Teléfono: ${s.phone}</p>
-                <p class="text-[11px] text-slate-600 mt-2 bg-white p-2 rounded border border-slate-200 leading-snug">${s.notes}</p>
+                <p class="text-xs text-slate-500">${tr("Teléfono:", "Phone:")} ${s.phone}</p>
+                <p class="text-[11px] text-slate-600 mt-2 bg-white p-2 rounded border border-slate-200 leading-snug">${translateContent(s.notes)}</p>
               </div>
             </div>
           `).join('')}
@@ -2634,7 +2989,10 @@ function toggleMerchItemStatus(itemIndex) {
 
   saveAppState();
   renderMerchView();
-  showToast(`Estado cambiado a: ${item.status}`, "success");
+  const label = item.status === 'delivered' ? tr('Entregado', 'Delivered') :
+    item.status === 'in_production' ? tr('En Producción', 'In Production') :
+    item.status === 'approved' ? tr('Aprobado', 'Approved') : tr('Cotización Pedida', 'Quote Requested');
+  showToast(tr(`Estado cambiado a: ${label}`, `Status changed to: ${label}`), "success");
 }
 
 // =========================================================================
@@ -2646,9 +3004,12 @@ function renderRaciView() {
   return `
     <div class="space-y-6 animate-fadeIn">
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-        <h2 class="text-2xl font-bold text-[#323B3F] mb-1">Matriz RACI & Equipo de Witness to War</h2>
+        <h2 class="text-2xl font-bold text-[#323B3F] mb-1">${tr("Matriz RACI & Equipo de Witness to War", "RACI Matrix & Witness to War Operations Team")}</h2>
         <p class="text-sm text-slate-600 mb-6">
-          Definición clara de roles para evitar que las tareas reboten entre "miles de personas".
+          ${tr(
+            "Definición clara de roles para evitar que las tareas reboten entre \"miles de personas\".",
+            "Clear accountability structure to prevent deliverables from bouncing between \"thousands of people\"."
+          )}
         </p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -2661,26 +3022,26 @@ function renderRaciView() {
                   </span>
                   <div>
                     <h4 class="font-bold text-slate-900 text-base">${m.name}</h4>
-                    <span class="text-xs text-slate-500 block">${m.role}</span>
+                    <span class="text-xs text-slate-500 block">${translateContent(m.role)}</span>
                   </div>
                 </div>
 
                 <div class="text-xs text-slate-600 space-y-1.5 mt-3 pt-3 border-t border-slate-200">
                   <p><strong>Email:</strong> <a href="mailto:${m.email}" class="text-blue-600 hover:underline">${m.email}</a></p>
-                  ${m.phone ? `<p><strong>Teléfono:</strong> ${m.phone}</p>` : ''}
+                  ${m.phone ? `<p><strong>${tr("Teléfono:", "Phone:")}</strong> ${m.phone}</p>` : ''}
                 </div>
               </div>
 
               <div class="mt-4 pt-3 border-t border-slate-200">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Responsabilidad Primaria:</span>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">${tr("Responsabilidad Primaria:", "Primary Accountability:")}</span>
                 <p class="text-[11px] text-slate-700 font-medium">
-                  ${m.id === 'lachlan' ? 'Aprobación final de presupuestos, cronogramas y escalamiento institucional al directorio.' :
-                    m.id === 'luis' ? 'Gestión técnica y de marketing, pauta publicitaria en Meta/Google, relación con agencia onmove y compras.' :
-                    m.id === 'joshua' ? 'Aprobación clínica estricta de contenidos de salud mental, técnicas de respiración y sentimientos.' :
-                    m.id === 'yassmen' ? 'Operación del servicio telefónico de Witness to War, registro de llamadas e insumos comunitarios.' :
-                    m.id === 'jasmina' ? 'Coordinación comunitaria en STARTTS y alineación estratégica de fondos y alianzas.' :
-                    m.id === 'maria' ? 'Soporte operativo, becas ucranianas, cotizaciones de merchandising y redes sociales.' :
-                    'Entrega técnica de diseño en Figma y desarrollo WordPress en Bricks Builder con compromiso de fechas.'}
+                  ${m.id === 'lachlan' ? tr('Aprobación final de presupuestos, cronogramas y escalamiento institucional al directorio.', 'Final sign-off on budgets, overall timeframe, and executive escalation to STARTTS Board and NSW Health.') :
+                    m.id === 'luis' ? tr('Gestión técnica y de marketing, pauta publicitaria en Meta/Google, relación con agencia onmove y compras.', 'Technical and marketing delivery, Meta & Google Ads management, agency SLA tracking with onmove, and procurement.') :
+                    m.id === 'joshua' ? tr('Aprobación clínica estricta de contenidos de salud mental, técnicas de respiración y sentimientos.', 'Strict clinical sign-off on all psychoeducational content, grounding exercises, and 8-feeling taxonomy.') :
+                    m.id === 'yassmen' ? tr('Operación del servicio telefónico de Witness to War, registro de llamadas e insumos comunitarios.', 'Operational oversight of toll-free line (1800), incoming switchboard log, and community translation review.') :
+                    m.id === 'jasmina' ? tr('Coordinación comunitaria en STARTTS y alineación estratégica de fondos y alianzas.', 'Community stakeholder engagement, multicultural partner alignment, and funding governance.') :
+                    m.id === 'maria' ? tr('Soporte operativo, becas ucranianas, cotizaciones de merchandising y redes sociales.', 'Operational support, Ukrainian Fellowship rollout, merchandise supplier quotes, and social media posting.') :
+                    tr('Entrega técnica de diseño en Figma y desarrollo WordPress en Bricks Builder con compromiso de fechas.', 'Technical Figma UX/UI delivery, custom WordPress development in Bricks Builder, and sprint schedule commitment.')}
                 </p>
               </div>
             </div>
@@ -2698,7 +3059,236 @@ function renderTimelineView() {
   const roadmap = AppState.data.agencyRoadmap;
   const meta = AppState.data.paidMedia.phase1Meta;
   const merch = AppState.data.merchandising;
+  const isAgency = AppState.currentRole === "agency";
+  const isEn = AppState.lang === "en";
 
+  // =========================================================================
+  // VISTA DE CRONOGRAMA EXCLUSIVA PARA LA AGENCIA ONMOVE (Alcance Estricto Web)
+  // =========================================================================
+  if (isAgency) {
+    return `
+      <div class="space-y-6 animate-fadeIn">
+        <!-- Encabezado del Roadmap (Restringido para Agencia) -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-3 py-1 bg-slate-900 text-[#96EE89] rounded-lg text-xs font-bold uppercase tracking-wider">
+                  ${tr("Alcance Agencia onmove", "onmove Agency Scope")}
+                </span>
+                <span class="text-xs text-slate-500">${tr("Sprints de Desarrollo Web: <strong>Agosto 2026 — Enero 2027</strong>", "Website Delivery Sprints: <strong>August 2026 — January 2027</strong>")}</span>
+              </div>
+              <h2 class="text-2xl font-bold text-[#323B3F] mt-2">
+                ${tr("Cronograma de Desarrollo Web & Entregables onmove", "Website Delivery Roadmap & onmove Sprints")}
+              </h2>
+              <p class="text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
+                ${tr(
+                  "Sincronización de las 4 fases contratadas de onmove: Estrategia, Diseño UX/UI en Figma, Construcción en WordPress Bricks Builder y Lanzamiento oficial multilingüe.",
+                  "Visual schedule tracking onmove's 4 contracted phases: Strategy & IA, Figma UX/UI Design, WordPress Bricks Builder Build, and Multilingual Go-Live."
+                )}
+              </p>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="exportAgencySprintToLachlan()" class="px-4 py-2.5 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] text-xs font-bold rounded-xl shadow flex items-center gap-2 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </svg>
+                ${tr("Copiar Resumen de Sprints", "Copy Sprint Summary")}
+              </button>
+            </div>
+          </div>
+
+          <!-- Indicadores de Estado por Línea de Tiempo (Solo Sitio Web) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6 text-xs">
+            <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+              <span class="font-bold text-emerald-800 uppercase text-[10px] block">${tr("Hito 1: Identidad & Branding", "Sprint 1: Identity & Branding")}</span>
+              <div class="text-base font-bold text-emerald-950 mt-1">${tr("100% Completado", "100% Completed")}</div>
+              <span class="text-slate-500 text-[11px]">${tr("Agosto 2026 · Logos multilingües & manual", "August 2026 · Multilingual logos & brand guide")}</span>
+            </div>
+
+            <div class="p-4 bg-amber-50 rounded-xl border border-amber-200">
+              <span class="font-bold text-amber-800 uppercase text-[10px] block flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                ${tr("Hito 2: Wireframes & Get Help", "Sprint 2: Wireframes & Get Help")}
+              </span>
+              <div class="text-base font-bold text-amber-950 mt-1">${tr("85% (Sesión 16 Oct)", "85% (Session 16 Oct)")}</div>
+              <span class="text-slate-600 text-[11px]">${tr("Validación Figma frames 1492-6", "Figma frames 1492-6 review")}</span>
+            </div>
+
+            <div class="p-4 bg-blue-50 rounded-xl border border-blue-100">
+              <span class="font-bold text-blue-800 uppercase text-[10px] block">${tr("Hito 3: Construcción WordPress", "Sprint 3: WordPress Build")}</span>
+              <div class="text-base font-bold text-blue-950 mt-1">${tr("Bricks Builder (6 Idiomas)", "Bricks Builder (6 Languages)")}</div>
+              <span class="text-slate-500 text-[11px]">${tr("Timeframe en confirmación", "Timeframe commitment in progress")}</span>
+            </div>
+
+            <div class="p-4 bg-purple-50 rounded-xl border border-purple-100">
+              <span class="font-bold text-purple-800 uppercase text-[10px] block">${tr("Hito 4: Testing & Lanzamiento", "Sprint 4: QA Testing & Go-Live")}</span>
+              <div class="text-base font-bold text-purple-950 mt-1">${tr("Enero 2027", "January 2027")}</div>
+              <span class="text-slate-500 text-[11px]">${tr("Accesibilidad WCAG 2.1 AA & Staging", "WCAG 2.1 AA accessibility & Staging")}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DIAGRAMA VISUAL GANTT / TIMELINE MENSUAL (Solo Fases Web) -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 overflow-x-auto">
+          <h3 class="text-lg font-bold text-[#323B3F] mb-6">${tr("Mapa Mensual de Sprints de la Agencia onmove", "onmove Monthly Sprint Delivery Schedule")}</h3>
+
+          <div class="min-w-[760px] space-y-5">
+            <!-- Encabezado de Meses -->
+            <div class="grid grid-cols-6 gap-2 text-center text-xs font-bold pb-3 border-b-2 border-slate-200">
+              <div class="text-slate-400">${tr("Agosto 2026", "August 2026")}</div>
+              <div class="text-slate-400">${tr("Septiembre 2026", "September 2026")}</div>
+              <div class="text-emerald-700 bg-emerald-50 py-1 rounded-lg border border-emerald-200">
+                ${tr("Octubre 2026 (HOY)", "October 2026 (NOW)")}
+              </div>
+              <div class="text-slate-700">${tr("Noviembre 2026", "November 2026")}</div>
+              <div class="text-slate-700">${tr("Diciembre 2026", "December 2026")}</div>
+              <div class="text-purple-700 bg-purple-50 py-1 rounded-lg border border-purple-200">
+                ${tr("Enero 2027 (Lanzamiento)", "January 2027 (Go-Live)")}
+              </div>
+            </div>
+
+            <!-- Barra 1: Identidad & Branding onmove -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-xs font-bold text-slate-700">
+                <span>${tr("1. Identidad, Branding & Paleta Pantone 2267 C", "1. Identity, Branding & Pantone 2267 C Palette")}</span>
+                <span class="text-emerald-600">${tr("✓ 100% Completado", "✓ 100% Completed")}</span>
+              </div>
+              <div class="grid grid-cols-6 gap-2 h-7 bg-slate-100 rounded-xl p-1 items-center">
+                <div class="col-span-1 bg-emerald-500 h-full rounded-lg text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
+                  ${tr("Entrega onmove", "onmove Delivery")}
+                </div>
+                <div class="col-span-5 text-[10px] text-slate-400 pl-2">
+                  ${tr("Manuales de marca, logos multilingües y packaging recibidos en Drive.", "Brand guidelines, multilingual logos, and packaging received on Drive.")}
+                </div>
+              </div>
+            </div>
+
+            <!-- Barra 2: Fase 1 Web - Estrategia & Arquitectura (onmove) -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-xs font-bold text-slate-700">
+                <span>${tr("2. Web Fase 1: Arquitectura, Sitemap & Get Help Toolkit", "2. Web Sprint 1: Architecture, Sitemap & Get Help Toolkit")}</span>
+                <span class="text-amber-600 font-bold">${tr("85% (Sesión de Wireframes)", "85% (Wireframes Session)")}</span>
+              </div>
+              <div class="grid grid-cols-6 gap-2 h-7 bg-slate-100 rounded-xl p-1 items-center">
+                <div class="col-span-1"></div>
+                <div class="col-span-1 bg-amber-400 h-full rounded-l-lg"></div>
+                <div class="col-span-1 bg-amber-500 h-full rounded-r-lg text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
+                  ${tr("Cierre Oct 20", "Closing Oct 20")}
+                </div>
+                <div class="col-span-3 text-[10px] text-slate-400 pl-2">
+                  ${tr("Wireframes listos en Figma (frames 1492-6). Pendiente aprobación de 8 emociones por Joshua.", "Figma wireframes ready (frames 1492-6). Awaiting clinical sign-off on 8 feelings by Joshua.")}
+                </div>
+              </div>
+            </div>
+
+            <!-- Barra 3: Fase 2 Web - Diseño Visual UX/UI (onmove) -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-xs font-bold text-slate-700">
+                <span>${tr("3. Web Fase 2: Diseño Visual & Maquetas Figma", "3. Web Sprint 2: Visual Design & Figma Mockups")}</span>
+                <span class="text-slate-600">${tr("40% (En curso)", "40% (In progress)")}</span>
+              </div>
+              <div class="grid grid-cols-6 gap-2 h-7 bg-slate-100 rounded-xl p-1 items-center">
+                <div class="col-span-2"></div>
+                <div class="col-span-2 bg-gradient-to-r from-slate-400 to-slate-700 h-full rounded-lg text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
+                  ${tr("Figma UX/UI (ETA comprometido: 5 Nov)", "Figma UX/UI (Committed ETA: 5 Nov)")}
+                </div>
+                <div class="col-span-2 text-[10px] text-slate-400 pl-2">
+                  ${tr("Homepage y Hub de recursos", "Homepage and Resource Hub")}
+                </div>
+              </div>
+            </div>
+
+            <!-- Barra 4: Fase 3 Web - Desarrollo CMS WordPress + Bricks Builder -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-xs font-bold text-slate-700">
+                <span>${tr("4. Web Fase 3: Construcción WordPress + Bricks Builder (6 Idiomas)", "4. Web Sprint 3: WordPress + Bricks Builder Build (6 Languages + RTL)")}</span>
+                <span class="text-amber-600 font-bold">${tr("Timeframe en confirmación", "Timeframe in confirmation")}</span>
+              </div>
+              <div class="grid grid-cols-6 gap-2 h-7 bg-slate-100 rounded-xl p-1 items-center">
+                <div class="col-span-3"></div>
+                <div class="col-span-2 border-2 border-dashed border-amber-400 bg-amber-50 h-full rounded-lg text-[10px] font-bold text-amber-900 flex items-center justify-center">
+                  ${tr("Sprints de Desarrollo CMS (WordPress + Bricks Builder)", "CMS Development Sprints (WordPress + Bricks Builder)")}
+                </div>
+                <div class="col-span-1 text-[10px] text-slate-400 pl-2"></div>
+              </div>
+            </div>
+
+            <!-- Barra 5: Fase 4 Web - Testing, Accesibilidad & Go-Live -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-xs font-bold text-slate-700">
+                <span>${tr("5. Web Fase 4: Testing WCAG 2.1 AA, Staging & Lanzamiento", "5. Web Sprint 4: WCAG 2.1 AA Testing, Staging & Production Go-Live")}</span>
+                <span class="text-purple-600 font-bold">${tr("Enero 2027", "January 2027")}</span>
+              </div>
+              <div class="grid grid-cols-6 gap-2 h-7 bg-slate-100 rounded-xl p-1 items-center">
+                <div class="col-span-5"></div>
+                <div class="col-span-1 bg-purple-600 h-full rounded-lg text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
+                  🚀 ${tr("Lanzamiento", "Go-Live")}
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TARJETAS DE DEPENDENCIAS CRÍTICAS (Estrictas para Agencia) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+            <span class="text-[10px] font-bold text-amber-800 uppercase tracking-wider block mb-1">
+              ${tr("Paso Crítico Inmediato #1", "Immediate Critical Step #1")}
+            </span>
+            <h4 class="font-bold text-slate-900 text-sm mb-1">${tr("Aprobación de Contenidos Clínicos", "Clinical Content Sign-off")}</h4>
+            <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+              ${tr(
+                "Joshua debe validar las 8 emociones del autoayuda. Sin esto, onmove no puede cerrar la taxonomía en WordPress.",
+                "Joshua must sign off on the 8 self-help emotional states to lock the CMS resource filters in WordPress."
+              )}
+            </p>
+            <button onclick="setActiveTab('scope-reviews')" class="w-full py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-xl shadow transition-all">
+              ${tr("Ver Estado en Scope Reviews &rarr;", "View Status in Scope Reviews &rarr;")}
+            </button>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+            <span class="text-[10px] font-bold text-blue-800 uppercase tracking-wider block mb-1">
+              ${tr("Paso Crítico Inmediato #2", "Immediate Critical Step #2")}
+            </span>
+            <h4 class="font-bold text-slate-900 text-sm mb-1">${tr("Compromiso Formal de Fechas onmove", "Formal Date Commitment from onmove")}</h4>
+            <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+              ${tr(
+                "Actualizar y comprometer las fechas de entrega de los sprints de desarrollo en WordPress Bricks Builder.",
+                "Update and commit development sprint milestone dates in WordPress Bricks Builder directly in the board."
+              )}
+            </p>
+            <button onclick="setActiveTab('agency')" class="w-full py-2 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] font-bold text-xs rounded-xl shadow transition-all">
+              ${tr("Editar Sprints en Portal Agencia &rarr;", "Edit Sprints in Agency Portal &rarr;")}
+            </button>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+            <span class="text-[10px] font-bold text-purple-800 uppercase tracking-wider block mb-1">
+              ${tr("Paso Crítico Inmediato #3", "Immediate Critical Step #3")}
+            </span>
+            <h4 class="font-bold text-slate-900 text-sm mb-1">${tr("Infraestructura y Contenidos Traducidos", "Hosting Infrastructure & Translations")}</h4>
+            <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+              ${tr(
+                "STARTTS entregará las credenciales de hosting y los textos finales en los 6 idiomas para la integración RTL.",
+                "STARTTS to deliver hosting infrastructure credentials and final approved copy in 6 languages for RTL integration."
+              )}
+            </p>
+            <button onclick="setActiveTab('scope-reviews')" class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow transition-all">
+              ${tr("Ver Pendientes STARTTS &rarr;", "View STARTTS Deliverables &rarr;")}
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // =========================================================================
+  // VISTA DE CRONOGRAMA COMPLETA (Lachlan, Luis, Equipo Interno, Marketing)
+  // =========================================================================
   return `
     <div class="space-y-6 animate-fadeIn">
       <!-- Encabezado del Roadmap -->
@@ -2707,14 +3297,16 @@ function renderTimelineView() {
           <div>
             <div class="flex items-center gap-2">
               <span class="px-3 py-1 bg-slate-900 text-[#96EE89] rounded-lg text-xs font-bold uppercase tracking-wider">
-                Plan Maestro
+                ${tr("Plan Maestro", "Master Delivery Plan")}
               </span>
-              <span class="text-xs text-slate-500">Horizonte de 6 Meses: <strong>Agosto 2026 — Enero 2027</strong></span>
+              <span class="text-xs text-slate-500">${tr("Horizonte de 6 Meses: <strong>Agosto 2026 — Enero 2027</strong>", "6-Month Horizon: <strong>August 2026 — January 2027</strong>")}</span>
             </div>
-            <h2 class="text-2xl font-bold text-[#323B3F] mt-2">Cronograma de Ejecución & Roadmap de Hitos</h2>
+            <h2 class="text-2xl font-bold text-[#323B3F] mt-2">${tr("Cronograma de Ejecución & Roadmap de Hitos", "Execution Roadmap & Milestone Schedule")}</h2>
             <p class="text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
-              Mapa visual que sincroniza las 4 fases de la agencia web onmove, la campaña activa de Meta Ads, 
-              la compra de merchandising y el hito de decisión de Google Ads para presentar a Lachlan y al directorio de STARTTS.
+              ${tr(
+                "Mapa visual que sincroniza las 4 fases de la agencia web onmove, la campaña activa de Meta Ads, la compra de merchandising y el hito de decisión de Google Ads para presentar a Lachlan y al directorio de STARTTS.",
+                "Visual roadmap synchronising onmove's 4 website phases, the active Meta Ads campaign, merchandise procurement, and the Google Ads reserve decision for Lachlan and the STARTTS board."
+              )}
             </p>
           </div>
 
@@ -2723,7 +3315,7 @@ function renderTimelineView() {
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
               </svg>
-              Compartir Cronograma
+              ${tr("Compartir Cronograma", "Share Roadmap")}
             </button>
           </div>
         </div>
@@ -2731,65 +3323,65 @@ function renderTimelineView() {
         <!-- Indicadores de Estado por Línea de Tiempo -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6 text-xs">
           <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-            <span class="font-bold text-emerald-800 uppercase text-[10px] block">Hito 1: Identidad</span>
-            <div class="text-base font-bold text-emerald-950 mt-1">100% Completado</div>
-            <span class="text-slate-500 text-[11px]">Agosto 2026 · Logos multilingües & manual</span>
+            <span class="font-bold text-emerald-800 uppercase text-[10px] block">${tr("Hito 1: Identidad", "Milestone 1: Identity")}</span>
+            <div class="text-base font-bold text-emerald-950 mt-1">${tr("100% Completado", "100% Completed")}</div>
+            <span class="text-slate-500 text-[11px]">${tr("Agosto 2026 · Logos multilingües & manual", "August 2026 · Multilingual logos & manual")}</span>
           </div>
 
           <div class="p-4 bg-blue-50 rounded-xl border border-blue-100">
-            <span class="font-bold text-blue-800 uppercase text-[10px] block">Hito 2: Pauta Meta Fase 1</span>
-            <div class="text-base font-bold text-blue-950 mt-1">En Ejecución (42%)</div>
-            <span class="text-slate-500 text-[11px]">7 Sep — 13 Dic 2026 · +75.5% llamadas</span>
+            <span class="font-bold text-blue-800 uppercase text-[10px] block">${tr("Hito 2: Pauta Meta Fase 1", "Milestone 2: Phase 1 Meta Ads")}</span>
+            <div class="text-base font-bold text-blue-950 mt-1">${tr("En Ejecución (42%)", "In Execution (42%)")}</div>
+            <span class="text-slate-500 text-[11px]">${tr("7 Sep — 13 Dic 2026 · +75.5% llamadas", "7 Sep — 13 Dec 2026 · +75.5% calls")}</span>
           </div>
 
           <div class="p-4 bg-amber-50 rounded-xl border border-amber-200">
             <span class="font-bold text-amber-800 uppercase text-[10px] block flex items-center gap-1">
               <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-              Hito 3: Sitio Web CMS
+              ${tr("Hito 3: Sitio Web CMS", "Milestone 3: Website CMS")}
             </span>
-            <div class="text-base font-bold text-amber-950 mt-1">35% (Cuello de Botella)</div>
-            <span class="text-slate-600 text-[11px]">Falta confirmación de fechas onmove</span>
+            <div class="text-base font-bold text-amber-950 mt-1">${tr("35% (Cuello de Botella)", "35% (Bottleneck)")}</div>
+            <span class="text-slate-600 text-[11px]">${tr("Falta confirmación de fechas onmove", "Awaiting onmove date confirmation")}</span>
           </div>
 
           <div class="p-4 bg-purple-50 rounded-xl border border-purple-100">
-            <span class="font-bold text-purple-800 uppercase text-[10px] block">Hito 4: Decisión Google Ads</span>
-            <div class="text-base font-bold text-purple-950 mt-1">Enero 2027 ($2,500)</div>
-            <span class="text-slate-500 text-[11px]">Criterio: Costo incremental de Meta</span>
+            <span class="font-bold text-purple-800 uppercase text-[10px] block">${tr("Hito 4: Decisión Google Ads", "Milestone 4: Google Ads Decision")}</span>
+            <div class="text-base font-bold text-purple-950 mt-1">${tr("Enero 2027 ($2,500)", "January 2027 ($2,500 AUD)")}</div>
+            <span class="text-slate-500 text-[11px]">${tr("Criterio: Costo incremental de Meta", "Criteria: Incremental cost on Meta")}</span>
           </div>
         </div>
       </div>
 
       <!-- DIAGRAMA VISUAL GANTT / TIMELINE MENSUAL -->
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 overflow-x-auto">
-        <h3 class="text-lg font-bold text-[#323B3F] mb-6">Mapa Mensual de Sprints & Entregables</h3>
+        <h3 class="text-lg font-bold text-[#323B3F] mb-6">${tr("Mapa Mensual de Sprints & Entregables", "Monthly Sprints & Deliverables Map")}</h3>
 
         <div class="min-w-[760px] space-y-5">
           <!-- Encabezado de Meses -->
           <div class="grid grid-cols-6 gap-2 text-center text-xs font-bold pb-3 border-b-2 border-slate-200">
-            <div class="text-slate-400">Agosto 2026</div>
-            <div class="text-slate-400">Septiembre 2026</div>
+            <div class="text-slate-400">${tr("Agosto 2026", "August 2026")}</div>
+            <div class="text-slate-400">${tr("Septiembre 2026", "September 2026")}</div>
             <div class="text-emerald-700 bg-emerald-50 py-1 rounded-lg border border-emerald-200">
-              Octubre 2026 (HOY)
+              ${tr("Octubre 2026 (HOY)", "October 2026 (NOW)")}
             </div>
-            <div class="text-slate-700">Noviembre 2026</div>
-            <div class="text-slate-700">Diciembre 2026</div>
+            <div class="text-slate-700">${tr("Noviembre 2026", "November 2026")}</div>
+            <div class="text-slate-700">${tr("Diciembre 2026", "December 2026")}</div>
             <div class="text-purple-700 bg-purple-50 py-1 rounded-lg border border-purple-200">
-              Enero 2027 (Lanzamiento)
+              ${tr("Enero 2027 (Lanzamiento)", "January 2027 (Go-Live)")}
             </div>
           </div>
 
           <!-- Barra 1: Identidad & Branding onmove -->
           <div class="space-y-1">
             <div class="flex items-center justify-between text-xs font-bold text-slate-700">
-              <span>1. Identidad, Branding & Paleta Pantone 2267 C ($27,300 AUD)</span>
-              <span class="text-emerald-600">✓ 100% Completado</span>
+              <span>${tr("1. Identidad, Branding & Paleta Pantone 2267 C ($27,300 AUD)", "1. Identity, Branding & Pantone 2267 C Palette ($27,300 AUD)")}</span>
+              <span class="text-emerald-600">${tr("✓ 100% Completado", "✓ 100% Completed")}</span>
             </div>
             <div class="grid grid-cols-6 gap-2 h-7 bg-slate-100 rounded-xl p-1 items-center">
               <div class="col-span-1 bg-emerald-500 h-full rounded-lg text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
-                Entrega onmove
+                ${tr("Entrega onmove", "onmove Delivery")}
               </div>
               <div class="col-span-5 text-[10px] text-slate-400 pl-2">
-                Manuales de marca, logos multilingües y packaging recibidos en Drive.
+                ${tr("Manuales de marca, logos multilingües y packaging recibidos en Drive.", "Brand manuals, multilingual logos, and packaging received on Drive.")}
               </div>
             </div>
           </div>
@@ -2797,34 +3389,34 @@ function renderTimelineView() {
           <!-- Barra 2: Campaña Meta Ads Fase 1 -->
           <div class="space-y-1">
             <div class="flex items-center justify-between text-xs font-bold text-slate-700">
-              <span>2. Campaña Meta Ads Fase 1 — Enfoque Regional ($2,500 AUD)</span>
-              <span class="text-blue-600 font-bold">Activa (Día 38 de 100)</span>
+              <span>${tr("2. Campaña Meta Ads Fase 1 — Enfoque Regional ($2,500 AUD)", "2. Phase 1 Meta Ads Campaign — Regional Focus ($2,500 AUD)")}</span>
+              <span class="text-blue-600 font-bold">${tr("Activa (Día 38 de 100)", "Active (Day 38 of 100)")}</span>
             </div>
             <div class="grid grid-cols-6 gap-2 h-7 bg-slate-100 rounded-xl p-1 items-center">
               <div class="col-span-1"></div>
               <div class="col-span-4 bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 h-full rounded-lg text-[10px] font-bold text-white flex items-center justify-between px-3 shadow-sm">
-                <span>Inicio: 7 Sep</span>
-                <span>7 Conjuntos (Árabe, Farsi, Ucraniano, Hebreo, Inglés)</span>
-                <span>Fin: 13 Dic</span>
+                <span>${tr("Inicio: 7 Sep", "Start: 7 Sep")}</span>
+                <span>${tr("7 Conjuntos (Árabe, Farsi, Ucraniano, Hebreo, Inglés)", "7 Sets (Arabic, Farsi, Ukrainian, Hebrew, English)")}</span>
+                <span>${tr("Fin: 13 Dic", "End: 13 Dec")}</span>
               </div>
-              <div class="col-span-1 text-[10px] text-slate-400 pl-2">Receso Verano</div>
+              <div class="col-span-1 text-[10px] text-slate-400 pl-2">${tr("Receso Verano", "Summer Recess")}</div>
             </div>
           </div>
 
           <!-- Barra 3: Fase 1 Web - Estrategia & Arquitectura (onmove) -->
           <div class="space-y-1">
             <div class="flex items-center justify-between text-xs font-bold text-slate-700">
-              <span>3. Web Fase 1: Arquitectura, Sitemap & Get Help Toolkit</span>
-              <span class="text-amber-600 font-bold">85% (Trabado en firma clínica)</span>
+              <span>${tr("3. Web Fase 1: Arquitectura, Sitemap & Get Help Toolkit", "3. Web Sprint 1: Architecture, Sitemap & Get Help Toolkit")}</span>
+              <span class="text-amber-600 font-bold">${tr("85% (Trabado en firma clínica)", "85% (Held on clinical sign-off)")}</span>
             </div>
             <div class="grid grid-cols-6 gap-2 h-7 bg-slate-100 rounded-xl p-1 items-center">
               <div class="col-span-1"></div>
               <div class="col-span-1 bg-amber-400 h-full rounded-l-lg"></div>
               <div class="col-span-1 bg-amber-500 h-full rounded-r-lg text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
-                Cierre Oct 20
+                ${tr("Cierre Oct 20", "Closing Oct 20")}
               </div>
               <div class="col-span-3 text-[10px] text-slate-400 pl-2">
-                Wireframes listos en Figma. Pendiente aprobación de 8 emociones por Joshua.
+                ${tr("Wireframes listos en Figma. Pendiente aprobación de 8 emociones por Joshua.", "Figma wireframes ready. Pending sign-off on 8 feelings by Joshua.")}
               </div>
             </div>
           </div>
@@ -2832,16 +3424,16 @@ function renderTimelineView() {
           <!-- Barra 4: Fase 2 Web - Diseño Visual UX/UI (onmove) -->
           <div class="space-y-1">
             <div class="flex items-center justify-between text-xs font-bold text-slate-700">
-              <span>4. Web Fase 2: Diseño Visual & Maquetas Figma</span>
-              <span class="text-slate-600">40% (En curso)</span>
+              <span>${tr("4. Web Fase 2: Diseño Visual & Maquetas Figma", "4. Web Sprint 2: Visual Design & Figma Mockups")}</span>
+              <span class="text-slate-600">${tr("40% (En curso)", "40% (In progress)")}</span>
             </div>
             <div class="grid grid-cols-6 gap-2 h-7 bg-slate-100 rounded-xl p-1 items-center">
               <div class="col-span-2"></div>
               <div class="col-span-2 bg-gradient-to-r from-slate-400 to-slate-700 h-full rounded-lg text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
-                Figma UX/UI (ETA comprometido: 5 Nov)
+                ${tr("Figma UX/UI (ETA comprometido: 5 Nov)", "Figma UX/UI (Committed ETA: 5 Nov)")}
               </div>
               <div class="col-span-2 text-[10px] text-slate-400 pl-2">
-                Homepage y Hub de recursos
+                ${tr("Homepage y Hub de recursos", "Homepage and Resource Hub")}
               </div>
             </div>
           </div>
@@ -2849,13 +3441,13 @@ function renderTimelineView() {
           <!-- Barra 5: Fase 3 Web - Desarrollo CMS WordPress + Bricks Builder -->
           <div class="space-y-1">
             <div class="flex items-center justify-between text-xs font-bold text-slate-700">
-              <span>5. Web Fase 3: Construcción WordPress + Bricks Builder (6 Idiomas)</span>
-              <span class="text-red-500 font-bold">⚠️ Fecha por fijar por onmove</span>
+              <span>${tr("5. Web Fase 3: Construcción WordPress + Bricks Builder (6 Idiomas)", "5. Web Sprint 3: WordPress + Bricks Builder Build (6 Languages + RTL)")}</span>
+              <span class="text-red-500 font-bold">${tr("⚠️ Fecha por fijar por onmove", "⚠️ Awaiting onmove date commitment")}</span>
             </div>
             <div class="grid grid-cols-6 gap-2 h-7 bg-slate-100 rounded-xl p-1 items-center">
               <div class="col-span-3"></div>
               <div class="col-span-2 border-2 border-dashed border-amber-400 bg-amber-50 h-full rounded-lg text-[10px] font-bold text-amber-900 flex items-center justify-center">
-                Sprints de Desarrollo CMS (Timeframe pendiente)
+                ${tr("Sprints de Desarrollo CMS (Timeframe pendiente)", "CMS Development Sprints (Pending Timeframe)")}
               </div>
               <div class="col-span-1 text-[10px] text-slate-400 pl-2"></div>
             </div>
@@ -2864,13 +3456,13 @@ function renderTimelineView() {
           <!-- Barra 6: Fase 4 Web - Testing, Accesibilidad & Go-Live -->
           <div class="space-y-1">
             <div class="flex items-center justify-between text-xs font-bold text-slate-700">
-              <span>6. Web Fase 4: Testing WCAG 2.1 AA, Staging & Lanzamiento</span>
-              <span class="text-purple-600 font-bold">Enero 2027</span>
+              <span>${tr("6. Web Fase 4: Testing WCAG 2.1 AA, Staging & Lanzamiento", "6. Web Sprint 4: WCAG 2.1 AA Testing, Staging & Production Go-Live")}</span>
+              <span class="text-purple-600 font-bold">${tr("Enero 2027", "January 2027")}</span>
             </div>
             <div class="grid grid-cols-6 gap-2 h-7 bg-slate-100 rounded-xl p-1 items-center">
               <div class="col-span-5"></div>
               <div class="col-span-1 bg-purple-600 h-full rounded-lg text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
-                🚀 Go-Live
+                🚀 ${tr("Lanzamiento", "Go-Live")}
               </div>
             </div>
           </div>
@@ -2878,8 +3470,8 @@ function renderTimelineView() {
           <!-- Barra 7: Merchandising & Banners para Eventos -->
           <div class="space-y-1">
             <div class="flex items-center justify-between text-xs font-bold text-slate-700">
-              <span>7. Merchandising, Banners & Uniformes ($4,750 AUD)</span>
-              <span class="text-indigo-600 font-bold">Lote 1 Pagado · Lote 2 en Cotización</span>
+              <span>${tr("7. Merchandising, Banners & Uniformes ($4,750 AUD)", "7. Merchandise, Banners & Uniforms ($4,750 AUD)")}</span>
+              <span class="text-indigo-600 font-bold">${tr("Lote 1 Pagado · Lote 2 en Cotización", "Batch 1 Paid · Batch 2 Tendering")}</span>
             </div>
             <div class="grid grid-cols-6 gap-2 h-7 bg-slate-100 rounded-xl p-1 items-center">
               <div class="col-span-1 bg-indigo-500 h-full rounded-l-lg text-[10px] font-bold text-white flex items-center justify-center">
@@ -2887,10 +3479,10 @@ function renderTimelineView() {
               </div>
               <div class="col-span-1"></div>
               <div class="col-span-2 bg-indigo-200 border border-indigo-300 h-full rounded-r-lg text-[10px] font-bold text-indigo-900 flex items-center justify-center">
-                4 Proveedores cotizando manteles y kits
+                ${tr("4 Proveedores cotizando manteles y kits", "4 Suppliers tendering runners & kits")}
               </div>
               <div class="col-span-2 text-[10px] text-slate-400 pl-2">
-                Entrega masiva para eventos 2027
+                ${tr("Entrega masiva para eventos 2027", "Bulk delivery for 2027 events")}
               </div>
             </div>
           </div>
@@ -2901,35 +3493,50 @@ function renderTimelineView() {
       <!-- TARJETAS DE DEPENDENCIAS CRÍTICAS -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-          <span class="text-[10px] font-bold text-amber-800 uppercase tracking-wider block mb-1">Paso Crítico Inmediato #1</span>
-          <h4 class="font-bold text-slate-900 text-sm mb-1">Aprobación de Contenidos Clínicos</h4>
+          <span class="text-[10px] font-bold text-amber-800 uppercase tracking-wider block mb-1">
+            ${tr("Paso Crítico Inmediato #1", "Immediate Critical Step #1")}
+          </span>
+          <h4 class="font-bold text-slate-900 text-sm mb-1">${tr("Aprobación de Contenidos Clínicos", "Clinical Content Sign-off")}</h4>
           <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-            Joshua debe validar las 8 emociones del autoayuda. Sin esto, onmove no puede cerrar la arquitectura del sitio web.
+            ${tr(
+              "Joshua debe validar las 8 emociones del autoayuda. Sin esto, onmove no puede cerrar la arquitectura del sitio web.",
+              "Joshua must validate the 8 self-help emotional states. Without this, onmove cannot lock the website IA."
+            )}
           </p>
           <button onclick="openEmailModal('act-2')" class="w-full py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-xl shadow transition-all">
-            Enviar Recordatorio a Joshua &rarr;
+            ${tr("Enviar Recordatorio a Joshua &rarr;", "Send Reminder to Joshua &rarr;")}
           </button>
         </div>
 
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-          <span class="text-[10px] font-bold text-blue-800 uppercase tracking-wider block mb-1">Paso Crítico Inmediato #2</span>
-          <h4 class="font-bold text-slate-900 text-sm mb-1">Compromiso Formal de Fechas onmove</h4>
+          <span class="text-[10px] font-bold text-blue-800 uppercase tracking-wider block mb-1">
+            ${tr("Paso Crítico Inmediato #2", "Immediate Critical Step #2")}
+          </span>
+          <h4 class="font-bold text-slate-900 text-sm mb-1">${tr("Compromiso Formal de Fechas onmove", "Formal Date Commitment from onmove")}</h4>
           <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-            Exigir a onmove las fechas de entrega de los sprints de desarrollo en WordPress Bricks Builder antes de emitir más pagos.
+            ${tr(
+              "Exigir a onmove las fechas de entrega de los sprints de desarrollo en WordPress Bricks Builder antes de emitir más pagos.",
+              "Demand committed sprint milestone dates in WordPress Bricks Builder from onmove before releasing further payments."
+            )}
           </p>
           <button onclick="openEmailModal('act-1')" class="w-full py-2 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] font-bold text-xs rounded-xl shadow transition-all">
-            Exigir Timeframe a onmove &rarr;
+            ${tr("Exigir Timeframe a onmove &rarr;", "Demand Timeframe from onmove &rarr;")}
           </button>
         </div>
 
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-          <span class="text-[10px] font-bold text-indigo-800 uppercase tracking-wider block mb-1">Paso Crítico Inmediato #3</span>
-          <h4 class="font-bold text-slate-900 text-sm mb-1">Consolidación de Cotizaciones Merch</h4>
+          <span class="text-[10px] font-bold text-indigo-800 uppercase tracking-wider block mb-1">
+            ${tr("Paso Crítico Inmediato #3", "Immediate Critical Step #3")}
+          </span>
+          <h4 class="font-bold text-slate-900 text-sm mb-1">${tr("Consolidación de Cotizaciones Merch", "Consolidate Merchandise Quotes")}</h4>
           <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-            Maria debe cerrar la tabla comparativa de precios con SOS Promotions, Everything Branded, Fast Promos y Vivid Ads.
+            ${tr(
+              "Maria debe cerrar la tabla comparativa de precios con SOS Promotions, Everything Branded, Fast Promos y Vivid Ads.",
+              "Maria must finalise the competitive quote table with SOS Promotions, Everything Branded, Fast Promos, and Vivid Ads."
+            )}
           </p>
           <button onclick="setActiveTab('merch')" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow transition-all">
-            Ver Comparativa de Proveedores &rarr;
+            ${tr("Ver Comparativa de Proveedores &rarr;", "View Supplier Comparison &rarr;")}
           </button>
         </div>
       </div>
@@ -2963,9 +3570,9 @@ async function openShareModal() {
         <div class="flex items-center justify-between pb-4 border-b border-slate-100">
           <div>
             <span class="text-[10px] font-bold uppercase tracking-wider text-[#323B3F] bg-[#96EE89] px-2 py-0.5 rounded">
-              Colaboración & Acceso
+              ${tr("Colaboración & Acceso", "Collaboration & Access")}
             </span>
-            <h3 class="text-xl font-bold text-[#323B3F] mt-1">Enlaces de Acceso Personalizados por Rol</h3>
+            <h3 class="text-xl font-bold text-[#323B3F] mt-1">${tr("Enlaces de Acceso Personalizados por Rol", "Role-Personalised Access Links")}</h3>
           </div>
           <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2974,9 +3581,11 @@ async function openShareModal() {
           </button>
         </div>
 
-        <p class="text-xs text-slate-600 mt-2 mb-4">
-          Cada enlace abre el Centro de Control configurado para el rol específico, permitiendo a la agencia fijar sus fechas, 
-          a Lachlan evaluar el estado ejecutivo y al equipo operar sin desorganización.
+        <p class="text-xs text-slate-600 mt-2 mb-4 leading-relaxed">
+          ${tr(
+            "Cada enlace abre el Centro de Control configurado para el rol específico, permitiendo a la agencia fijar sus fechas, a Lachlan evaluar el estado ejecutivo y al equipo operar sin desorganización.",
+            "Each secure link opens the Control Centre configured for that specific role, enabling onmove to commit their delivery dates, Lachlan to assess executive progress, and internal teams to eliminate coordination bottlenecks."
+          )}
         </p>
 
         <!-- SECCIÓN DE ENLACE PÚBLICO SEGURO (CLOUDFLARE TUNNEL) -->
@@ -2988,13 +3597,13 @@ async function openShareModal() {
               <div class="flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full ${tunnelInfo.active ? 'bg-emerald-500 animate-ping' : 'bg-slate-400'}"></span>
                 <h4 class="font-bold text-xs text-slate-900">
-                  ${tunnelInfo.active ? 'Túnel Público Seguro Activo (HTTPS)' : 'Acceso Público en la Nube (Cloudflare)'}
+                  ${tunnelInfo.active ? tr("Túnel Público Seguro Activo (HTTPS)", "Active Secure Public Tunnel (HTTPS)") : tr("Acceso Público en la Nube (Cloudflare)", "Cloudflare Public Tunnel Access")}
                 </h4>
               </div>
               <p class="text-[11px] text-slate-600 mt-1">
                 ${tunnelInfo.active ? 
-                  `URL Pública: <strong class="text-emerald-800 select-all">${tunnelInfo.publicUrl}</strong>` : 
-                  'Genera una URL segura accesible desde cualquier dispositivo (celulares, red NSW Health, computadoras de la agencia).'}
+                  `${tr("URL Pública:", "Public URL:")} <strong class="text-emerald-800 select-all">${tunnelInfo.publicUrl}</strong>` : 
+                  tr("Genera una URL segura accesible desde cualquier dispositivo (celulares, red NSW Health, computadoras de la agencia).", "Generate a secure URL accessible from any mobile device, NSW Health network, or external agency workstation.")}
               </p>
             </div>
 
@@ -3002,10 +3611,10 @@ async function openShareModal() {
               ${tunnelInfo.active ? `
                 <div class="flex items-center gap-2">
                   <button onclick="copyToClipboard('${tunnelInfo.publicUrl}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow">
-                    Copiar URL Pública
+                    ${tr("Copiar URL Pública", "Copy Public URL")}
                   </button>
                   <button onclick="toggleTunnel('stop')" class="px-2.5 py-1.5 bg-red-100 hover:bg-red-200 text-red-700 font-bold text-xs rounded-lg">
-                    Detener
+                    ${tr("Detener", "Stop")}
                   </button>
                 </div>
               ` : `
@@ -3013,7 +3622,7 @@ async function openShareModal() {
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                   </svg>
-                  Activar Enlace Público (1 Clic)
+                  ${tr("Activar Enlace Público (1 Clic)", "Activate Public Link (1-Click)")}
                 </button>
               `}
             </div>
@@ -3026,18 +3635,18 @@ async function openShareModal() {
           <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div class="flex items-center gap-2">
-                <span class="font-bold text-slate-900">🏢 Enlace para la Agencia (onmove)</span>
-                <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">Fijar Fechas</span>
+                <span class="font-bold text-slate-900">${tr("🏢 Enlace para la Agencia (onmove)", "🏢 onmove Agency Access Link")}</span>
+                <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">${tr("Fijar Fechas", "Commit ETAs")}</span>
               </div>
               <p class="text-[11px] text-slate-500 mt-0.5">
-                Abre directamente la vista de sprints para que ingresen y comprometan sus fechas de entrega (ETAs).
+                ${tr("Abre directamente la vista de sprints para que ingresen y comprometan sus fechas de entrega (ETAs).", "Directly opens sprint deliverables for onmove to review and commit milestone delivery dates.")}
               </p>
             </div>
             <button onclick="copyToClipboard('${baseUrl}/?role=agency&tab=agency')" class="whitespace-nowrap px-3 py-1.5 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] font-bold rounded-lg shadow flex items-center gap-1.5">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
               </svg>
-              Copiar Enlace
+              ${tr("Copiar Enlace", "Copy Link")}
             </button>
           </div>
 
@@ -3045,18 +3654,18 @@ async function openShareModal() {
           <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div class="flex items-center gap-2">
-                <span class="font-bold text-slate-900">👑 Enlace para Lachlan (Líder de Área)</span>
-                <span class="text-[10px] font-bold bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">Reporte & Board</span>
+                <span class="font-bold text-slate-900">${tr("👑 Enlace para Lachlan (Líder de Área)", "👑 Lachlan (Executive Sponsor) Link")}</span>
+                <span class="text-[10px] font-bold bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">${tr("Reporte & Board", "Board Report")}</span>
               </div>
               <p class="text-[11px] text-slate-500 mt-0.5">
-                Muestra el radar estratégico (Dónde estamos, Dónde vamos, Próximo paso) y exportación de informe PDF.
+                ${tr("Muestra el radar estratégico (Dónde estamos, Dónde vamos, Próximo paso) y exportación de informe PDF.", "Displays the Strategic Radar (Where we are, Where we are headed, Next step) and PDF export.")}
               </p>
             </div>
             <button onclick="copyToClipboard('${baseUrl}/?role=executive&tab=radar')" class="whitespace-nowrap px-3 py-1.5 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] font-bold rounded-lg shadow flex items-center gap-1.5">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
               </svg>
-              Copiar Enlace
+              ${tr("Copiar Enlace", "Copy Link")}
             </button>
           </div>
 
@@ -3064,18 +3673,18 @@ async function openShareModal() {
           <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div class="flex items-center gap-2">
-                <span class="font-bold text-slate-900">👥 Enlace Operativo & Anti-Cuellos de Botella</span>
-                <span class="text-[10px] font-bold bg-red-100 text-red-800 px-2 py-0.5 rounded-full">SLA 48h</span>
+                <span class="font-bold text-slate-900">${tr("👥 Enlace Operativo & Anti-Cuellos de Botella", "👥 W2W Team Operations Link")}</span>
+                <span class="text-[10px] font-bold bg-red-100 text-red-800 px-2 py-0.5 rounded-full">${tr("SLA 48h", "48h SLA")}</span>
               </div>
               <p class="text-[11px] text-slate-500 mt-0.5">
-                Tablero Kanban con asignación de dueño único y semáforo de revisiones atrasadas.
+                ${tr("Tablero Kanban con asignación de dueño único y semáforo de revisiones atrasadas.", "Kanban workflow board with single-owner accountability and 48-hour SLA bottleneck alerts.")}
               </p>
             </div>
             <button onclick="copyToClipboard('${baseUrl}/?role=operations&tab=workflow')" class="whitespace-nowrap px-3 py-1.5 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] font-bold rounded-lg shadow flex items-center gap-1.5">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
               </svg>
-              Copiar Enlace
+              ${tr("Copiar Enlace", "Copy Link")}
             </button>
           </div>
 
@@ -3083,18 +3692,18 @@ async function openShareModal() {
           <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div class="flex items-center gap-2">
-                <span class="font-bold text-slate-900">📈 Enlace Campañas (Meta Ads & Google)</span>
-                <span class="text-[10px] font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">Pauta & Telefonía</span>
+                <span class="font-bold text-slate-900">${tr("📈 Enlace Campañas (Meta Ads & Google)", "📈 Paid Media & Telephony Link")}</span>
+                <span class="text-[10px] font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">${tr("Pauta & Telefonía", "Growth & Inquiries")}</span>
               </div>
               <p class="text-[11px] text-slate-500 mt-0.5">
-                Desglose de los 7 conjuntos de anuncios por idioma, llamadas fuera de NSW y reserva de Google.
+                ${tr("Desglose de los 7 conjuntos de anuncios por idioma, llamadas fuera de NSW y reserva de Google.", "Breakdown of 7 language-targeted ad sets, interstate call volume, and Google reserve strategy.")}
               </p>
             </div>
             <button onclick="copyToClipboard('${baseUrl}/?role=media&tab=media')" class="whitespace-nowrap px-3 py-1.5 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] font-bold rounded-lg shadow flex items-center gap-1.5">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
               </svg>
-              Copiar Enlace
+              ${tr("Copiar Enlace", "Copy Link")}
             </button>
           </div>
 
@@ -3102,25 +3711,25 @@ async function openShareModal() {
           <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div class="flex items-center gap-2">
-                <span class="font-bold text-slate-900">📦 Enlace Merchandising & Proveedores</span>
-                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full">Cotizaciones</span>
+                <span class="font-bold text-slate-900">${tr("📦 Enlace Merchandising & Proveedores", "📦 Merchandise & Procurement Link")}</span>
+                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full">${tr("Cotizaciones", "Supplier Quotes")}</span>
               </div>
               <p class="text-[11px] text-slate-500 mt-0.5">
-                Tabla de los 11 artículos pedidos, directorio de los 4 proveedores y control de presupuesto.
+                ${tr("Tabla de los 11 artículos pedidos, directorio de los 4 proveedores y control de presupuesto.", "Inventory tracking of 11 items, 4 supplier quotes directory, and Pantone 2267 C specifications.")}
               </p>
             </div>
             <button onclick="copyToClipboard('${baseUrl}/?role=merch&tab=merch')" class="whitespace-nowrap px-3 py-1.5 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] font-bold rounded-lg shadow flex items-center gap-1.5">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
               </svg>
-              Copiar Enlace
+              ${tr("Copiar Enlace", "Copy Link")}
             </button>
           </div>
         </div>
 
         <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-end">
           <button onclick="closeModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl">
-            Listo / Cerrar
+            ${tr("Listo / Cerrar", "Done / Close")}
           </button>
         </div>
       </div>
@@ -3134,7 +3743,7 @@ async function openShareModal() {
 async function toggleTunnel(action) {
   const btn = document.getElementById("btnStartTunnel");
   if (btn) {
-    btn.innerHTML = `<span class="animate-spin mr-1">⏳</span> Generando enlace seguro...`;
+    btn.innerHTML = `<span class="animate-spin mr-1">⏳</span> ${tr("Generando enlace seguro...", "Generating secure tunnel...")}`;
     btn.disabled = true;
   }
 
@@ -3146,21 +3755,21 @@ async function toggleTunnel(action) {
     });
     const result = await res.json();
     if (result.ok) {
-      showToast(action === 'start' ? "¡Enlace público seguro generado!" : "Túnel detenido", "success");
+      showToast(action === 'start' ? tr("¡Enlace público seguro generado!", "Secure public tunnel generated!") : tr("Túnel detenido", "Tunnel stopped"), "success");
       openShareModal(); // Refrescar modal
     } else {
-      showToast("Error al configurar túnel: " + (result.error || ""), "error");
+      showToast(tr("Error al configurar túnel: ", "Error configuring tunnel: ") + (result.error || ""), "error");
     }
   } catch (err) {
-    showToast("Error comunicando con el servidor local", "error");
+    showToast(tr("Error comunicando con el servidor local", "Error connecting to local server"), "error");
   }
 }
 
 function copyToClipboard(text) {
   navigator.clipboard.writeText(text).then(() => {
-    showToast("¡Enlace copiado al portapapeles!", "success");
+    showToast(tr("¡Enlace copiado al portapapeles!", "Link copied to clipboard!"), "success");
   }).catch(() => {
-    prompt("Copia este enlace manualmente:", text);
+    prompt(tr("Copia este enlace manualmente:", "Copy this link manually:"), text);
   });
 }
 
@@ -3179,7 +3788,7 @@ function openEmailModal(actionId) {
     <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl animate-scaleUp">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-          <h3 class="text-lg font-bold text-[#323B3F]">Plantilla de Correo Lista para Enviar</h3>
+          <h3 class="text-lg font-bold text-[#323B3F]">${tr("Plantilla de Correo Lista para Enviar", "Ready-to-Send Email Template")}</h3>
           <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -3189,20 +3798,20 @@ function openEmailModal(actionId) {
 
         <div class="mt-4 space-y-3 text-xs">
           <div>
-            <label class="block font-bold text-slate-700 mb-1">Destinatario:</label>
+            <label class="block font-bold text-slate-700 mb-1">${tr("Destinatario:", "Recipient:")}</label>
             <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 text-slate-800 font-semibold">
               ${action.owner === 'onmove (Agencia)' ? 'projects@onmove.com.au' : 'joshua.clinical@health.nsw.gov.au'}
             </div>
           </div>
 
           <div>
-            <label class="block font-bold text-slate-700 mb-1">Asunto:</label>
+            <label class="block font-bold text-slate-700 mb-1">${tr("Asunto:", "Subject:")}</label>
             <input type="text" id="emailSubjectInput" value="${action.emailTemplate.subject}" 
                    class="w-full bg-slate-50 p-2 rounded-lg border border-slate-200 text-slate-800 font-bold focus:outline-none" />
           </div>
 
           <div>
-            <label class="block font-bold text-slate-700 mb-1">Cuerpo del Mensaje:</label>
+            <label class="block font-bold text-slate-700 mb-1">${tr("Cuerpo del Mensaje:", "Message Body:")}</label>
             <textarea id="emailBodyInput" rows="8" 
                       class="w-full bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-slate-800 font-mono text-[11px] leading-relaxed focus:outline-none">${action.emailTemplate.body}</textarea>
           </div>
@@ -3210,13 +3819,13 @@ function openEmailModal(actionId) {
 
         <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
           <button onclick="closeModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl">
-            Cerrar
+            ${tr("Cerrar", "Close")}
           </button>
           <button onclick="copyEmailToClipboard()" class="px-4 py-2 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] text-xs font-bold rounded-xl shadow flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
             </svg>
-            Copiar al Portapapeles
+            ${tr("Copiar al Portapapeles", "Copy to Clipboard")}
           </button>
         </div>
       </div>
@@ -3230,10 +3839,10 @@ function copyEmailToClipboard() {
   const fullText = `Asunto: ${subject}\n\n${body}`;
 
   navigator.clipboard.writeText(fullText).then(() => {
-    showToast("¡Texto de correo copiado al portapapeles!", "success");
+    showToast(tr("¡Texto de correo copiado al portapapeles!", "Email draft copied to clipboard!"), "success");
     closeModal();
   }).catch(() => {
-    showToast("No se pudo copiar automáticamente, copia manualmente.", "error");
+    showToast(tr("No se pudo copiar automáticamente, copia manualmente.", "Could not copy automatically, please copy manually."), "error");
   });
 }
 
@@ -3249,7 +3858,7 @@ function openNewTaskModal() {
     <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl animate-scaleUp">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-          <h3 class="text-lg font-bold text-[#323B3F]">Nueva Tarea / Aprobación</h3>
+          <h3 class="text-lg font-bold text-[#323B3F]">${tr("Nueva Tarea / Aprobación", "New Task / Sign-off")}</h3>
           <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -3259,14 +3868,14 @@ function openNewTaskModal() {
 
         <form onsubmit="handleCreateTask(event)" class="mt-4 space-y-3 text-xs">
           <div>
-            <label class="block font-bold text-slate-700 mb-1">Título de la Tarea:</label>
-            <input type="text" id="newTaskTitle" required placeholder="Ej: Revisión de textos en Dari" 
+            <label class="block font-bold text-slate-700 mb-1">${tr("Título de la Tarea:", "Task Title:")}</label>
+            <input type="text" id="newTaskTitle" required placeholder="${tr("Ej: Revisión de textos en Dari", "e.g. Dari translated copy review")}" 
                    class="w-full bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#96EE89]" />
           </div>
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block font-bold text-slate-700 mb-1">Responsable Único:</label>
+              <label class="block font-bold text-slate-700 mb-1">${tr("Responsable Único:", "Single Assignee:")}</label>
               <select id="newTaskAssignee" class="w-full bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-slate-800">
                 ${AppState.data.teamOperations.members.map(m => `
                   <option value="${m.id}">${m.name}</option>
@@ -3274,42 +3883,42 @@ function openNewTaskModal() {
               </select>
             </div>
             <div>
-              <label class="block font-bold text-slate-700 mb-1">Prioridad:</label>
+              <label class="block font-bold text-slate-700 mb-1">${tr("Prioridad:", "Priority:")}</label>
               <select id="newTaskPriority" class="w-full bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-slate-800">
-                <option value="critical">Crítica</option>
-                <option value="high" selected>Alta</option>
-                <option value="medium">Media</option>
+                <option value="critical">${tr("Crítica", "Critical")}</option>
+                <option value="high" selected>${tr("Alta", "High")}</option>
+                <option value="medium">${tr("Media", "Medium")}</option>
               </select>
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block font-bold text-slate-700 mb-1">Etapa Inicial:</label>
+              <label class="block font-bold text-slate-700 mb-1">${tr("Etapa Inicial:", "Initial Stage:")}</label>
               <select id="newTaskStage" class="w-full bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-slate-800">
-                <option value="requested">1. Solicitado</option>
-                <option value="in_prep" selected>2. En Redacción</option>
-                <option value="tech_review">3. Revisión Técnica</option>
-                <option value="clinical_review">4. Revisión Clínica</option>
-                <option value="area_approval">5. Aprobación Área</option>
+                <option value="requested">${tr("1. Solicitado", "1. Requested")}</option>
+                <option value="in_prep" selected>${tr("2. En Redacción", "2. In Drafting")}</option>
+                <option value="tech_review">${tr("3. Revisión Técnica", "3. Technical Review")}</option>
+                <option value="clinical_review">${tr("4. Revisión Clínica", "4. Clinical Review")}</option>
+                <option value="area_approval">${tr("5. Aprobación Área", "5. Area Sign-off")}</option>
               </select>
             </div>
             <div>
-              <label class="block font-bold text-slate-700 mb-1">Fecha Límite:</label>
+              <label class="block font-bold text-slate-700 mb-1">${tr("Fecha Límite:", "Due Date:")}</label>
               <input type="date" id="newTaskDueDate" required 
                      class="w-full bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-slate-800" />
             </div>
           </div>
 
           <div>
-            <label class="block font-bold text-slate-700 mb-1">Notas / Instrucciones:</label>
-            <textarea id="newTaskNotes" rows="2" placeholder="Detalles de la entrega..." 
+            <label class="block font-bold text-slate-700 mb-1">${tr("Notas / Instrucciones:", "Notes / Instructions:")}</label>
+            <textarea id="newTaskNotes" rows="2" placeholder="${tr("Detalles de la entrega...", "Deliverable details...")}" 
                       class="w-full bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-slate-800 focus:outline-none"></textarea>
           </div>
 
           <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
-            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-100 text-slate-700 font-bold rounded-xl">Cancelar</button>
-            <button type="submit" class="px-4 py-2 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] font-bold rounded-xl shadow">Crear Tarea</button>
+            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-100 text-slate-700 font-bold rounded-xl">${tr("Cancelar", "Cancel")}</button>
+            <button type="submit" class="px-4 py-2 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] font-bold rounded-xl shadow">${tr("Crear Tarea", "Create Task")}</button>
           </div>
         </form>
       </div>
@@ -3347,7 +3956,7 @@ function handleCreateTask(e) {
   saveAppState();
   closeModal();
   renderWorkflowView();
-  showToast("Nueva tarea creada exitosamente", "success");
+  showToast(tr("Nueva tarea creada exitosamente", "New task created successfully"), "success");
 }
 
 /**
@@ -3362,7 +3971,7 @@ function openNewMerchModal() {
     <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl animate-scaleUp">
         <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-          <h3 class="text-lg font-bold text-[#323B3F]">Agregar Artículo de Merchandising</h3>
+          <h3 class="text-lg font-bold text-[#323B3F]">${tr("Agregar Artículo de Merchandising", "Add Merchandise Item")}</h3>
           <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -3372,25 +3981,25 @@ function openNewMerchModal() {
 
         <form onsubmit="handleCreateMerch(event)" class="mt-4 space-y-3 text-xs">
           <div>
-            <label class="block font-bold text-slate-700 mb-1">Nombre del Artículo:</label>
-            <input type="text" id="newMerchItem" required placeholder="Ej: Banderines para eventos" 
+            <label class="block font-bold text-slate-700 mb-1">${tr("Nombre del Artículo:", "Item Name:")}</label>
+            <input type="text" id="newMerchItem" required placeholder="${tr("Ej: Banderines para eventos", "e.g. Event Banners & Table Runners")}" 
                    class="w-full bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-slate-800" />
           </div>
 
           <div>
-            <label class="block font-bold text-slate-700 mb-1">Especificaciones:</label>
-            <input type="text" id="newMerchSpecs" required placeholder="Ej: 50 unidades lona impresa" 
+            <label class="block font-bold text-slate-700 mb-1">${tr("Especificaciones:", "Specifications:")}</label>
+            <input type="text" id="newMerchSpecs" required placeholder="${tr("Ej: 50 unidades lona impresa", "e.g. 50 units printed heavy canvas")}" 
                    class="w-full bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-slate-800" />
           </div>
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block font-bold text-slate-700 mb-1">Cantidad:</label>
+              <label class="block font-bold text-slate-700 mb-1">${tr("Cantidad:", "Quantity:")}</label>
               <input type="number" id="newMerchQty" required min="1" value="50" 
                      class="w-full bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-slate-800" />
             </div>
             <div>
-              <label class="block font-bold text-slate-700 mb-1">Costo Estimado ($AUD):</label>
+              <label class="block font-bold text-slate-700 mb-1">${tr("Costo Estimado ($AUD):", "Estimated Cost ($AUD):")}</label>
               <input type="number" id="newMerchCost" step="0.01" required value="250.00" 
                      class="w-full bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-slate-800" />
             </div>
@@ -3398,7 +4007,7 @@ function openNewMerchModal() {
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block font-bold text-slate-700 mb-1">Proveedor:</label>
+              <label class="block font-bold text-slate-700 mb-1">${tr("Proveedor:", "Supplier:")}</label>
               <select id="newMerchSupplier" class="w-full bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-slate-800">
                 ${AppState.data.merchandising.suppliers.map(s => `
                   <option value="${s.id}">${s.name}</option>
@@ -3406,15 +4015,15 @@ function openNewMerchModal() {
               </select>
             </div>
             <div>
-              <label class="block font-bold text-slate-700 mb-1">Color / Versión:</label>
+              <label class="block font-bold text-slate-700 mb-1">${tr("Color / Versión:", "Colour / Finish:")}</label>
               <input type="text" id="newMerchColor" value="Renewal Green #96EE89" 
                      class="w-full bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-slate-800" />
             </div>
           </div>
 
           <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
-            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-100 text-slate-700 font-bold rounded-xl">Cancelar</button>
-            <button type="submit" class="px-4 py-2 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] font-bold rounded-xl shadow">Guardar Artículo</button>
+            <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-100 text-slate-700 font-bold rounded-xl">${tr("Cancelar", "Cancel")}</button>
+            <button type="submit" class="px-4 py-2 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] font-bold rounded-xl shadow">${tr("Guardar Artículo", "Save Item")}</button>
           </div>
         </form>
       </div>
