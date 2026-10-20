@@ -103,7 +103,7 @@ window.WTW_INITIAL_DATA = {
           actionBtnText: "Copiar Correo para onmove",
           emailTemplate: {
             subject: "Witness to War - Requerimiento de Cronograma y Timeframes de Desarrollo Web",
-            body: "Estimado equipo de onmove,\n\nPara poder coordinar el lanzamiento institucional y reportar al liderazgo de área (Lachlan) y al directorio de STARTTS, necesitamos que nos confirmen el cronograma definitivo con fechas estimadas (ETAs) para las siguientes entregas de la propuesta de $21,450:\n\n1. Finalización y aprobación de UX/UI en Figma.\n2. Inicio y finalización del desarrollo en WordPress / Bricks Builder.\n3. Período de integración de los 6 idiomas y revisión de accesibilidad WCAG 2.1 AA.\n4. Ventana estimada de Staging y Lanzamiento en vivo.\n\nPor favor, actualicen estas fechas directamente en el tablero de control o envíennos el detalle antes de finalizar esta semana.\n\nSaludos cordiales,\nEquipo Witness to War"
+            body: "Estimado equipo de onmove,\n\nPara poder coordinar el lanzamiento institucional y reportar al liderazgo de área (Lachlan) y al directorio de STARTTS, necesitamos que nos confirmen el cronograma definitivo con fechas estimadas (ETAs) para las siguientes entregas acordadas en la hoja de ruta de desarrollo web:\n\n1. Finalización y aprobación de UX/UI en Figma.\n2. Inicio y finalización del desarrollo en WordPress / Bricks Builder.\n3. Período de integración de los 6 idiomas y revisión de accesibilidad WCAG 2.1 AA.\n4. Ventana estimada de Staging y Lanzamiento en vivo.\n\nPor favor, actualicen estas fechas directamente en el tablero de control o envíennos el detalle antes de finalizar esta semana.\n\nSaludos cordiales,\nEquipo Witness to War"
           }
         },
         {

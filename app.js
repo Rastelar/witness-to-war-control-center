@@ -47,18 +47,16 @@ const I18N = {
     agencyTag: "Web Development & CMS",
     agencyContracted: "Agency Contracted:",
     agencyHeadline: "Deliverables, Sprints & Official Timeframe Tracking",
-    agencyProposal: "Approved proposal: 165 hours @ $130/hr + GST ($21,450 AUD) on WordPress with Bricks Builder across 6 languages.",
+    agencyProposal: "Technical roadmap and deliverables tracking for the Witness to War multilingual website on WordPress with Bricks Builder across 6 languages.",
     demandTimeframeBtn: "Request Timeframe from onmove",
     openFigmaBtn: "Open onmove Figma",
     addDeliverableBtn: "➕ Add Deliverable",
     exportSprintBtn: "📄 Export Sprint to Lachlan",
-    hoursContracted: "Contracted Hours",
-    fixedRate: "Fixed rate of $130/hr + GST",
-    webBudget: "Website Budget",
-    budgetExcl: "Excludes hosting & plugin licences",
+    totalDeliverables: "Scope & Deliverables",
+    sprintProgress: "Sprint Progress",
     techStack: "Tech Stack",
     wcagStandard: "WordPress CMS + WCAG 2.1 AA",
-    managementAlert: "Management Alert",
+    managementAlert: "Timeframe Commitment",
     managementAlertText: "Awaiting onmove development commitment dates to present to Lachlan and Board.",
     allDeliverables: "All Deliverables",
     laneDone: "Completed ('What has been done')",
@@ -137,18 +135,16 @@ const I18N = {
     agencyTag: "Desarrollo Web & CMS",
     agencyContracted: "Agencia Contratada:",
     agencyHeadline: "Seguimiento de Entregables, Sprints y Cronograma Oficial",
-    agencyProposal: "Propuesta aprobada: 165 horas @ $130/h + GST ($21,450 AUD) en WordPress con Bricks Builder para 6 idiomas.",
+    agencyProposal: "Hoja de ruta técnica y seguimiento de entregables para el sitio web multilingüe de Witness to War en WordPress con Bricks Builder para 6 idiomas.",
     demandTimeframeBtn: "Exigir Timeframe a onmove",
     openFigmaBtn: "Abrir Figma de onmove",
     addDeliverableBtn: "➕ Agregar Entregable",
     exportSprintBtn: "📄 Exportar Sprint a Lachlan",
-    hoursContracted: "Horas Contratadas",
-    fixedRate: "Tarifa fija de $130/hr + GST",
-    webBudget: "Presupuesto Web",
-    budgetExcl: "Excluye hosting y licencias",
+    totalDeliverables: "Alcance & Entregables",
+    sprintProgress: "Progreso de Sprints",
     techStack: "Stack Tecnológico",
     wcagStandard: "WordPress CMS + WCAG 2.1 AA",
-    managementAlert: "Alerta de Gestión",
+    managementAlert: "Compromiso de Fechas",
     managementAlertText: "Falta confirmación de fechas de desarrollo para presentar a Lachlan y al Directorio.",
     allDeliverables: "Todos los Entregables",
     laneDone: "Completado ('Lo que se hizo')",
@@ -916,10 +912,10 @@ function renderHeaderMetrics() {
           <span class="font-bold text-[#96EE89]">${websiteProgress}%</span>
         </div>
 
-        <!-- Alcance Contratado -->
+        <!-- Alcance Web -->
         <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800/90 text-slate-300 border border-slate-700">
-          <span class="text-slate-400">${tr("Alcance Contratado:", "Contracted Scope:")}</span>
-          <span class="font-bold text-white">165 hrs ($21,450 AUD)</span>
+          <span class="text-slate-400">${tr("Alcance Web:", "Website Scope:")}</span>
+          <span class="font-bold text-white">4 Sprints (20 ${tr("Entregables", "Deliverables")})</span>
         </div>
 
         <!-- Stack Tecnológico -->
@@ -1378,18 +1374,18 @@ function renderAgencyView() {
           </div>
         </div>
 
-        <!-- Tarjetas de Información Clave sobre la Agencia -->
+        <!-- Tarjetas de Información Operativa de Sprints -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6">
           <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <span class="text-xs font-bold text-slate-500 uppercase">${t("hoursContracted")}</span>
-            <div class="text-2xl font-black text-[#323B3F] mt-1">${agency.totalHours} hrs</div>
-            <span class="text-[11px] text-slate-500">${t("fixedRate")}</span>
+            <span class="text-xs font-bold text-slate-500 uppercase">${t("totalDeliverables")}</span>
+            <div class="text-2xl font-black text-[#323B3F] mt-1">${agency.phases.length} Sprints</div>
+            <span class="text-[11px] text-slate-500">${allDeliverables.length} ${tr("entregables en hoja de ruta", "deliverables across roadmap")}</span>
           </div>
 
-          <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
-            <span class="text-xs font-bold text-slate-500 uppercase">${t("webBudget")}</span>
-            <div class="text-2xl font-black text-[#323B3F] mt-1">$${agency.totalBudgetExGst.toLocaleString()} AUD</div>
-            <span class="text-[11px] text-slate-500">${t("budgetExcl")}</span>
+          <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+            <span class="text-xs font-bold text-emerald-800 uppercase">${t("sprintProgress")}</span>
+            <div class="text-2xl font-black text-emerald-700 mt-1">${Math.round(agency.phases.reduce((acc, p) => acc + (p.progress || 0), 0) / agency.phases.length)}%</div>
+            <span class="text-[11px] text-emerald-600 font-semibold">${completedCount} / ${allDeliverables.length} ${tr("completados", "completed")}</span>
           </div>
 
           <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
@@ -1991,7 +1987,7 @@ function exportAgencySprintToLachlan() {
 
   let report = `========================================================\n`;
   report += `WITNESS TO WAR & VIOLENCE — OFFICIAL WEBSITE SPRINT TIMEFRAME\n`;
-  report += `Agency: onmove (${agency.website}) | Total Contracted: ${agency.totalHours} hrs ($${agency.totalBudgetExGst} AUD ex GST)\n`;
+  report += `Agency: onmove (${agency.website}) | Scope: 4 Sprints (WordPress Development)\n`;
   report += `Status Date: ${new Date().toLocaleDateString('en-AU')}\n`;
   report += `========================================================\n\n`;
 
