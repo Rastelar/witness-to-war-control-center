@@ -253,7 +253,53 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // 6. POST /api/reset -> Restablece a los datos iniciales
+  // 6. POST /api/alerts/send -> Registra alerta de plazos y notifica en tiempo real por SSE
+  if (req.method === 'POST' && reqPath === '/api/alerts/send') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const payload = JSON.parse(body || '{}');
+        const alertRecord = {
+          id: 'alt-' + Date.now(),
+          timestamp: new Date().toISOString(),
+          recipients: payload.recipients || [
+            'projects@onmove.com.au',
+            'ErnestoLuis.Rastelli@health.nsw.gov.au',
+            'maria@health.nsw.gov.au'
+          ],
+          subject: payload.subject || '[Witness to War] Alerta de Plazos y Cronograma Web',
+          itemCount: (payload.items || []).length,
+          items: payload.items || [],
+          sentBy: payload.sentBy || 'Luis Rastelli'
+        };
+
+        // Guardar registro de la alerta en data-store.json
+        if (fs.existsSync(DATA_FILE)) {
+          const store = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+          if (!store.alertsHistory) store.alertsHistory = [];
+          store.alertsHistory.unshift(alertRecord);
+          // Mantener los últimos 50 envíos
+          if (store.alertsHistory.length > 50) store.alertsHistory = store.alertsHistory.slice(0, 50);
+          fs.writeFileSync(DATA_FILE, JSON.stringify(store, null, 2), 'utf-8');
+        }
+
+        // Notificar en tiempo real a todos los navegadores conectados por SSE
+        broadcast('alert_dispatched', alertRecord);
+        console.log(`[ALERT] Alerta transmitida para: ${alertRecord.recipients.join(', ')} con ${alertRecord.itemCount} ítems.`);
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, alert: alertRecord }));
+      } catch (err) {
+        console.error('[API] Error al registrar alerta:', err);
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Payload inválido', message: err.message }));
+      }
+    });
+    return;
+  }
+
+  // 7. POST /api/reset -> Restablece a los datos iniciales
   if (req.method === 'POST' && reqPath === '/api/reset') {
     try {
       if (fs.existsSync(DATA_FILE)) {

@@ -214,6 +214,27 @@
             "name": "Diseño responsivo para móviles y tablets",
             "status": "pending",
             "date": "2026-11-12"
+          },
+          {
+            "name": "Contenido P1: Sustituir videos AI de prueba ('grok-video') por 4 videos Get Help + Institucional",
+            "status": "pending",
+            "date": "2026-10-30",
+            "owner": "onmove / Luis",
+            "note": "Auditoría en vivo: Homepage enlaza grok-video-1.mp4. Reemplazar por videos oficiales con subtítulos."
+          },
+          {
+            "name": "Feature P2: Directorio interactivo de partners FASSTT por estado (VIC, QLD, SA, WA, TAS, NT, ACT)",
+            "status": "pending",
+            "date": "2026-11-06",
+            "owner": "onmove / Maria",
+            "note": "Auditoría en vivo: No hay localizador de sedes interestatales de la red FASSTT."
+          },
+          {
+            "name": "Seguridad P2: Endurecer botón 'Quick Exit' con window.location.replace y borrado de sesión",
+            "status": "pending",
+            "date": "2026-10-25",
+            "owner": "onmove Dev Lead",
+            "note": "Auditoría en vivo: el botón actual es un enlace simple que queda en el historial del navegador."
           }
         ],
         "clientDependencies": "Aprobación de la dirección visual de Homepage por Lachlan."
@@ -223,40 +244,71 @@
         "name": "Fase 3: Desarrollo en WordPress (Bricks Builder)",
         "hours": 80,
         "budget": 10400,
-        "progress": 10,
-        "status": "pending_eta",
+        "progress": 35,
+        "status": "attention",
         "eta": "Por Confirmar por onmove",
         "responsible": "onmove",
         "deliverables": [
           {
             "name": "Instalación y configuración de WordPress + Bricks Builder",
+            "status": "completed",
+            "date": "2026-10-10",
+            "note": "Verificado en auditoría en vivo: WordPress 6.x + Bricks Builder activo."
+          },
+          {
+            "name": "Fix P0: Resolver error HTTP 403 Forbidden en página /contact/",
             "status": "pending",
-            "date": "TBD"
+            "date": "2026-10-24",
+            "owner": "onmove Dev Lead",
+            "note": "Auditoría en vivo: /contact/ devuelve 403 Forbidden. Revisar permisos Nginx, permalinks y plantilla Bricks."
+          },
+          {
+            "name": "Dev P0: Poblar CPT 'emotions' con las 8 emociones clínicas",
+            "status": "in_progress",
+            "date": "2026-10-26",
+            "owner": "onmove / Joshua",
+            "note": "Auditoría en vivo: 0 registros. Cargar Ansiedad, Desconexión, Depresión, Miedo, Soledad, Agobio, Inquietud, Preocupación."
+          },
+          {
+            "name": "Dev P0: Poblar CPT 'guides' con las 4 técnicas y limpiar tarjetas dummy",
+            "status": "pending",
+            "date": "2026-10-27",
+            "owner": "onmove Dev Lead",
+            "note": "Auditoría en vivo: /techniques-and-guides/ repite 3 veces la tarjeta de prueba. Cargar guías reales y query loop."
+          },
+          {
+            "name": "Fix P1: Corregir enlace telefónico (eliminar espacio en 'tel: 1800')",
+            "status": "pending",
+            "date": "2026-10-23",
+            "owner": "onmove Dev Lead",
+            "note": "Auditoría en vivo: href='tel: 1800 845 198' rompe el discador en iPhone/Safari. Cambiar a href='tel:1800845198'."
+          },
+          {
+            "name": "WPML P1: Traducir Get Help y Toolkit a Árabe, Farsi, Ucraniano, Hebreo y Dari",
+            "status": "pending",
+            "date": "2026-11-04",
+            "owner": "onmove / Yassmen",
+            "note": "Auditoría en vivo: WPML activo pero 0 traducciones en páginas críticas de soporte."
           },
           {
             "name": "Desarrollo del theme accesible y modular",
-            "status": "pending",
-            "date": "TBD"
+            "status": "in_progress",
+            "date": "2026-11-08"
           },
           {
             "name": "Implementación del Hub de Recursos con filtros por sentimiento",
             "status": "pending",
-            "date": "TBD"
-          },
-          {
-            "name": "Configuración multilingüe en 6 idiomas (RTL para Árabe/Hebreo/Farsi/Dari)",
-            "status": "pending",
-            "date": "TBD"
+            "date": "2026-11-12"
           },
           {
             "name": "Integración de donaciones (sistema embebido)",
             "status": "pending",
-            "date": "TBD"
+            "date": "2026-11-15"
           },
           {
             "name": "Optimización técnica y SEO básico",
             "status": "pending",
-            "date": "TBD"
+            "date": "2026-11-18"
           }
         ],
         "clientDependencies": "Entrega de textos traducidos en los 6 idiomas e infraestructura de hosting/licencia de plugins."
@@ -1114,5 +1166,162 @@
         }
       ]
     }
-  }
+  },
+  "liveWebsiteAudit": {
+    "targetUrl": "https://witnesstowar.org.au/",
+    "auditedAt": "2026-10-22",
+    "auditor": "Nino - Technical & Clinical Web Auditor",
+    "overallScore": "C-",
+    "status": "attention",
+    "cms": "WordPress 6.x + Bricks Builder Theme",
+    "infrastructure": "SiteGround Nginx Reverse Proxy + Dynamic Optimizer Cache",
+    "multilingualPlugin": "WPML (SitePress Multilingual CMS)",
+    "configuredLanguages": [
+      {
+        "code": "en",
+        "name": "English (AU)",
+        "status": "published_partial"
+      },
+      {
+        "code": "ar",
+        "name": "Arabic (العربية)",
+        "status": "configured_empty_toolkit"
+      },
+      {
+        "code": "prs",
+        "name": "Dari (دری)",
+        "status": "configured_empty_toolkit"
+      },
+      {
+        "code": "fa",
+        "name": "Farsi (فارسی)",
+        "status": "configured_empty_toolkit"
+      },
+      {
+        "code": "uk",
+        "name": "Ukrainian (Українська)",
+        "status": "configured_empty_toolkit"
+      },
+      {
+        "code": "he",
+        "name": "Hebrew (עברית)",
+        "status": "configured_empty_toolkit"
+      }
+    ],
+    "scoreBreakdown": {
+      "cmsAndBranding": 75,
+      "clinicalGetHelp": 20,
+      "multilingualCoverage": 25,
+      "mobileTelephony": 55,
+      "securityAndSafety": 40
+    },
+    "executiveSummary": "El sitio cuenta con WordPress y Bricks Builder instalados, paleta de colores oficial aplicada y 10 páginas registradas en inglés. Sin embargo, la funcionalidad central y clínica comprometida para Get Help y Técnicas no existe: los CPTs 'emotions' y 'guides' están en 0, la página /contact/ arroja HTTP 403 Forbidden, el marcado telefónico tiene errores de sintaxis que rompen en móviles, y la portada utiliza videos temporales generados por IA en lugar de los videos de STARTTS.",
+    "findings": [
+      {
+        "id": "aud-01",
+        "severity": "critical",
+        "title": "Error HTTP 403 Forbidden en página de contacto (/contact/)",
+        "url": "https://witnesstowar.org.au/contact/",
+        "problem": "La página de contacto del sitio web en vivo devuelve un error HTTP 403 Forbidden, impidiendo que usuarios o derivadores institucionales envíen consultas.",
+        "rootCause": "Bloqueo de seguridad de SiteGround Optimizer, regla Nginx restrictiva, o permalink huérfano sin plantilla Bricks asignada.",
+        "actionRequired": "Verificar permisos de archivo, regenerar permalinks en WordPress y asignar template Bricks a /contact/.",
+        "responsible": "onmove Dev Lead",
+        "phase": "p3",
+        "eta": "2026-10-24",
+        "status": "pending"
+      },
+      {
+        "id": "aud-02",
+        "severity": "critical",
+        "title": "CPT 'emotions' con 0 registros (Selector de sentimientos vacío)",
+        "url": "https://witnesstowar.org.au/get-help/",
+        "problem": "El endpoint REST /wp-json/wp/v2/emotions confirma 0 entradas. La funcionalidad central de 'How are you feeling?' no cuenta con datos en producción.",
+        "rootCause": "El CPT fue registrado en functions.php o plugin pero nunca se crearon ni publicaron las 8 emociones clínicas aprobadas.",
+        "actionRequired": "Publicar las 8 entradas (Ansiedad, Desconexión, Depresión, Miedo, Soledad, Agobio, Inquietud, Preocupación) con sus micro-textos y rutas asociadas.",
+        "responsible": "onmove / Joshua",
+        "phase": "p3",
+        "eta": "2026-10-26",
+        "status": "in_progress"
+      },
+      {
+        "id": "aud-03",
+        "severity": "critical",
+        "title": "CPT 'guides' vacío y tarjetas dummy triplicadas en /techniques-and-guides/",
+        "url": "https://witnesstowar.org.au/techniques-and-guides/",
+        "problem": "El endpoint REST /wp-json/wp/v2/guides confirma 0 entradas. La página en vivo repite 3 veces la misma tarjeta de relleno 'Finding calm when you feel restless'.",
+        "rootCause": "Las tarjetas fueron maquetadas como bloques HTML estáticos duplicados a mano en Bricks Builder en lugar de un Query Loop dinámico conectado al CPT.",
+        "actionRequired": "Publicar las 4 técnicas clínicas de STARTTS (Belly Breathing, 5-4-3-2-1 Grounding, Orient to Present, 5 Senses) y conectar el Query Loop de Bricks.",
+        "responsible": "onmove Dev Lead",
+        "phase": "p3",
+        "eta": "2026-10-27",
+        "status": "pending"
+      },
+      {
+        "id": "aud-04",
+        "severity": "high",
+        "title": "Falta total de traducciones en Get Help, Toolkit y Técnicas (5 idiomas)",
+        "url": "https://witnesstowar.org.au/get-help/",
+        "problem": "Los usuarios de comunidades no angloparlantes (Árabe, Dari, Farsi, Ucraniano, Hebreo) solo tienen acceso a páginas en inglés.",
+        "rootCause": "WPML está activo pero las páginas críticas de autoayuda solo existen bajo el post_name en inglés y no tienen réplicas en los 5 idiomas secundarios.",
+        "actionRequired": "Sincronizar y cargar las traducciones suministradas por STARTTS en WPML para todas las páginas de soporte y metadatos.",
+        "responsible": "onmove / Yassmen",
+        "phase": "p3",
+        "eta": "2026-11-04",
+        "status": "pending"
+      },
+      {
+        "id": "aud-05",
+        "severity": "high",
+        "title": "Error de sintaxis en marcado telefónico: 'tel: 1800 845 198' con espacio inicial",
+        "url": "https://witnesstowar.org.au/",
+        "problem": "El atributo href contiene un espacio después del prefijo tel: (href='tel: 1800 845 198'). En navegadores móviles (iOS Safari) la llamada no se inicia o reporta número inválido.",
+        "rootCause": "Tipografía manual en el template de header y footer en Bricks Builder.",
+        "actionRequired": "Normalizar todas las etiquetas telefónicas al formato estándar RFC 3966: href='tel:1800845198'.",
+        "responsible": "onmove Dev Lead",
+        "phase": "p3",
+        "eta": "2026-10-23",
+        "status": "pending"
+      },
+      {
+        "id": "aud-06",
+        "severity": "high",
+        "title": "Videos temporales de IA ('grok-video') en lugar de los 4 videos clínicos + Institucional",
+        "url": "https://witnesstowar.org.au/",
+        "problem": "La portada reproduce 3 videos MP4 temporales de prueba AI ('grok-video-1.mp4', etc.) subidos en julio de 2026 que no corresponden al proyecto.",
+        "rootCause": "Archivos placeholder utilizados durante el prototipado inicial no sustituidos por los materiales finales.",
+        "actionRequired": "Reemplazar los embeds por los 4 videos de Get Help y el institucional con reproductor accesible y transcripciones.",
+        "responsible": "onmove / Luis",
+        "phase": "p2",
+        "eta": "2026-10-30",
+        "status": "pending"
+      },
+      {
+        "id": "aud-07",
+        "severity": "medium",
+        "title": "Ausencia del Directorio Nacional de Oficinas FASSTT para otros estados",
+        "url": "https://witnesstowar.org.au/about-us/",
+        "problem": "No existe un componente o mapa que permita a víctimas fuera de NSW localizar su oficina estatal FASSTT (Foundation House, QPASTT, STTARS, etc.).",
+        "rootCause": "No se contempló el componente de red nacional en las plantillas Bricks de About Us o Get Help.",
+        "actionRequired": "Implementar un acordeón o localizador interactivo con las 8 agencias de la red nacional FASSTT y sus datos de contacto.",
+        "responsible": "onmove / Maria",
+        "phase": "p2",
+        "eta": "2026-11-06",
+        "status": "pending"
+      },
+      {
+        "id": "aud-08",
+        "severity": "medium",
+        "title": "Mecanismo de Salida Rápida ('Quick Exit') inseguro para víctimas en riesgo",
+        "url": "https://witnesstowar.org.au/",
+        "problem": "El botón Quick Exit actual es un simple enlace <a> que deja la navegación guardada en el historial del navegador.",
+        "rootCause": "Falta de implementación JavaScript para redirección segura y purga de estado.",
+        "actionRequired": "Implementar función JS con window.location.replace('https://www.google.com.au') y borrado de sesión/almacenamiento local.",
+        "responsible": "onmove Dev Lead",
+        "phase": "p2",
+        "eta": "2026-10-25",
+        "status": "pending"
+      }
+    ]
+  },
+  "alertsHistory": []
 }

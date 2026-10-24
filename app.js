@@ -8,7 +8,7 @@
  */
 
 // Key para persistencia local
-const STORAGE_KEY = "wtwv_control_center_state_v1";
+const STORAGE_KEY = "wtwv_control_center_state_v2";
 
 // DICCIONARIO DE INTERNACIONALIZACIÓN (DEFAULT: AUSTRALIAN ENGLISH)
 const I18N = {
@@ -300,6 +300,14 @@ const CONTENT_TRANSLATIONS = {
   "Capacitación de CMS para el equipo (5 horas incluidas)": "CMS training for WTWV team (5 hrs included)",
   "Despliegue a producción y verificación en vivo": "Production deployment & live verification",
   "Soporte post-lanzamiento (15 horas incluidas)": "Post-launch warranty & hypercare support (15 hrs included)",
+  "Fix P0: Resolver error HTTP 403 Forbidden en página /contact/": "Fix P0: Resolve HTTP 403 Forbidden error on /contact/ page",
+  "Dev P0: Poblar CPT 'emotions' con las 8 emociones clínicas": "Dev P0: Populate 'emotions' CPT with the 8 clinical emotional states",
+  "Dev P0: Poblar CPT 'guides' con las 4 técnicas y limpiar tarjetas dummy": "Dev P0: Populate 'guides' CPT with 4 self-help techniques & remove dummy cards",
+  "Fix P1: Corregir enlace telefónico (eliminar espacio en 'tel: 1800')": "Fix P1: Fix telephone link syntax (remove whitespace in 'tel: 1800')",
+  "WPML P1: Traducir Get Help y Toolkit a Árabe, Farsi, Ucraniano, Hebreo y Dari": "WPML P1: Translate Get Help and Toolkit into Arabic, Farsi, Ukrainian, Hebrew, and Dari",
+  "Contenido P1: Sustituir videos AI de prueba ('grok-video') por 4 videos Get Help + Institucional": "Content P1: Replace temporary AI test videos ('grok-video') with 4 Get Help videos + Institutional",
+  "Feature P2: Directorio interactivo de partners FASSTT por estado (VIC, QLD, SA, WA, TAS, NT, ACT)": "Feature P2: Interactive FASSTT national partner directory by state (VIC, QLD, SA, WA, TAS, NT, ACT)",
+  "Seguridad P2: Endurecer botón 'Quick Exit' con window.location.replace y borrado de sesión": "Security P2: Harden 'Quick Exit' button with window.location.replace and session purge",
 
   // Notas y Dependencias
   "Wireframes listos en Figma (frames 1492-6, 1853-7561). Falta cierre de textos clínicos.": "Figma wireframes ready (frames 1492-6, 1853-7561). Pending clinical text sign-off.",
@@ -499,6 +507,7 @@ function updateI18nStaticUI() {
   safeText("hdrTitle", t("appTitle"));
   safeText("roleLabelText", t("roleLabel"));
   safeText("shareBtnText", t("shareBtn"));
+  safeText("alertsBtnText", AppState.lang === 'en' ? "Alerts" : "Alertas");
   safeText("syncStatusText", AppState.isServerSyncActive ? t("liveSync") : t("offlineMode"));
 
   // Pestañas
@@ -603,7 +612,26 @@ async function initAppState() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         AppState.data = JSON.parse(saved);
-        console.log("Cargados datos guardados en LocalStorage.");
+        // Asegurar que la auditoría en vivo y los nuevos entregables existan
+        if (window.WTW_INITIAL_DATA) {
+          if (!AppState.data.liveWebsiteAudit) {
+            AppState.data.liveWebsiteAudit = JSON.parse(JSON.stringify(window.WTW_INITIAL_DATA.liveWebsiteAudit));
+          }
+          if (window.WTW_INITIAL_DATA.agencyRoadmap && window.WTW_INITIAL_DATA.agencyRoadmap.phases) {
+            window.WTW_INITIAL_DATA.agencyRoadmap.phases.forEach((initPhase, pIdx) => {
+              if (AppState.data.agencyRoadmap && AppState.data.agencyRoadmap.phases[pIdx]) {
+                const curPhase = AppState.data.agencyRoadmap.phases[pIdx];
+                (initPhase.deliverables || []).forEach(initDel => {
+                  const exists = (curPhase.deliverables || []).some(d => d.name === initDel.name);
+                  if (!exists) {
+                    curPhase.deliverables.push(JSON.parse(JSON.stringify(initDel)));
+                  }
+                });
+              }
+            });
+          }
+        }
+        console.log("Cargados datos guardados en LocalStorage (v2).");
       } else if (window.WTW_INITIAL_DATA) {
         AppState.data = JSON.parse(JSON.stringify(window.WTW_INITIAL_DATA));
         saveAppState();
@@ -639,6 +667,15 @@ function initLiveSync() {
           }
         } catch (err) {
           console.warn("Error refrescando tras evento SSE:", err);
+        }
+      });
+
+      evtSource.addEventListener('alert_dispatched', (e) => {
+        try {
+          const alertData = JSON.parse(e.data || '{}');
+          showToast(`📧 Alerta de plazos enviada a ${alertData.recipients ? alertData.recipients.join(', ') : 'equipo y agencia'}`, 'success');
+        } catch (err) {
+          console.warn("Error procesando alert_dispatched:", err);
         }
       });
 
@@ -1357,6 +1394,13 @@ function renderAgencyView() {
               <span>${t("exportSprintBtn")}</span>
             </button>
 
+            <button onclick="openDeadlineAlertsModal()" class="px-3.5 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
+              <svg class="w-4 h-4 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+              <span>${isEn ? "📧 Email Alerts Center" : "📧 Alertas de Vencimiento"}</span>
+            </button>
+
             <button onclick="openEmailModal('act-1')" class="px-3.5 py-2.5 bg-[#323B3F] hover:bg-slate-900 text-[#96EE89] text-xs font-bold rounded-xl shadow flex items-center gap-1.5 transition-all">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -1402,6 +1446,102 @@ function renderAgencyView() {
             <div class="text-xs font-semibold text-amber-900 mt-1 leading-snug">
               ${t("managementAlertText")}
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AUDITORÍA TÉCNICA Y CLÍNICA DEL SITIO EN VIVO (witnesstowar.org.au) -->
+      <div class="bg-[#323B3F] text-white rounded-2xl border border-slate-700 shadow-md p-6">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 border-b border-slate-700/80">
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-red-500 text-white shadow-sm">
+                ${isEn ? "Live Website Audit" : "Auditoría del Sitio en Vivo"}
+              </span>
+              <a href="https://witnesstowar.org.au/" target="_blank" class="text-xs font-mono font-bold text-[#96EE89] hover:underline flex items-center gap-1">
+                <span>https://witnesstowar.org.au/</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
+              </a>
+              <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">
+                WordPress 6.x + Bricks Builder
+              </span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">
+                WPML (6 ${isEn ? "Languages" : "Idiomas"})
+              </span>
+            </div>
+            <h3 class="text-xl font-black text-white mt-2 flex items-center gap-2">
+              <span>🔍</span>
+              <span>${isEn ? "Professional Technical & Clinical Web Audit" : "Auditoría Técnica y Clínica Profesional del Sitio Web"}</span>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 max-w-3xl leading-relaxed">
+              ${isEn 
+                ? "Inspection of the live production environment compared against onmove's approved scope (165 hours). While the CMS core and theme are installed, the critical self-help functionality ('Get Help'), empty custom post types (0 emotions, 0 guides), 403 errors, and temporary AI test videos require immediate remediation."
+                : "Inspección técnica del entorno en producción comparado con la propuesta oficial aprobada de onmove (165 horas). Si bien el CMS base y el theme están instalados, la funcionalidad nuclear de autoayuda ('Get Help'), CPTs vacíos (0 emociones, 0 guías), errores 403 y videos temporales de IA requieren corrección inmediata."}
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 flex-shrink-0">
+            <button onclick="openDeadlineAlertsModal()" 
+                    class="px-4 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black rounded-xl shadow transition-all flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+              <span>${isEn ? "📧 Dispatch Alerts to Agency" : "📧 Enviar Alertas a onmove y Equipo"}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Rejilla de los 8 Hallazgos de Auditoría -->
+        <div class="mt-5">
+          <div class="flex items-center justify-between mb-3 text-xs">
+            <span class="font-bold text-slate-300 uppercase tracking-wider text-[11px]">
+              ${isEn ? "Live Audit Findings & Action Plan (8 Key Items):" : "Hallazgos de Auditoría en Vivo y Plan de Acción (8 Puntos Clave):"}
+            </span>
+            <span class="text-amber-400 font-semibold text-[11px]">
+              ${isEn ? "3 Critical P0 · 3 High P1 · 2 Medium P2" : "3 Críticos P0 · 3 Alta Prioridad P1 · 2 Medios P2"}
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            ${((AppState.data.liveWebsiteAudit && AppState.data.liveWebsiteAudit.findings) || (window.WTW_INITIAL_DATA && window.WTW_INITIAL_DATA.liveWebsiteAudit && window.WTW_INITIAL_DATA.liveWebsiteAudit.findings) || []).map((f) => `
+              <div class="p-4 rounded-xl border ${
+                f.severity === 'critical' ? 'bg-red-950/30 border-red-700/80 text-red-50' :
+                f.severity === 'high' ? 'bg-amber-950/20 border-amber-600/70 text-amber-50' :
+                'bg-slate-800/80 border-slate-700 text-slate-200'
+              } flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between gap-2 mb-2">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase ${
+                      f.severity === 'critical' ? 'bg-red-500 text-white' :
+                      f.severity === 'high' ? 'bg-amber-500 text-slate-950' :
+                      'bg-slate-600 text-slate-200'
+                    }">
+                      ${f.severity.toUpperCase()}
+                    </span>
+                    <span class="text-[11px] font-mono font-bold text-slate-300">ETA: ${f.eta}</span>
+                  </div>
+                  
+                  <h4 class="text-xs font-bold text-white leading-snug">${translateContent(f.title)}</h4>
+                  <p class="text-[11px] text-slate-300 mt-1.5 leading-relaxed">${translateContent(f.problem)}</p>
+                  
+                  <div class="mt-3 pt-2.5 border-t border-slate-700/60 text-[11px] space-y-1">
+                    <div class="text-slate-300">
+                      <strong class="text-white">${isEn ? "Action Required:" : "Acción Requerida:"}</strong> ${translateContent(f.actionRequired)}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-3 pt-2.5 border-t border-slate-700/60 flex items-center justify-between text-[11px]">
+                  <span class="font-semibold text-slate-300">👤 ${f.responsible}</span>
+                  <a href="${f.url}" target="_blank" class="text-[#96EE89] hover:underline font-mono flex items-center gap-1 font-bold">
+                    <span>${isEn ? "Inspect URL" : "Ver URL"}</span>
+                    <span>↗</span>
+                  </a>
+                </div>
+              </div>
+            `).join('')}
           </div>
         </div>
       </div>
@@ -1594,7 +1734,7 @@ function renderAgencyView() {
                       phase.status === 'in_progress' ? (isEn ? 'In Progress' : 'En Curso') :
                       phase.status === 'attention' ? (isEn ? 'Needs Attention' : 'Requiere Atención') : (isEn ? 'Pending ETA' : 'Pendiente de Fechas')}
                   </span>
-                  <span class="text-xs text-slate-400 font-medium">${phase.hours} ${isEn ? 'Hours' : 'Horas'} | $${phase.budget.toLocaleString()} AUD</span>
+                  <span class="text-xs text-slate-500 font-medium">${(phase.deliverables || []).length} ${isEn ? 'Deliverables' : 'Entregables'}</span>
                 </div>
                 <h3 class="text-lg font-bold text-[#323B3F] mt-1">${translateContent(phase.name)}</h3>
               </div>
@@ -3840,6 +3980,284 @@ function copyEmailToClipboard() {
   }).catch(() => {
     showToast(tr("No se pudo copiar automáticamente, copia manualmente.", "Could not copy automatically, please copy manually."), "error");
   });
+}
+
+/**
+ * Modal del Centro de Alertas y Notificaciones por Correo (onmove + Luis + Maria)
+ */
+function openDeadlineAlertsModal() {
+  const modalContainer = document.getElementById("modalContainer");
+  if (!modalContainer) return;
+
+  const isEn = AppState.lang === "en";
+  const now = new Date();
+  const todayStr = now.toISOString().split("T")[0];
+
+  // 1. Recolectar entregables de la agencia
+  const phases = (AppState.data.agencyRoadmap && AppState.data.agencyRoadmap.phases) || [];
+  const allDel = [];
+  phases.forEach((p, pIdx) => {
+    (p.deliverables || []).forEach((d, dIdx) => {
+      allDel.push({
+        ...d,
+        phaseName: p.name,
+        phaseIdx: pIdx,
+        delIdx: dIdx
+      });
+    });
+  });
+
+  // Clasificar: Vencidos, Próximos (<= 4 días), Pendientes ETA
+  const overdueItems = allDel.filter(d => d.status !== 'completed' && d.date && d.date !== 'TBD' && d.date < todayStr);
+  const upcomingItems = allDel.filter(d => d.status !== 'completed' && d.date && d.date !== 'TBD' && d.date >= todayStr && d.date <= '2026-10-31');
+  const pendingEtaItems = allDel.filter(d => d.status !== 'completed' && (!d.date || d.date === 'TBD'));
+
+  // 2. Recolectar hallazgos de la auditoría en vivo
+  const audit = AppState.data.liveWebsiteAudit || (window.WTW_INITIAL_DATA && window.WTW_INITIAL_DATA.liveWebsiteAudit) || { findings: [] };
+  const auditFindings = audit.findings || [];
+  const criticalAudit = auditFindings.filter(f => f.severity === 'critical');
+  const highAudit = auditFindings.filter(f => f.severity === 'high');
+
+  // Pre-generar Asunto y Cuerpo de Correo
+  const subject = `[Witness to War] Alerta de Plazos, Entregables y Auditoría Web - onmove / STARTTS (${todayStr})`;
+  
+  const agencyLiveUrl = "https://rastelar.github.io/witness-to-war-control-center/?role=agency&tab=agency&lang=en";
+
+  let body = isEn
+    ? `Dear onmove Web Team,\nCC: Ernesto Luis Rastelli, Maria (Witness to War Operations / STARTTS)\n\nPlease review the current deadline commitments and technical audit findings for the Witness to War website (https://witnesstowar.org.au/).\n\nDIRECT AGENCY WORKSPACE TO UPDATE DATES & OWNERS:\n${agencyLiveUrl}\n\n`
+    : `Estimado equipo de onmove,\nCC: Ernesto Luis Rastelli, Maria (Operaciones Witness to War / STARTTS)\n\nLes compartimos el estado de plazos de entrega y los hallazgos de la auditoría técnica del sitio web (https://witnesstowar.org.au/) para coordinar las resoluciones inmediatas.\n\nTABLERO DE LA AGENCIA PARA EDITAR FECHAS Y RESPONSABLES DIRECTAMENTE:\n${agencyLiveUrl}\n\n`;
+
+  body += isEn ? "--- 1. URGENT LIVE WEBSITE AUDIT FINDINGS (P0 & P1) ---\n" : "--- 1. ACCIONES URGENTES DE AUDITORÍA EN VIVO (P0 y P1) ---\n";
+  auditFindings.forEach((f) => {
+    body += `• [${f.severity.toUpperCase()}] ${f.title}\n   ${isEn ? 'Action:' : 'Acción:'} ${f.actionRequired || f.problem}\n   ${isEn ? 'ETA:' : 'Fecha Requerida:'} ${f.eta} | ${isEn ? 'Resp:' : 'Responsable:'} ${f.responsible}\n\n`;
+  });
+
+  body += isEn ? "\n--- 2. UPCOMING & OVERDUE SPRINT DELIVERABLES ---\n" : "\n--- 2. ENTREGABLES DE SPRINT PRÓXIMOS O PENDIENTES ---\n";
+  if (overdueItems.length > 0) {
+    body += isEn ? "[OVERDUE / REQUIRES IMMEDIATE UPDATE]:\n" : "[VENCIDOS / REQUIEREN ACTUALIZACIÓN INMEDIATA]:\n";
+    overdueItems.forEach(d => {
+      body += `• ${d.name} (${d.phaseName.split(':')[0]}) - ETA: ${d.date} | Status: ${d.status}\n`;
+    });
+    body += "\n";
+  }
+
+  if (upcomingItems.length > 0) {
+    body += isEn ? "[UPCOMING THIS SPRINT]:\n" : "[PRÓXIMAS ENTREGAS]:\n";
+    upcomingItems.forEach(d => {
+      body += `• ${d.name} - ETA: ${d.date} | Resp: ${d.owner || 'onmove'}\n`;
+    });
+    body += "\n";
+  }
+
+  body += isEn
+    ? `Please access the link above to update commitment dates (ETAs), assignees, and mark completed items.\n\nBest regards,\nWitness to War Operations Team\nSTARTTS / NSW Health Department`
+    : `Por favor ingresen al enlace provisto arriba para actualizar las fechas de compromiso (ETAs), asignar responsables y registrar los avances.\n\nSaludos cordiales,\nEquipo de Operaciones Witness to War\nSTARTTS / Departamento de Salud de NSW`;
+
+  AppState.modalOpen = "deadlineAlertsModal";
+
+  modalContainer.innerHTML = `
+    <div class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div class="bg-white rounded-2xl max-w-2xl w-full p-5 sm:p-6 shadow-2xl animate-scaleUp my-8 max-h-[90vh] flex flex-col">
+        
+        <!-- Header del Modal -->
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100 flex-shrink-0">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-amber-500 animate-ping"></span>
+              <h3 class="text-base sm:text-lg font-black text-[#323B3F]">
+                ${isEn ? "📧 Email Deadline Alert & Live Audit Center" : "📧 Centro de Alertas de Vencimiento y Auditoría Web"}
+              </h3>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">
+              ${isEn ? "Automated email dispatch for onmove agency, Luis Rastelli, and Maria." : "Despacho automatizado de avisos por correo para onmove, Luis Rastelli y Maria."}
+            </p>
+          </div>
+          <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Cuerpo con scroll -->
+        <div class="overflow-y-auto flex-1 pr-1 space-y-4 my-4 text-xs">
+          
+          <!-- Métricas Resumen -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <div class="p-3 bg-red-50 border border-red-200 rounded-xl text-center">
+              <span class="text-[10px] font-bold text-red-700 uppercase">${isEn ? "Overdue" : "Vencidas"}</span>
+              <div class="text-xl font-black text-red-900 mt-0.5">${overdueItems.length}</div>
+            </div>
+            <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-center">
+              <span class="text-[10px] font-bold text-amber-800 uppercase">${isEn ? "Audit P0/P1" : "Auditoría P0/P1"}</span>
+              <div class="text-xl font-black text-amber-900 mt-0.5">${criticalAudit.length + highAudit.length}</div>
+            </div>
+            <div class="p-3 bg-blue-50 border border-blue-200 rounded-xl text-center">
+              <span class="text-[10px] font-bold text-blue-800 uppercase">${isEn ? "Due This Sprint" : "Próximas"}</span>
+              <div class="text-xl font-black text-blue-900 mt-0.5">${upcomingItems.length}</div>
+            </div>
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-center">
+              <span class="text-[10px] font-bold text-slate-600 uppercase">${isEn ? "Pending ETA" : "Sin Fecha"}</span>
+              <div class="text-xl font-black text-slate-800 mt-0.5">${pendingEtaItems.length}</div>
+            </div>
+          </div>
+
+          <!-- Destinatarios Oficiales -->
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+            <span class="block font-bold text-slate-700 mb-1.5 uppercase text-[10px] tracking-wider">
+              ${isEn ? "Recipients (Configured Stakeholders):" : "Destinatarios (Partes Interesadas Configuradas):"}
+            </span>
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-xs bg-white p-2 rounded-lg border border-slate-200">
+                <span class="font-bold text-slate-800">🏢 onmove Web Agency (TO)</span>
+                <span class="font-mono text-slate-600">projects@onmove.com.au</span>
+              </div>
+              <div class="flex items-center justify-between text-xs bg-white p-2 rounded-lg border border-slate-200">
+                <span class="font-bold text-slate-800">👤 Ernesto Luis Rastelli - Lead PM (CC)</span>
+                <span class="font-mono text-slate-600">ErnestoLuis.Rastelli@health.nsw.gov.au</span>
+              </div>
+              <div class="flex items-center justify-between text-xs bg-white p-2 rounded-lg border border-slate-200">
+                <span class="font-bold text-slate-800">👥 Maria - Project Support (CC)</span>
+                <span class="font-mono text-slate-600">maria@health.nsw.gov.au</span>
+              </div>
+              <label class="flex items-center gap-2 pt-1 text-slate-600 cursor-pointer">
+                <input type="checkbox" id="ccLachlanCheckbox" class="rounded border-slate-300 text-slate-800 focus:ring-slate-500">
+                <span class="text-[11px] font-semibold">${isEn ? "Include Lachlan in CC (Area Leader / Executive Sponsor)" : "Incluir a Lachlan en CC (Líder de Área / Sponsor Ejecutivo)"}</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Enlace Directo para la Agencia -->
+          <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <div>
+              <span class="text-[11px] font-bold text-emerald-900 block">${isEn ? "Agency Portal URL to include:" : "URL del Portal de la Agencia incluido en el correo:"}</span>
+              <span class="text-[10px] font-mono text-emerald-700 break-all">${agencyLiveUrl}</span>
+            </div>
+            <button onclick="copyToClipboard('${agencyLiveUrl}', '${isEn ? "Agency link copied!" : "¡Enlace copiado!"}')" 
+                    class="px-2.5 py-1 bg-white hover:bg-emerald-100 text-emerald-800 text-[11px] font-bold rounded-lg border border-emerald-300 transition-all flex-shrink-0">
+              📋 ${isEn ? "Copy Link" : "Copiar Enlace"}
+            </button>
+          </div>
+
+          <!-- Asunto Editable -->
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">${isEn ? "Email Subject:" : "Asunto del Correo:"}</label>
+            <input type="text" id="alertEmailSubject" value="${subject}" 
+                   class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-slate-800 font-bold focus:ring-2 focus:ring-[#96EE89] focus:outline-none" />
+          </div>
+
+          <!-- Cuerpo Editable -->
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">${isEn ? "Generated Email Body (Ready to Send):" : "Cuerpo del Correo Generado (Listo para Enviar):"}</label>
+            <textarea id="alertEmailBody" rows="10" 
+                      class="w-full bg-slate-50 p-3 rounded-xl border border-slate-200 text-slate-800 font-mono text-[11px] leading-relaxed focus:ring-2 focus:ring-[#96EE89] focus:outline-none">${body}</textarea>
+          </div>
+        </div>
+
+        <!-- Footer con Acciones -->
+        <div class="mt-2 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
+          <button onclick="closeModal()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl">
+            ${isEn ? "Cancel" : "Cancelar"}
+          </button>
+          
+          <div class="flex flex-wrap items-center gap-2">
+            <!-- Copiar al Portapapeles -->
+            <button onclick="copyAlertEmailDraft()" class="px-3.5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-all">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+              </svg>
+              <span>${isEn ? "Copy Draft" : "Copiar Borrador"}</span>
+            </button>
+
+            <!-- Disparar por Servidor / SSE -->
+            <button onclick="dispatchAlertViaServer()" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow flex items-center gap-1.5 transition-all">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+              <span>${isEn ? "Record & Broadcast" : "Registrar & Transmitir"}</span>
+            </button>
+
+            <!-- Abrir en Cliente de Correo (mailto:) -->
+            <button onclick="launchNativeEmailClient()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold rounded-xl shadow-md flex items-center gap-1.5 transition-all">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+              <span>${isEn ? "Open in Outlook / Mail (mailto:)" : "Abrir en Correo / Outlook (mailto:)"}</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  `;
+}
+
+function launchNativeEmailClient() {
+  const to = "projects@onmove.com.au";
+  const ccCheck = document.getElementById("ccLachlanCheckbox");
+  let cc = "ErnestoLuis.Rastelli@health.nsw.gov.au,maria@health.nsw.gov.au";
+  if (ccCheck && ccCheck.checked) {
+    cc += ",lachlan@health.nsw.gov.au";
+  }
+
+  const subject = document.getElementById("alertEmailSubject").value;
+  const body = document.getElementById("alertEmailBody").value;
+
+  const mailtoUrl = `mailto:${to}?cc=${encodeURIComponent(cc)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailtoUrl;
+
+  showToast(tr("Abriendo cliente de correo predeterminado...", "Opening default email client..."), "info");
+  closeModal();
+}
+
+function copyAlertEmailDraft() {
+  const subject = document.getElementById("alertEmailSubject").value;
+  const body = document.getElementById("alertEmailBody").value;
+  const to = "projects@onmove.com.au";
+  const cc = "ErnestoLuis.Rastelli@health.nsw.gov.au, maria@health.nsw.gov.au";
+
+  const fullText = `Para: ${to}\nCC: ${cc}\nAsunto: ${subject}\n\n${body}`;
+  navigator.clipboard.writeText(fullText).then(() => {
+    showToast(tr("¡Borrador completo copiado al portapapeles!", "Full draft copied to clipboard!"), "success");
+  }).catch(() => {
+    showToast(tr("Error al copiar automáticamente.", "Error copying automatically."), "error");
+  });
+}
+
+async function dispatchAlertViaServer() {
+  const subject = document.getElementById("alertEmailSubject").value;
+  const body = document.getElementById("alertEmailBody").value;
+  const to = "projects@onmove.com.au";
+  const cc = ["ErnestoLuis.Rastelli@health.nsw.gov.au", "maria@health.nsw.gov.au"];
+  const ccCheck = document.getElementById("ccLachlanCheckbox");
+  if (ccCheck && ccCheck.checked) {
+    cc.push("lachlan@health.nsw.gov.au");
+  }
+
+  const payload = {
+    recipients: [to, ...cc],
+    subject: subject,
+    body: body,
+    sentBy: "Luis Rastelli"
+  };
+
+  try {
+    const res = await fetch('/api/alerts/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      showToast(tr("¡Alerta registrada y notificada vía API!", "Alert recorded and broadcast via API!"), "success");
+      closeModal();
+    } else {
+      copyAlertEmailDraft();
+      showToast(tr("Servidor estático: borrador copiado al portapapeles.", "Static server: draft copied to clipboard."), "info");
+    }
+  } catch (err) {
+    copyAlertEmailDraft();
+    showToast(tr("Modo estático: borrador copiado al portapapeles.", "Static mode: draft copied to clipboard."), "info");
+  }
 }
 
 /**

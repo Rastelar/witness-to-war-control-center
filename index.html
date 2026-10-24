@@ -159,6 +159,15 @@
               <span id="syncStatusText">Live Sync</span>
             </div>
 
+            <!-- Botón de Alertas por Email (Vencimientos y Auditoría Web) -->
+            <button onclick="openDeadlineAlertsModal()" title="Email Deadline Alerts & Web Audit" 
+                    class="flex items-center gap-1.5 px-3 py-1.5 bg-amber-400 hover:bg-amber-300 text-slate-900 text-xs font-extrabold rounded-xl shadow-sm transition-all">
+              <svg class="w-4 h-4 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+              <span class="hidden sm:inline" id="alertsBtnText">Alerts</span>
+            </button>
+
             <!-- Botón de Compartir Enlace con Roles & Túnel Seguro -->
             <button onclick="openShareModal()" title="Share Access Links" 
                     class="flex items-center gap-1.5 px-3 py-1.5 bg-[#96EE89] hover:bg-[#82d675] text-[#323B3F] text-xs font-extrabold rounded-xl shadow-sm transition-all">
